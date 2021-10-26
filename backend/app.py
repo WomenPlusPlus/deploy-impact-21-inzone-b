@@ -2,14 +2,39 @@ import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
 app.config.from_object(DevelopmentConfig)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =  False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-from models import Student
+class Student(db.Model):
+    __tablename__ = 'students'
+
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    joined_at = db.Column(db.DateTime())
+
+    def __init__(self, full_name, email, joined_at):
+        self.full_name = full_name
+        self.email = email
+        self.joined_at = joined_at
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'full_name': self.full_name,
+            'email': self.email,
+            'joined_at':self.joined_at
+        }
+
 
 @app.route("/")
 def hello():
