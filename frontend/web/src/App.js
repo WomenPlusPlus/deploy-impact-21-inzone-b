@@ -1,12 +1,15 @@
 import "./App.css";
-import React from "react";
+import "./scss/shared.scss"
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link
 } from "react-router-dom";
-import LoginScreen from "./components/LoginScreen";
+import LoginScreen from "./components/login/LoginScreen";
+import SignupScreen from "./components/signup/SignupScreen";
+import ForgotPasswordScreen from "./components/forgot-password/ForgotPasswordScreen";
+import SetupAccountScreen from "./components/setup-account/SetupAccountScreen";
 
 function App() {
   return (
@@ -37,6 +40,15 @@ function App() {
                 <Switch>
                     <Route path="/login">
                         <LoginScreen />
+                    </Route>
+                    <Route path="/signup">
+                        <SignupScreen />
+                    </Route>
+                    <Route path="/setup-account">
+                        <SetupAccountScreen />
+                    </Route>
+                    <Route path="/forgot-password">
+                        <ForgotPasswordScreen />
                     </Route>
                 </Switch>
             </div>
