@@ -10,9 +10,10 @@ app = Flask(__name__)
 
 app.config.from_object(DevelopmentConfig)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
 
 class Student(db.Model):
     __tablename__ = 'students'
@@ -32,10 +33,10 @@ class Student(db.Model):
         self.email = email
         self.joined_at = datetime.now()
         self.password = password
-        
+
     def __repr__(self):
         return '<id {}>'.format(self.id)
-    
+
     def serialize(self):
         return {
             'id': self.id,
@@ -57,6 +58,7 @@ def home():
         resp.status_code = 401
         return resp
 
+
 @app.route("/student/getall")
 def get_all():
     try:
@@ -64,6 +66,7 @@ def get_all():
         return jsonify([e.serialize() for e in students])
     except Exception as e:
         return(str(e))
+
 
 @app.route("/student/<email_>")
 def get_by_email(email_):
@@ -77,7 +80,8 @@ def get_by_email(email_):
         return jsonify(student.serialize())
     except Exception as e:
         return(str(e))
-    
+
+
 @app.route('/student', methods=['POST'])
 def register_new_student():
     if not request.is_json:
@@ -96,12 +100,12 @@ def register_new_student():
         if existing_student is not None:
             # we found a student with the same email
             resp = jsonify(
-                    {'message': 'Bad Request - a student with this email already existed'})
+                {'message': 'Bad Request - a student with this email already existed'})
             resp.status_code = 400
             return resp
-        
+
         # we can create a new student
-        student=Student(
+        student = Student(
             full_name=full_name,
             email=email,
             password=password
@@ -111,12 +115,13 @@ def register_new_student():
         return jsonify({'message': 'Student registered with email {}'.format(email)})
     except Exception as e:
         resp = jsonify(
-                {'message': 'Error: {}'.format(str(e))})
+            {'message': 'Error: {}'.format(str(e))})
         resp.status_code = 400
         return resp
 
+
 @app.route('/student/login', methods=['POST'])
-def login():
+def student_login():
     try:
         json = request.json
         email = json.get('email')
@@ -152,5 +157,17 @@ def login():
             {'message': 'Unexpected error'})
         resp.status_code = 400
         return resp
+
+
+@app.route('/student/logout', methods=['POST'])
+def student_logout():
+    if 'email' in session:
+        current_email = session['email']
+        session.pop('email', None)
+        return jsonify({'message': 'You successfully logged out from {}'.format(current_email)})
+    else:
+        return jsonify({'message': 'You successfully logged out even though you were not logged in'})
+
+
 if __name__ == '__main__':
     app.run()
