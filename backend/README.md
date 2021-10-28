@@ -14,6 +14,7 @@ Install Azure CLI:
 https://docs.microsoft.com/en-us/cli/azure/install-azure-cli  
 To deploy to azure:  
 (Reference https://docs.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=bash&pivots=python-framework-flask)
+
 0. Verify if az CLI is installed:  
 az --version
 1. Log in:  
