@@ -1,0 +1,62 @@
+@import "../config/font";
+@import "../config/colors";
+
+.nav__container {
+  display: flex;
+  background-color: #fff;
+  min-height: 74px;
+  min-width: 100%;
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wrapper--left {
+  margin-left: 37px;
+  img {
+    max-width: 30px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.wrapper--right {
+  margin-right: 37px;
+  display: flex;
+  align-items: center;
+}
+
+#nav__img--circle {
+  object-fit: cover;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
+.wrapper--middle {
+  margin: 0;
+  a {
+    margin-right: 22px;
+    padding: 1px;
+    text-decoration: none;
+    font-family: $font;
+    font-weight: 500;
+    font-size: $x-medium;
+    line-height: 15px;
+    text-align: center;
+    color: $dashboard-text;
+    &:hover {
+      background: $dashboard-hover;
+      font-weight: 600;
+    }
+  }
+  a[tabindex]:focus {
+    color: $dashboard-pressed;
+    text-decoration: underline;
+  }
+}
