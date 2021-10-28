@@ -20,7 +20,7 @@ function App() {
         {/*</div>*/}
 
         <Router>
-            <div>
+            <div className="container">
                 {/*<nav>*/}
                 {/*    <ul>*/}
                 {/*        <li>*/}

@@ -1,3 +1,5 @@
+@import "custom";
+
 .entry-screen {
   display: flex;
   flex-direction: column;
@@ -7,8 +9,17 @@
     margin: 50px 0;
   }
 
-  label {
-    font-size: 14px;
-    font-weight: 500;
+  a {
+    text-decoration: none;
+  }
+
+  strong {
+    font-weight: 600;
+    a {
+      color: $grey;
+      &:hover {
+        color: $primary;
+      }
+    }
   }
 }
