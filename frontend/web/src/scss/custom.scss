@@ -1,11 +1,31 @@
 // Override default variables before the import
 $body-bg: #F3F3F3;
 $body-color: #181313;
-$font-family-sans-serif: 'Poppins', sans-serif;
 
 $primary: #0056D1;
 $secondary: #382C8B;
+$grey: #655E5D;
 
+$input-padding-y: 16px;
+$input-padding-x: 16px;
+$input-font-size: 14px;
+$input-font-weight: 600;
+$input-bg: white;
+$input-color: #655E5D;
+$input-border-radius: 0;
+$input-border-color: #CCDDF5;
+$input-border-width: 2px;
+$input-focus-border-color: #2674D9;
+
+$btn-padding-y: 12px;
+$btn-font-size: 14px;
+$btn-font-weight: 600;
+$btn-border-radius: 8px;
+
+$form-text-font-size: 16px;
+$form-text-color: $grey;
+$form-label-font-size: 14px;
+$form-label-font-weight: 600;
 
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';
