@@ -1,8 +1,14 @@
-import {Link} from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import React from "react";
 
 function SignupScreen(props) {
+    const history = useHistory();
+
     const [showPasswordInstructions, setPasswordInstructions] = React.useState(false)
+
+    const nextStep = () => {
+        history.push("/setup-account");
+    }
 
     return (
         <div className="container">
@@ -37,7 +43,7 @@ function SignupScreen(props) {
                             <div className="form-text">By clicking Sign Up you agree to our <strong><a href="terms-of-service">Terms of Service</a></strong> & <strong><a href="privacy-policy">Privacy Policy</a></strong></div>
                         </div>
                         <div className="mb-4">
-                            <button type="button" className="btn btn-primary w-100">Sign Up</button>
+                            <button type="button" className="btn btn-primary w-100" onClick={nextStep}>Sign Up</button>
                         </div>
                         <div>
                             <div className="form-text">
