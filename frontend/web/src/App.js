@@ -10,51 +10,33 @@ import LoginScreen from "./components/login/LoginScreen";
 import SignupScreen from "./components/signup/SignupScreen";
 import ForgotPasswordScreen from "./components/forgot-password/ForgotPasswordScreen";
 import SetupAccountScreen from "./components/setup-account/SetupAccountScreen";
+import Dashboard from "./components/dashboard/";
 
 function App() {
-  return (
-    <div className="App">
-
-        {/*<div className="container">*/}
-        {/*    <LoginScreen />*/}
-        {/*</div>*/}
-
-        <Router>
-            <div className="container">
-                {/*<nav>*/}
-                {/*    <ul>*/}
-                {/*        <li>*/}
-                {/*            <Link to="/">Home</Link>*/}
-                {/*        </li>*/}
-                {/*        <li>*/}
-                {/*            <Link to="/about">About</Link>*/}
-                {/*        </li>*/}
-                {/*        <li>*/}
-                {/*            <Link to="/users">Users</Link>*/}
-                {/*        </li>*/}
-                {/*    </ul>*/}
-                {/*</nav>*/}
-
-                {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+    return (
+        <div className="App">
+            <Router>
                 <Switch>
-                    <Route path="/login">
-                        <LoginScreen />
-                    </Route>
                     <Route path="/signup">
-                        <SignupScreen />
+                        <SignupScreen/>
                     </Route>
                     <Route path="/setup-account">
-                        <SetupAccountScreen />
+                        <SetupAccountScreen/>
                     </Route>
                     <Route path="/forgot-password">
-                        <ForgotPasswordScreen />
+                        <ForgotPasswordScreen/>
+                    </Route>
+                    <Route path="/home">
+                        <Dashboard/>
+                    </Route>
+                    {/*<Route path="/login">*/}
+                    <Route path="/">
+                        <LoginScreen/>
                     </Route>
                 </Switch>
-            </div>
-        </Router>
-    </div>
-  );
+            </Router>
+        </div>
+    )
 }
 
 export default App;
