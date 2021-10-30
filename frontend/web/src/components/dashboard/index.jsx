@@ -7,7 +7,7 @@ import progressImage from "../../assets/dashboard/progress.svg";
 
 const Dashboard = () => {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" style={{padding: 0}}>
       <Nav></Nav>
       <div className="dash__container">
         <div className="section section--top">
