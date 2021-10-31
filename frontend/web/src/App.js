@@ -1,10 +1,10 @@
 import "./App.css";
 import "./scss/shared.scss"
+import React from 'react'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
 } from "react-router-dom";
 import LoginScreen from "./components/login/";
 import Index from "./components/signup/";
