@@ -1,7 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import React from "react";
 
-function SignupScreen(props) {
+function Index(props) {
     const history = useHistory();
 
     const [showPasswordInstructions, setPasswordInstructions] = React.useState(false)
@@ -57,4 +57,4 @@ function SignupScreen(props) {
     );
 }
 
-export default SignupScreen;
+export default Index;

@@ -1,10 +1,7 @@
-import "./LoginScreen.scss"
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
+import axios from "../../shared/axios";
 import React, { useState } from 'react';
 
-// to do: move to shared state
-const baseURL = "http://edunity.azurewebsites.net/student/login";
 
 function LoginScreen(props) {
     const history = useHistory();
@@ -14,7 +11,7 @@ function LoginScreen(props) {
 
     const logIn = () => {
         if (username && password) {
-            axios.post(baseURL, {
+            axios.post('student/login', {
                 email: username,
                 password: password
             }).then((response) => {

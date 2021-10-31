@@ -6,10 +6,10 @@ import {
     Route,
     Link
 } from "react-router-dom";
-import LoginScreen from "./components/login/LoginScreen";
-import SignupScreen from "./components/signup/SignupScreen";
-import ForgotPasswordScreen from "./components/forgot-password/ForgotPasswordScreen";
-import SetupAccountScreen from "./components/setup-account/SetupAccountScreen";
+import LoginScreen from "./components/login/";
+import Index from "./components/signup/";
+import ForgotPasswordScreen from "./components/forgot-password/";
+import SetupAccountScreen from "./components/setup-account/";
 import Dashboard from "./components/dashboard/";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
             <Router>
                 <Switch>
                     <Route path="/signup">
-                        <SignupScreen/>
+                        <Index/>
                     </Route>
                     <Route path="/setup-account">
                         <SetupAccountScreen/>

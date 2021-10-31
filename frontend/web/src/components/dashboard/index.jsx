@@ -1,5 +1,5 @@
 import React from "react";
-import Nav from "./Nav";
+import Nav from "../navigation-bar/";
 
 import "../../scss/dashboard/_main.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
