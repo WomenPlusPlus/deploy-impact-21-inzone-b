@@ -101,7 +101,6 @@ def student_login():
 @app.route('/student/logout', methods=['POST'])
 def student_logout():
     if 'email' in session:
-        current_email = session['email']
         session.pop('email', None)
     return QueryHandler.create_generic_json_response({'message': 'You successfully logged out'})
 

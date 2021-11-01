@@ -53,9 +53,15 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
-    def handle_add_new_object(self, object, **kwargs):
+    def add_new_object_to_db(self, object, **kwargs):
         '''
-        Given a JSON request, create new object in db
+        Given a object from a model, create new object in db if there is no such object existed in the db.
+        The searching criteria is set by **kwargs.
+        For example,
+        if there is already an object of model A with attribute_x="some_value", then
+        self.add_new_object_to_db(new_object, attribute_x="some_value") --> will not add new object to the db
+        self.add_new_object_to_db(new_object, attribute_x="some_other_value") --> will add new object to the db
+        self.add_new_object_to_db(new_object, attribute_y="some_value") --> will also add new object to the db
         '''
         try:
             # we first check if there is any existing object with this argument
@@ -111,7 +117,7 @@ class StudentQueryHandler(QueryHandler):
             course_name=content['course_name'],
             course_location=content['course_location'],
             language=content['language'])
-        return self.handle_add_new_object(student, email=email)
+        return self.add_new_object_to_db(student, email=email)
 
 
 class CourseQueryHandler(QueryHandler):
@@ -134,4 +140,4 @@ class CourseQueryHandler(QueryHandler):
             finish_at=content['finish_at'],
             description=content['description'],
             number_of_credits=content['number_of_credits'])
-        return self.handle_add_new_object(course, name=course_name)
+        return self.add_new_object_to_db(course, name=course_name)
