@@ -28,6 +28,16 @@ class QueryHandler:
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
+    @staticmethod
+    def get_missing_field_name(json_object, fields):
+        '''
+        Given a json_object and a list of required fields, finds the first one in the list that is missing in the json object. If all fields are present, returns None.
+        '''
+        for field in fields:
+            if json_object.get(field) is None:
+                return field
+        return None
+
     def handle_get_all_request(self):
         '''
         Get all object from the db and return a REST response
@@ -69,7 +79,7 @@ class QueryHandler:
             if existing_object is not None:
                 # we found an object with this filter, so we cant create a new object
                 return QueryHandler.create_generic_json_response(
-                    {'message': 'Bad Request - {} with {} already exists'.format(self.model_name, kwargs)}, 400)
+                    {'message': 'Bad Request: {} with {} already exists'.format(self.model_name, kwargs)}, 400)
             self.db_obj.session.add(object)
             self.db_obj.session.commit()
             return QueryHandler.create_generic_json_response(
@@ -106,17 +116,20 @@ class StudentQueryHandler(QueryHandler):
         Given a JSON request, create new object in db
         '''
         if not request.is_json:
-            return QueryHandler.create_generic_json_response({'message': 'Bad Request - input is not json'}, 400)
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        email = content['email']
+        missing_field = QueryHandler.get_missing_field_name(content, ['fullName', 'email', 'password', 'course_name', 'course_location', 'language'])
+        if missing_field is not None:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
+        email = content.get('email')
         # create a new student
         student = self.model(
-            full_name=content['fullName'],
+            full_name=content.get('fullName'),
             email=email,
-            password=generate_password_hash(content['password']),
-            course_name=content['course_name'],
-            course_location=content['course_location'],
-            language=content['language'])
+            password=generate_password_hash(content.get('password')),
+            course_name=content.get('course_name'),
+            course_location=content.get('course_location'),
+            language=content.get('language'))
         return self.add_new_object_to_db(student, email=email)
 
 
@@ -130,14 +143,17 @@ class CourseQueryHandler(QueryHandler):
         Given a JSON request, create new object in db
         '''
         if not request.is_json:
-            return QueryHandler.create_generic_json_response({'message': 'Bad Request - input is not json'}, 400)
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        course_name = content['name']
+        missing_field = QueryHandler.get_missing_field_name(content, ['name', 'start_at', 'finish_at', 'description', 'number_of_credits'])
+        if missing_field is not None:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
+        course_name = content.get('name')
         # create a new course
         course = self.model(
             name=course_name,
-            start_at=content['start_at'],
-            finish_at=content['finish_at'],
-            description=content['description'],
-            number_of_credits=content['number_of_credits'])
+            start_at=content.get('start_at'),
+            finish_at=content.get('finish_at'),
+            description=content.get('description'),
+            number_of_credits=content.get('number_of_credits'))
         return self.add_new_object_to_db(course, name=course_name)
