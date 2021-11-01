@@ -11,13 +11,19 @@ class Student(db.Model):
     email = db.Column(db.String(200))
     joined_at = db.Column(db.DateTime())
     password = db.Column(db.String(200))
+    course_name = db.Column(db.String(200))
+    course_location = db.Column(db.String(200))
+    language = db.Column(db.String(200))
 
-    def __init__(self, full_name, email, password):
+    def __init__(self, full_name, email, password, course_name, course_location, language):
         # we dont have to create the id because the db will do that automatically
         self.full_name = full_name
         self.email = email
         self.joined_at = datetime.now()
         self.password = password
+        self.course_name = course_name
+        self.course_location = course_location
+        self.language = language
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -28,8 +34,12 @@ class Student(db.Model):
             'full_name': self.full_name,
             'email': self.email,
             'joined_at': self.joined_at,
-            'password': self.password
+            'password': self.password,
+            'course_name': self.course_name,
+            'course_location': self.course_location,
+            'language': self.language
         }
+
 
 class Course(db.Model):
     __tablename__ = 'courses'

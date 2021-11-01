@@ -53,6 +53,42 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
+    def handle_add_new_object(self, object, **kwargs):
+        '''
+        Given a JSON request, create new object in db
+        '''
+        try:
+            # we first check if there is any existing object with this argument
+            existing_object = self.model.query.filter_by(**kwargs).first()
+            if existing_object is not None:
+                # we found an object with this filter, so we cant create a new object
+                return QueryHandler.create_generic_json_response(
+                    {'message': 'Bad Request - {} with {} already exists'.format(self.model_name, kwargs)}, 400)
+            self.db_obj.session.add(object)
+            self.db_obj.session.commit()
+            return QueryHandler.create_generic_json_response(
+                {'message': 'A new {} added with {}'.format(self.model_name, kwargs)})
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
+    def handle_delete_object_by_attribute(self, **kwargs):
+        '''
+        Given keyword arguments, delete the first object with matching query condition.
+        For example,
+        if the input is name='some_name', then we will delete the first object of the db which field 'name' equals to 'some_name'
+        '''
+        try:
+            object = self.model.query.filter_by(**kwargs).first()
+            if object is None:
+                return QueryHandler.create_generic_json_response(
+                    {'message': 'Unable to find any {} with {}'.format(self.model_name, kwargs)}, 400)
+            self.db_obj.session.delete(object)
+            self.db_obj.session.commit()
+            return QueryHandler.create_generic_json_response(
+                {'message': '{} with {} is deleted'.format(self.model_name, kwargs)})
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
 
 class StudentQueryHandler(QueryHandler):
     '''
@@ -65,31 +101,17 @@ class StudentQueryHandler(QueryHandler):
         '''
         if not request.is_json:
             return QueryHandler.create_generic_json_response({'message': 'Bad Request - input is not json'}, 400)
-
         content = request.get_json()
-        full_name = content["fullName"]
-        email = content["email"]
-        password = generate_password_hash(content["password"])
-        try:
-            # we first check if there is any existing student with the same email
-            existing_object = self.model.query.filter_by(email=email).first()
-            if existing_object is not None:
-                # we found a student with the same email, so we cant create a new student
-                return QueryHandler.create_generic_json_response(
-                    {'message': 'Bad Request - a student with this email already existed'}, 400)
-
-            # we can create a new student
-            student = self.model(
-                full_name=full_name,
-                email=email,
-                password=password
-            )
-            self.db_obj.session.add(student)
-            self.db_obj.session.commit()
-            return QueryHandler.create_generic_json_response(
-                {'message': 'A new student added with email {}'.format(email)})
-        except Exception as e:
-            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+        email = content['email']
+        # create a new student
+        student = self.model(
+            full_name=content['fullName'],
+            email=email,
+            password=generate_password_hash(content['password']),
+            course_name=content['course_name'],
+            course_location=content['course_location'],
+            language=content['language'])
+        return self.handle_add_new_object(student, email=email)
 
 
 class CourseQueryHandler(QueryHandler):
@@ -101,5 +123,15 @@ class CourseQueryHandler(QueryHandler):
         '''
         Given a JSON request, create new object in db
         '''
-        # TODO: add logic to add new course here
-        return QueryHandler.create_generic_json_response({'message': 'Error: not supported yet'}, 400)
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Bad Request - input is not json'}, 400)
+        content = request.get_json()
+        course_name = content['name']
+        # create a new course
+        course = self.model(
+            name=course_name,
+            start_at=content['start_at'],
+            finish_at=content['finish_at'],
+            description=content['description'],
+            number_of_credits=content['number_of_credits'])
+        return self.handle_add_new_object(course, name=course_name)

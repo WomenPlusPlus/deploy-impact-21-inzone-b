@@ -21,7 +21,7 @@ student_handler = StudentQueryHandler(db, Student, 'student')
 course_handler = CourseQueryHandler(db, Course, 'course')
 
 
-@app.route("/")
+@app.route('/')
 def home():
     if 'email' in session:
         return QueryHandler.create_generic_json_response(
@@ -30,35 +30,38 @@ def home():
         return QueryHandler.create_generic_json_response(
             {'message': 'Welcome to Edunity, proceed to log in now'}, 401)
 
-
-@app.route("/course/getall")
+@app.route('/course/getall')
 def get_all_courses():
     return course_handler.handle_get_all_request()
 
-
-@app.route("/course/<query_name>")
+@app.route('/course/<query_name>')
 def get_course_by_name(query_name):
     return course_handler.handle_get_object_by_attribute(name=query_name)
-
 
 @app.route('/course', methods=['POST'])
 def add_new_course():
     return course_handler.handle_add_new_object_request(request)
 
+@app.route('/course/<query_name>', methods=['DELETE'])
+def delete_course(query_name):
+    return course_handler.handle_delete_object_by_attribute(name=query_name)
 
-@app.route("/student/getall")
+
+@app.route('/student/getall')
 def get_all_students():
     return student_handler.handle_get_all_request()
 
-
-@app.route("/student/<query_email>")
+@app.route('/student/<query_email>')
 def get_student_by_email(query_email):
     return student_handler.handle_get_object_by_attribute(email=query_email)
-
 
 @app.route('/student', methods=['POST'])
 def add_new_student():
     return student_handler.handle_add_new_object_request(request)
+
+@app.route('/student/<query_email>', methods=['DELETE'])
+def delete_student(query_email):
+    return student_handler.handle_delete_object_by_attribute(email=query_email)
 
 
 @app.route('/student/login', methods=['POST'])
