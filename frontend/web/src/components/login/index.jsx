@@ -24,10 +24,10 @@ function LoginScreen(props) {
             console.log(response);
             dispatch(
               login({
-                isLoggedIn: true,
                 email: username,
               })
             );
+            localStorage.setItem("isLogged", true);
             history.push("/home");
           } else {
             alert("login was not successful :(");

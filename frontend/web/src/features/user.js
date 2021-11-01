@@ -4,7 +4,6 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     value: {
-      isLoggedIn: "false",
       email: "",
     },
   },
