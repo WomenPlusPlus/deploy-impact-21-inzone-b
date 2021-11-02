@@ -1,123 +1,108 @@
 from flask import Flask, request, jsonify, session
-from flask_sqlalchemy import SQLAlchemy
+
 from config import DevelopmentConfig
 from flask_migrate import Migrate
-from datetime import datetime, timedelta
+from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from handler import *
+from models import *
 
 app = Flask(__name__)
 
 app.config.from_object(DevelopmentConfig)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# we want to set the timeout of each session
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
-db = SQLAlchemy(app)
+# we define db object in models.py and now we link it to the flask app
+db.init_app(app)
 migrate = Migrate(app, db)
+student_handler = StudentQueryHandler(db, Student, 'student')
+course_handler = CourseQueryHandler(db, Course, 'course')
+role_type_handler = QueryHandler(db, RoleType, 'role type')
+course_location_handler = QueryHandler(db, CourseLocation, 'course location')
+supported_language_handler = QueryHandler(
+    db, SupportedLanguages, 'supported language')
 
 
-class Student(db.Model):
-    __tablename__ = 'students'
-
-    id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(200))
-    email = db.Column(db.String(200))
-    joined_at = db.Column(db.DateTime())
-    password = db.Column(db.String(200))
-
-    def __init__(self, full_name, email, password):
-        # we dont have to create the id because the db will do that automatically
-        # self.id = 1 # 2 bytes
-        # while Student.query.filter_by(id=self.id).first() is not None:
-        #     self.id = uuid.uuid4().fields[1]
-        self.full_name = full_name
-        self.email = email
-        self.joined_at = datetime.now()
-        self.password = password
-
-    def __repr__(self):
-        return '<id {}>'.format(self.id)
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'full_name': self.full_name,
-            'email': self.email,
-            'joined_at': self.joined_at,
-            'password': self.password
-        }
-
-
-@app.route("/")
+@app.route('/')
 def home():
     if 'email' in session:
-        email = session['email']
-        return jsonify({'message': 'Welcome to Edunity, you are already logged in ', 'email': email})
+        return QueryHandler.create_generic_json_response(
+            {'message': 'Welcome to Edunity, you are already logged in ', 'email': session['email']})
     else:
-        resp = jsonify(
-            {'message': 'Welcome to Edunity, proceed to log in now'})
-        resp.status_code = 401
-        return resp
+        return QueryHandler.create_generic_json_response(
+            {'message': 'Welcome to Edunity, proceed to log in now'}, 401)
 
 
-@app.route("/student/getall")
-def get_all():
-    try:
-        students = Student.query.all()
-        return jsonify([e.serialize() for e in students])
-    except Exception as e:
-        return(str(e))
+@app.route('/role-types')
+def get_all_role_types():
+    return role_type_handler.handle_get_all_request()
 
 
-@app.route("/student/<email_>")
-def get_by_email(email_):
-    try:
-        student = Student.query.filter_by(email=email_).first()
-        if student is None:
-            resp = jsonify(
-                {'message': 'Unable to find any student with email {}'.format(email_)})
-            resp.status_code = 400
-            return resp
-        return jsonify(student.serialize())
-    except Exception as e:
-        return(str(e))
+@app.route('/role-type/<query_name>')
+def get_role_type_by_name(query_name):
+    return role_type_handler.handle_get_object_by_attribute(role_type=query_name)
+
+
+@app.route('/course-locations')
+def get_all_course_locations():
+    return course_location_handler.handle_get_all_request()
+
+
+@app.route('/course-location/<query_name>')
+def get_course_location_by_name(query_name):
+    return course_location_handler.handle_get_object_by_attribute(location=query_name)
+
+
+@app.route('/supported-languages')
+def get_all_supported_languages():
+    return supported_language_handler.handle_get_all_request()
+
+
+@app.route('/supported-language/<query_name>')
+def get_supported_language_by_name(query_name):
+    return supported_language_handler.handle_get_object_by_attribute(location=query_name)
+
+
+@app.route('/courses')
+def get_all_courses():
+    return course_handler.handle_get_all_request()
+
+
+@app.route('/course/<query_name>')
+def get_course_by_name(query_name):
+    return course_handler.handle_get_object_by_attribute(name=query_name)
+
+
+@app.route('/course', methods=['POST'])
+def add_new_course():
+    return course_handler.handle_add_new_object_request(request)
+
+
+@app.route('/course/<query_name>', methods=['DELETE'])
+def delete_course(query_name):
+    return course_handler.handle_delete_object_by_attribute(name=query_name)
+
+
+@app.route('/students')
+def get_all_students():
+    return student_handler.handle_get_all_request()
+
+
+@app.route('/student/<query_email>')
+def get_student_by_email(query_email):
+    return student_handler.handle_get_object_by_attribute(email=query_email)
 
 
 @app.route('/student', methods=['POST'])
-def register_new_student():
-    if not request.is_json:
-        resp = jsonify(
-            {'message': 'Bad Request - input is not json'})
-        resp.status_code = 400
-        return resp
+def add_new_student():
+    return student_handler.handle_add_new_object_request(request)
 
-    content = request.get_json()
-    full_name = content["fullName"]
-    email = content["email"]
-    password = generate_password_hash(content["password"])
-    try:
-        # we first check if there is any existing student with the same email
-        existing_student = Student.query.filter_by(email=email).first()
-        if existing_student is not None:
-            # we found a student with the same email
-            resp = jsonify(
-                {'message': 'Bad Request - a student with this email already existed'})
-            resp.status_code = 400
-            return resp
 
-        # we can create a new student
-        student = Student(
-            full_name=full_name,
-            email=email,
-            password=password
-        )
-        db.session.add(student)
-        db.session.commit()
-        return jsonify({'message': 'Student registered with email {}'.format(email)})
-    except Exception as e:
-        resp = jsonify(
-            {'message': 'Error: {}'.format(str(e))})
-        resp.status_code = 400
-        return resp
+@app.route('/student/<query_email>', methods=['DELETE'])
+def delete_student(query_email):
+    return student_handler.handle_delete_object_by_attribute(email=query_email)
 
 
 @app.route('/student/login', methods=['POST'])
@@ -129,44 +114,36 @@ def student_login():
 
         valid_request = False
         # validate the received values
-        if email and raw_pass:
-            # get student object
-            student = Student.query.filter_by(email=email).first()
-            # check if we can find any student with this email
-            if student is not None:
-                valid_request = True
-                # verify password
-                if check_password_hash(student.password, raw_pass):
-                    # successfully log in
-                    session['email'] = student.email
-                    return jsonify({'message': 'You are logged in successfully with email {}'.format(session['email'])})
-                else:
-                    resp = jsonify(
-                        {'message': 'Bad Request - invalid password'})
-                    resp.status_code = 400
-                    return resp
+        if email is None or raw_pass is None:
+            return QueryHandler.create_generic_json_response(
+                {'message': 'Bad Request - invalid credentials'}, 400)
 
-        if valid_request == False:
-            resp = jsonify(
-                {'message': 'Bad Request - invalid credentials'})
-            resp.status_code = 400
-            return resp
+        # get student object
+        student = Student.query.filter_by(email=email).first()
+        # check if we can find any student with this email
+        if student is None:
+            return QueryHandler.create_generic_json_response(
+                {'message': 'Bad Request - unable to find any student with email {}'.format(email)}, 400)
 
+        # verify password
+        if check_password_hash(student.password, raw_pass):
+            # successfully log in
+            session['email'] = student.email
+            return QueryHandler.create_generic_json_response(
+                {'message': 'Logged in successfully with email {}'.format(session['email'])})
+        else:
+            return QueryHandler.create_generic_json_response(
+                {'message': 'Bad Request - invalid password'}, 400)
     except Exception as e:
-        resp = jsonify(
-            {'message': 'Unexpected error'})
-        resp.status_code = 400
-        return resp
+        return QueryHandler.create_generic_json_response(
+            {'message': 'unexpected error: {}'.format(str(e))}, 400)
 
 
 @app.route('/student/logout', methods=['POST'])
 def student_logout():
     if 'email' in session:
-        current_email = session['email']
         session.pop('email', None)
-        return jsonify({'message': 'You successfully logged out from {}'.format(current_email)})
-    else:
-        return jsonify({'message': 'You successfully logged out even though you were not logged in'})
+    return QueryHandler.create_generic_json_response({'message': 'You successfully logged out'})
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../../scss/dashboard/_nav.scss";
+import "./_nav.scss";
 import icon from "../../assets/dashboard/favicon.png";
 import demo from "../../assets/dashboard/face_demo.png";
 

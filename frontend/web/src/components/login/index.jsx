@@ -1,6 +1,8 @@
 import { Link, useHistory } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "../../shared/axios";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/user";
 import EntryScreen from "../entry-screen";
 
 function LoginScreen(props) {
@@ -18,7 +20,9 @@ function LoginScreen(props) {
     }
   }
 
-  const logIn = () => {
+  const dispatch = useDispatch();
+
+  const logIn = async () => {
     if (username && password) {
       axios
         .post("student/login", {
@@ -26,8 +30,14 @@ function LoginScreen(props) {
           password,
         })
         .then((response) => {
-          console.log(response);
           if (response.status === 200) {
+            console.log(response);
+            dispatch(
+              login({
+                email: username,
+              })
+            );
+            localStorage.setItem("isLogged", true);
             history.push("/home");
           } else {
             alert("login was not successful :(");
