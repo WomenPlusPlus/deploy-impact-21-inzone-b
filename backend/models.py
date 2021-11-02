@@ -96,10 +96,12 @@ class CourseLocation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String(200))
+    country = db.Column(db.String(200))
 
-    def __init__(self, location):
+    def __init__(self, location, country):
         # we dont have to create the id because the db will do that automatically
         self.location = location
+        self.country = country
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -107,7 +109,8 @@ class CourseLocation(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'location': self.location
+            'location': self.location,
+            'country': self.country
         }
 
 class SupportedLanguages(db.Model):
