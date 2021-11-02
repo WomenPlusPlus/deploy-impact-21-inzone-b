@@ -92,7 +92,10 @@ def get_all_students():
 
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
-    return student_handler.handle_get_object_by_attribute(email=query_email)
+    result = student_handler.handle_get_object_by_attribute(email=query_email)
+    if result.status_code == 200:
+        student_handler.set_first_query_done(query_email)
+    return result
 
 
 @app.route('/student', methods=['POST'])
@@ -103,6 +106,11 @@ def add_new_student():
 @app.route('/student/<query_email>', methods=['DELETE'])
 def delete_student(query_email):
     return student_handler.handle_delete_object_by_attribute(email=query_email)
+
+
+@app.route('/student', methods=['PUT'])
+def update_student():
+    return student_handler.handle_update_object(request)
 
 
 @app.route('/student/login', methods=['POST'])

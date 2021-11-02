@@ -14,8 +14,10 @@ class Student(db.Model):
     course_name = db.Column(db.String(200))
     course_location = db.Column(db.String(200))
     language = db.Column(db.String(200))
+    first_query_done = db.Column(db.Boolean)
+    validated_by_admin = db.Column(db.Boolean)
 
-    def __init__(self, full_name, email, password, course_name, course_location, language):
+    def __init__(self, full_name, email, password, course_name, course_location, language, first_query_done = False, validated_by_admin = False):
         # we dont have to create the id because the db will do that automatically
         self.full_name = full_name
         self.email = email
@@ -24,6 +26,8 @@ class Student(db.Model):
         self.course_name = course_name
         self.course_location = course_location
         self.language = language
+        self.first_query_done = first_query_done
+        self.validated_by_admin = validated_by_admin
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -37,7 +41,9 @@ class Student(db.Model):
             'password': self.password,
             'course_name': self.course_name,
             'course_location': self.course_location,
-            'language': self.language
+            'language': self.language,
+            'first_query_done': self.first_query_done,
+            'validated_by_admin': self.validated_by_admin
         }
 
 

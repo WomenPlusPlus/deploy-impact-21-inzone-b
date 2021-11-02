@@ -111,6 +111,37 @@ class StudentQueryHandler(QueryHandler):
     A class inherits from QueryHandler and perform specific functionality related to student
     '''
 
+    @staticmethod
+    def UpdateEntry(student, json_with_updates):
+        '''
+        Updates student info.
+        Returns True if some fields were updated and False otherwise.
+        '''
+        has_updates = False
+        full_name = json_with_updates.get('fullName')
+        if full_name is not None and full_name != student.fullName:
+            student.fullName = full_name
+            has_updates = True
+        password = json_with_updates.get('password')
+        if password is not None:
+            password = generate_password_hash(password)
+            if password != student.password:
+                student.password = password
+                has_updates = True
+        course_name = json_with_updates.get('course_name')
+        if course_name is not None and course_name != student.course_name:
+            student.course_name = course_name
+            has_updates = True
+        course_location = json_with_updates.get('course_location')
+        if course_location is not None and course_location != student.course_location:
+            student.course_location = course_location
+            has_updates = True
+        language = json_with_updates.get('language')
+        if language is not None and language != student.language:
+            student.language = language
+            has_updates = True
+        return has_updates
+
     def handle_add_new_object_request(self, request):
         '''
         Given a JSON request, create new object in db
@@ -133,6 +164,49 @@ class StudentQueryHandler(QueryHandler):
             course_location=content.get('course_location'),
             language=content.get('language'))
         return self.add_new_object_to_db(student, email=email)
+
+    def handle_update_object(self, request):
+        '''
+        Update students table entry according to request
+        '''
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        content = request.get_json()
+        email = content.get('email')
+        if email is None:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        try:
+            student = self.model.query.filter_by(email=email).first()
+            if student is None:
+                return QueryHandler.create_generic_json_response(
+                        {'message': 'Bad Request: {} with email={} doesn\'t exist'.format(self.model_name, email)}, 400)
+            if not StudentQueryHandler.UpdateEntry(student, content):
+                return QueryHandler.create_generic_json_response(
+                        {'message': 'Bad Request: {} with email={} nothing to update'.format(self.model_name, email)}, 400)
+            self.db_obj.session.merge(student)
+            self.db_obj.session.commit()
+            return QueryHandler.create_generic_json_response(
+                    {'message': '{} with email={} is updated'.format(self.model_name, email)})
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
+    def set_first_query_done(self, email):
+        '''
+        Sets first_query_done fiels to True for student with specified email.
+        Returns True on success, False otherwise.
+        '''
+        try:
+            student = self.model.query.filter_by(email=email).first()
+            if student is None:
+                return False
+            if student.first_query_done:
+                return True
+            student.first_query_done = True
+            self.db_obj.session.merge(student)
+            self.db_obj.session.commit()
+            return True
+        except Exception as e:
+            return False
 
 
 class CourseQueryHandler(QueryHandler):
