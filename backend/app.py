@@ -19,6 +19,10 @@ db.init_app(app)
 migrate = Migrate(app, db)
 student_handler = StudentQueryHandler(db, Student, 'student')
 course_handler = CourseQueryHandler(db, Course, 'course')
+role_type_handler = QueryHandler(db, RoleType, 'role type')
+course_location_handler = QueryHandler(db, CourseLocation, 'course location')
+supported_language_handler = QueryHandler(
+    db, SupportedLanguages, 'supported language')
 
 
 @app.route('/')
@@ -30,17 +34,51 @@ def home():
         return QueryHandler.create_generic_json_response(
             {'message': 'Welcome to Edunity, proceed to log in now'}, 401)
 
+
+@app.route('/role-types')
+def get_all_role_types():
+    return role_type_handler.handle_get_all_request()
+
+
+@app.route('/role-type/<query_name>')
+def get_role_type_by_name(query_name):
+    return role_type_handler.handle_get_object_by_attribute(role_type=query_name)
+
+
+@app.route('/course-locations')
+def get_all_course_locations():
+    return course_location_handler.handle_get_all_request()
+
+
+@app.route('/course-location/<query_name>')
+def get_course_location_by_name(query_name):
+    return course_location_handler.handle_get_object_by_attribute(location=query_name)
+
+
+@app.route('/supported-languages')
+def get_all_supported_languages():
+    return supported_language_handler.handle_get_all_request()
+
+
+@app.route('/supported-language/<query_name>')
+def get_supported_language_by_name(query_name):
+    return supported_language_handler.handle_get_object_by_attribute(location=query_name)
+
+
 @app.route('/courses')
 def get_all_courses():
     return course_handler.handle_get_all_request()
+
 
 @app.route('/course/<query_name>')
 def get_course_by_name(query_name):
     return course_handler.handle_get_object_by_attribute(name=query_name)
 
+
 @app.route('/course', methods=['POST'])
 def add_new_course():
     return course_handler.handle_add_new_object_request(request)
+
 
 @app.route('/course/<query_name>', methods=['DELETE'])
 def delete_course(query_name):
@@ -51,13 +89,16 @@ def delete_course(query_name):
 def get_all_students():
     return student_handler.handle_get_all_request()
 
+
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
     return student_handler.handle_get_object_by_attribute(email=query_email)
 
+
 @app.route('/student', methods=['POST'])
 def add_new_student():
     return student_handler.handle_add_new_object_request(request)
+
 
 @app.route('/student/<query_email>', methods=['DELETE'])
 def delete_student(query_email):

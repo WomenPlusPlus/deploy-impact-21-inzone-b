@@ -71,3 +71,60 @@ class Course(db.Model):
             'finish_at': self.finish_at,
             'number_of_credits': self.number_of_credits
         }
+
+class RoleType(db.Model):
+    __tablename__ = 'role_types'
+
+    id = db.Column(db.Integer, primary_key=True)
+    role_type = db.Column(db.String(200))
+
+    def __init__(self, role_type):
+        # we dont have to create the id because the db will do that automatically
+        self.role_type = role_type
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'role_type': self.role_type
+        }
+
+class CourseLocation(db.Model):
+    __tablename__ = 'course_locations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(200))
+
+    def __init__(self, location):
+        # we dont have to create the id because the db will do that automatically
+        self.location = location
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'location': self.location
+        }
+
+class SupportedLanguages(db.Model):
+    __tablename__ = 'supported_languages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    language = db.Column(db.String(200))
+
+    def __init__(self, language):
+        # we dont have to create the id because the db will do that automatically
+        self.language = language
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'language': self.language
+        }
