@@ -40,15 +40,14 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-          <div className="column--right column-bottom" id="column--notitle">
-            <div className="inner__wrapper inner__wrapper--bottom">
-              <div className="inner__nav line">
-                <h5 className="h5__line">Post exams</h5>
-                <div className="nav__pastexams">
-                  <a href="/">Grade</a>
-                  <a href="/">Credits</a>
-                  <a href="/">Status</a>
-                </div>
+        </div>
+        <div className="column--right column-bottom" id="column--notitle">
+          <div className="inner__wrapper inner__wrapper--bottom">
+            <div className="inner__nav line">
+              <h5 className="h5__line">Post exams</h5>
+              <div className="nav__pastexams">
+                <a href="/">Completion date</a>
+                <a href="/">Status</a>
               </div>
               <p className="p__text">
                 Your grades for your past exams will be added here
