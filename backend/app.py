@@ -108,9 +108,9 @@ def delete_student(query_email):
     return student_handler.handle_delete_object_by_attribute(email=query_email)
 
 
-@app.route('/student', methods=['PUT'])
-def update_student():
-    return student_handler.handle_update_object(request)
+@app.route('/student/<query_email>', methods=['PUT'])
+def update_student(query_email):
+    return student_handler.handle_update_object_by_attribute(request, email=query_email)
 
 
 @app.route('/student/login', methods=['POST'])

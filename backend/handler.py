@@ -112,15 +112,15 @@ class StudentQueryHandler(QueryHandler):
     '''
 
     @staticmethod
-    def UpdateEntry(student, json_with_updates):
+    def update_entry(student, json_with_updates):
         '''
         Updates student info.
         Returns True if some fields were updated and False otherwise.
         '''
         has_updates = False
         full_name = json_with_updates.get('fullName')
-        if full_name is not None and full_name != student.fullName:
-            student.fullName = full_name
+        if full_name is not None and full_name != student.full_name:
+            student.full_name = full_name
             has_updates = True
         password = json_with_updates.get('password')
         if password is not None:
@@ -165,28 +165,25 @@ class StudentQueryHandler(QueryHandler):
             language=content.get('language'))
         return self.add_new_object_to_db(student, email=email)
 
-    def handle_update_object(self, request):
+    def handle_update_object_by_attribute(self, request, **kwargs):
         '''
         Update students table entry according to request
         '''
         if not request.is_json:
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        email = content.get('email')
-        if email is None:
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         try:
-            student = self.model.query.filter_by(email=email).first()
+            student = self.model.query.filter_by(**kwargs).first()
             if student is None:
                 return QueryHandler.create_generic_json_response(
-                        {'message': 'Bad Request: {} with email={} doesn\'t exist'.format(self.model_name, email)}, 400)
-            if not StudentQueryHandler.UpdateEntry(student, content):
+                    {'message': 'Unable to find any {} with {}'.format(self.model_name, kwargs)}, 400)
+            if not StudentQueryHandler.update_entry(student, content):
                 return QueryHandler.create_generic_json_response(
-                        {'message': 'Bad Request: {} with email={} nothing to update'.format(self.model_name, email)}, 400)
+                        {'message': 'Bad Request: There is nothing to update for {} with {}'.format(self.model_name, kwargs)}, 400)
             self.db_obj.session.merge(student)
             self.db_obj.session.commit()
             return QueryHandler.create_generic_json_response(
-                    {'message': '{} with email={} is updated'.format(self.model_name, email)})
+                    {'message': '{} with {} is updated'.format(self.model_name, kwargs)})
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
