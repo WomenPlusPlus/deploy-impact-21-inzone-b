@@ -1,26 +1,37 @@
-import "./App.css";
-import "./scss/shared.scss"
 import React from 'react'
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
+    Redirect
 } from "react-router-dom";
 import LoginScreen from "./components/login/";
-import Index from "./components/signup/";
+import Signup from "./components/signup/";
+import SetupAccountScreen from "./components/signup/setup-account/";
 import ForgotPasswordScreen from "./components/forgot-password/";
-import SetupAccountScreen from "./components/setup-account/";
 import Dashboard from "./components/dashboard/";
+
+import './scss/custom.scss';
+import Nav from "./components/navigation-bar";
 
 function App() {
     return (
-        <div className="App">
-            <Router>
+        <div>
+            <header>
+                <Nav />
+            </header>
+            <main>
                 <Switch>
-                    <Route path="/signup">
-                        <Index/>
+                    <Route path='/' exact>
+                        {/*TO DO: check if user is logged in or not*/}
+                        <Redirect to='/login' />
                     </Route>
-                    <Route path="/setup-account">
+                    <Route path="/login">
+                        <LoginScreen/>
+                    </Route>
+                    <Route path="/signup" exact>
+                        <Signup />
+                    </Route>
+                    <Route path="/signup/setup-account">
                         <SetupAccountScreen/>
                     </Route>
                     <Route path="/forgot-password">
@@ -29,12 +40,8 @@ function App() {
                     <Route path="/home">
                         <Dashboard/>
                     </Route>
-                    {/*<Route path="/login">*/}
-                    <Route path="/">
-                        <LoginScreen/>
-                    </Route>
                 </Switch>
-            </Router>
+            </main>
         </div>
     )
 }

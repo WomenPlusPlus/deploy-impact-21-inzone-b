@@ -1,10 +1,6 @@
-@import "custom";
+@import './../../scss/custom.scss';
 
 .entry-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   h1 {
     margin: 50px 0;
   }
@@ -21,5 +17,14 @@
         color: $primary;
       }
     }
+  }
+
+  .eye-icon {
+    cursor: pointer;
+    right: 16px;
+  }
+
+  .password-checkbox {
+    margin-left: 10px;
   }
 }
