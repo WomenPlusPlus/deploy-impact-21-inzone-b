@@ -1,7 +1,7 @@
 import React from "react";
 import Nav from "../navigation-bar";
 
-import "../../scss/dashboard/_main.scss";
+import "./_dashboard.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
 import progressImage from "../../assets/dashboard/progress.svg";
 
