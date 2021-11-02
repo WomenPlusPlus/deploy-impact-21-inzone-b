@@ -3,17 +3,20 @@ import React from "react";
 import "./_nav.scss";
 import icon from "../../assets/dashboard/favicon.png";
 import demo from "../../assets/dashboard/face_demo.png";
+import { useSelector } from "react-redux";
 
 const Nav = () => {
   // TO DO: get this information from shared state
-  const userIsLoggedIn = false;
+  // const userIsLoggedIn = false;
+
+  const user = useSelector((state) => state.user.value);
 
   return (
     <div className="nav__container">
       <div className="wrapper--left">
         <img id="nav__logo" src={icon} alt="logo" />
       </div>
-      {userIsLoggedIn &&
+      {user &&
         <div className="wrapper--middle">
           <a href="#" tabIndex="1">
             Overview
@@ -26,7 +29,7 @@ const Nav = () => {
           </a>
         </div>
       }
-      {userIsLoggedIn &&
+      {user &&
         <div className="wrapper--right">
           <img id="nav__img--circle" src={demo} alt="profile" />
         </div>

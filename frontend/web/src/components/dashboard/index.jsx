@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Nav from "../navigation-bar";
 
 import "./_dashboard.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
@@ -10,7 +9,6 @@ const Dashboard = () => {
   const user = useSelector((state) => state.user.value);
   return (
     <div className="container-fluid" style={{ padding: 0 }}>
-      <Nav />
       <div className="dash__container">
         <div className="section section--top">
           <div className="column--left column-top">

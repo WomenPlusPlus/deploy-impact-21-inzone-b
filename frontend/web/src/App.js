@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import LoginScreen from "./components/login/";
 import Signup from "./components/signup/";
-import SetupAccountScreen from "./components/signup/setup-account/";
+import SetupAccountScreen from "./components/signup/second-step/";
 import ForgotPasswordScreen from "./components/forgot-password/";
 import Dashboard from "./components/dashboard/";
 
