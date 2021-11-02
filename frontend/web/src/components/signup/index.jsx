@@ -1,92 +1,80 @@
-import { Link, useHistory } from "react-router-dom";
-import React from "react";
+import EntryScreen from "../entry-screen";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import axios from "../../shared/axios";
+import FirstStep from "./first-step";
+import SecondStep from "./second-step";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/user";
 
-function Index(props) {
+const Signup = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  const [showPasswordInstructions, setPasswordInstructions] =
-    React.useState(false);
+  const [signupStep, setSignupStep] = useState(1)
+  const [student, setStudent] = useState({})
 
-  const nextStep = () => {
-    history.push("/setup-account");
-  };
+  const signUp = async (student) => {
+    axios.post("student", student)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          dispatch(
+            login({
+              email: student.email,
+            })
+          );
+          localStorage.setItem("isLogged", true);
+          history.push("/home");
+        } else {
+          alert("signup was not successful :(");
+          console.log("testing");
+        }
+      });
+  }
+
+  const firstStepHandler = (data) => {
+    setStudent({
+      email: data.email,
+      password: data.password
+    });
+    setSignupStep(2);
+  }
+
+  const secondStepHandler = async (data) => {
+    // setStudent({
+    //   ...student,
+    //   fullName: data.name,
+    //   course_location: data.location,
+    //   course_name: data.course,
+    //   language: data.language
+    // });
+    const s = {
+      ...student,
+      fullName: data.name,
+      course_location: data.location,
+      course_name: data.course,
+      language: data.language
+    };
+    await signUp(s);
+  }
 
   return (
-    <div className="container">
-      <div className="row entry-screen">
-        <div className="col-lg-6">
-          <h1>Welcome to ExamPortal</h1>
-          <form>
-            <div className="mb-4">
-              <label htmlFor="exampleInputEmail1" className="form-label">
-                Email address
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="exampleInputPassword1" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="exampleInputPassword1"
-                onFocus={(e) => {
-                  setPasswordInstructions(true);
-                }}
-                onBlur={(e) => {
-                  setPasswordInstructions(false);
-                }}
-              />
-            </div>
-            <div
-              className={`mb-5 ${
-                showPasswordInstructions ? "d-block" : "d-none"
-              }`}
-            >
-              <div className="form-text">At least 8 characters long</div>
-              <div className="form-text">Contains 1 uppercase character</div>
-              <div className="form-text">Contains 1 number or symbol</div>
-            </div>
-            <div className="mb-4">
-              <div className="form-text">
-                By clicking Sign Up you agree to our
-                <strong>
-                  <a href="terms-of-service">Terms of Service</a>
-                </strong>{" "}
-                &
-                <strong>
-                  <a href="privacy-policy">Privacy Policy</a>
-                </strong>
-              </div>
-            </div>
-            <div className="mb-4">
-              <button
-                type="button"
-                className="btn btn-primary w-100"
-                onClick={nextStep}
-              >
-                Sign Up
-              </button>
-            </div>
-            <div>
-              <div className="form-text">
-                Already have an account?{" "}
-                <strong>
-                  <Link to="/login">Log In</Link>
-                </strong>
-              </div>
-            </div>
-          </form>
+    <EntryScreen>
+      <div className="container">
+        <div className="row justify-content-center">
+          { signupStep === 1 && <FirstStep
+            title="Welcome to ExamPortal"
+            onSubmitData={firstStepHandler}
+          /> }
+          { signupStep === 2 && <SecondStep
+            title="Let's set up your account"
+            onSubmitData={secondStepHandler}
+          /> }
         </div>
       </div>
-    </div>
-  );
+    </EntryScreen>
+  )
 }
 
-export default Index;
+export default Signup;
