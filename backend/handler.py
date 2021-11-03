@@ -105,6 +105,28 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
+    def handle_update_object_by_attribute(self, request, **kwargs):
+        '''
+        Update table entry according to request
+        '''
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        content = request.get_json()
+        try:
+            object = self.model.query.filter_by(**kwargs).first()
+            if object is None:
+                return QueryHandler.create_generic_json_response(
+                    {'message': 'Unable to find any {} with {}'.format(self.model_name, kwargs)}, 400)
+            if not object.update(content):
+                return QueryHandler.create_generic_json_response(
+                        {'message': 'Bad Request: There is nothing to update for {} with {}'.format(self.model_name, kwargs)}, 400)
+            self.db_obj.session.merge(object)
+            self.db_obj.session.commit()
+            return QueryHandler.create_generic_json_response(
+                    {'message': '{} with {} is updated'.format(self.model_name, kwargs)})
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
 
 class StudentQueryHandler(QueryHandler):
     '''

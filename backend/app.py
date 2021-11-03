@@ -85,6 +85,11 @@ def delete_course(query_name):
     return course_handler.handle_delete_object_by_attribute(name=query_name)
 
 
+@app.route('/course/<query_name>', methods=['PUT'])
+def update_course(query_name):
+    return course_handler.handle_update_object_by_attribute(request, name=query_name)
+
+
 @app.route('/students')
 def get_all_students():
     return student_handler.handle_get_all_request()
@@ -92,7 +97,11 @@ def get_all_students():
 
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
-    return student_handler.handle_get_object_by_attribute(email=query_email)
+    result = student_handler.handle_get_object_by_attribute(email=query_email)
+    if result.status_code == 200:
+        first_query_done_request = jsonify({'first_query_done' : True})
+        student_handler.handle_update_object_by_attribute(first_query_done_request, email=query_email)
+    return result
 
 
 @app.route('/student', methods=['POST'])
@@ -103,6 +112,11 @@ def add_new_student():
 @app.route('/student/<query_email>', methods=['DELETE'])
 def delete_student(query_email):
     return student_handler.handle_delete_object_by_attribute(email=query_email)
+
+
+@app.route('/student/<query_email>', methods=['PUT'])
+def update_student(query_email):
+    return student_handler.handle_update_object_by_attribute(request, email=query_email)
 
 
 @app.route('/student/login', methods=['POST'])
