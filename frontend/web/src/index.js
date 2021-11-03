@@ -23,7 +23,7 @@ if (currentEmail) {
   axios
   .get(`student/${currentEmail}`)
   .then((response) => {
-    if (response.data.language === "French") localStorage.setItem("i18nextLng", "fr")
+    if (response.data.language === "Français") localStorage.setItem("i18nextLng", "fr")
     else if (response.data.language === "Arabic") localStorage.setItem("i18nextLng", "ar")
     else localStorage.setItem("i18nextLng", "en")
   })
