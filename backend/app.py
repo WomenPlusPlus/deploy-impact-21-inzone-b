@@ -6,7 +6,12 @@ from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from handler import *
-from models import *
+
+from models.student import *
+from models.course import *
+from models.course_location import *
+from models.role_type import *
+from models.supported_language import *
 
 app = Flask(__name__)
 

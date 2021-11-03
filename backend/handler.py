@@ -1,7 +1,12 @@
 from os import stat
 from flask import jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import *
+from models.base_model import db
+from models.student import *
+from models.course import *
+from models.course_location import *
+from models.role_type import *
+from models.supported_language import *
 
 
 class QueryHandler:
