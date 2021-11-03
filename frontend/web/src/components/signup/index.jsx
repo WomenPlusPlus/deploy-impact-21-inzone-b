@@ -44,14 +44,14 @@ const Signup = () => {
   const secondStepHandler = async (data) => {
     // setStudent({
     //   ...student,
-    //   fullName: data.name,
+    //   full_name: data.name,
     //   course_location: data.location,
     //   course_name: data.course,
     //   language: data.language
     // });
     const s = {
       ...student,
-      fullName: data.name,
+      full_name: data.name,
       course_location: data.location,
       course_name: data.course,
       language: data.language

@@ -141,14 +141,14 @@ class StudentQueryHandler(QueryHandler):
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
         missing_field = QueryHandler.get_missing_field_name(
-            content, ['fullName', 'email', 'password', 'course_name', 'course_location', 'language'])
+            content, ['full_name', 'email', 'password', 'course_name', 'course_location', 'language'])
         if missing_field is not None:
             # there is at least 1 missing key in the input json, so we throw an error back
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
         email = content.get('email')
         # create a new student
         student = self.model(
-            full_name=content.get('fullName'),
+            full_name=content.get('full_name'),
             email=email,
             password=generate_password_hash(content.get('password')),
             course_name=content.get('course_name'),
