@@ -20,15 +20,17 @@ const Dashboard = () => {
     const isLogged = localStorage.getItem('isLogged');
     const currentEmail = localStorage.getItem('currentEmail');
     
-
+    
     if (isLogged) {
       axios
-        .get(`student/${currentEmail}`)
-        .then((response) => {
-          console.log(response)
-        })
+      .get(`student/${currentEmail}`)
+      .then((response) => {
+        if (response.data.language === "Français") localStorage.setItem("i18nextLng", "fr")
+        else if (response.data.language === "Arabic") localStorage.setItem("i18nextLng", "ar")
+        else localStorage.setItem("i18nextLng", "en")
         const lng = localStorage.getItem('i18nextLng');
         i18n.changeLanguage(lng)
+        })
     }
   }, []);
 
