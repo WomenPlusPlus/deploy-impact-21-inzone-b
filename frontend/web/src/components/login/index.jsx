@@ -38,6 +38,7 @@ function LoginScreen(props) {
               })
             );
             localStorage.setItem("isLogged", true);
+            localStorage.setItem("currentEmail", username);
             history.push("/home");
           } else {
             alert("login was not successful :(");
