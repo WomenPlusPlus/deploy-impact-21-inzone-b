@@ -1,5 +1,8 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useSelector } from "react-redux";
+import axios from "../../shared/axios";
+
+import CongratulationsModal from "./modal";
 
 import "./_dashboard.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
@@ -7,6 +10,21 @@ import progressImage from "../../assets/dashboard/progress.svg";
 
 const Dashboard = () => {
   const user = useSelector((state) => state.user.value);
+  // eslint-disable-next-line
+  const [firstLogin, setFirstLogin] =  useState(true);
+  
+  useEffect(() => {
+    const isLogged = localStorage.getItem('isLogged');
+    const currentEmail = localStorage.getItem('currentEmail');
+    if (isLogged) {
+      axios
+        .get(`student/${currentEmail}`)
+        .then((response) => {
+          console.log(response)
+        })
+    }
+  }, []);
+
   return (
     <div className="container-fluid" style={{ padding: 0 }}>
       <div className="dash__container">
@@ -28,6 +46,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        {firstLogin ? <CongratulationsModal className="congratulations__modal"></CongratulationsModal> : <></>}
         <div className="section section--bottom">
           <div className="column--left column-bottom">
             <h3 className="title">Your exam status</h3>
@@ -38,7 +57,6 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-        </div>
         <div className="column--right column-bottom" id="column--notitle">
           <div className="inner__wrapper inner__wrapper--bottom">
             <div className="inner__nav line">
@@ -47,14 +65,12 @@ const Dashboard = () => {
                 <a href="/">Completion date</a>
                 <a href="/">Status</a>
               </div>
-              <p className="p__text">
-                Your grades for your past exams will be added here
-              </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+   </div>
+   </div>
   );
 };
 export default Dashboard;
