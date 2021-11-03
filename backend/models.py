@@ -114,6 +114,30 @@ class Course(db.Model):
             'number_of_credits': self.number_of_credits
         }
 
+    def update(self, json_with_updates):
+        '''
+        Updates course info.
+        Returns True if some fields were updated and False otherwise.
+        '''
+        has_updates = False
+        description = json_with_updates.get('description')
+        if description is not None and description != self.description:
+                self.description = description
+                has_updates = True
+        start_at = json_with_updates.get('start_at')
+        if start_at is not None and start_at != self.start_at:
+            self.start_at = start_at
+            has_updates = True
+        finish_at = json_with_updates.get('finish_at')
+        if finish_at is not None and finish_at != self.finish_at:
+            self.finish_at = finish_at
+            has_updates = True
+        number_of_credits = json_with_updates.get('number_of_credits')
+        if number_of_credits is not None and number_of_credits != self.number_of_credits:
+            self.number_of_credits = number_of_credits
+            has_updates = True
+        return has_updates
+
 class RoleType(db.Model):
     __tablename__ = 'role_types'
 

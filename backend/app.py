@@ -85,6 +85,11 @@ def delete_course(query_name):
     return course_handler.handle_delete_object_by_attribute(name=query_name)
 
 
+@app.route('/course/<query_name>', methods=['PUT'])
+def update_course(query_name):
+    return course_handler.handle_update_object_by_attribute(request, name=query_name)
+
+
 @app.route('/students')
 def get_all_students():
     return student_handler.handle_get_all_request()
