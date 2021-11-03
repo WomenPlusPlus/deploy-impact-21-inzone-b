@@ -94,7 +94,8 @@ def get_all_students():
 def get_student_by_email(query_email):
     result = student_handler.handle_get_object_by_attribute(email=query_email)
     if result.status_code == 200:
-        student_handler.set_first_query_done(query_email)
+        first_query_done_request = jsonify({'first_query_done' : True})
+        student_handler.handle_update_object_by_attribute(first_query_done_request, email=query_email)
     return result
 
 

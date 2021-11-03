@@ -1,5 +1,6 @@
 from  datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
 
 # we define db object but we dont link it to the flask app yet
 db = SQLAlchemy()
@@ -45,6 +46,41 @@ class Student(db.Model):
             'first_query_done': self.first_query_done,
             'validated_by_admin': self.validated_by_admin
         }
+
+    def update(self, json_with_updates):
+        '''
+        Updates student info.
+        Returns True if some fields were updated and False otherwise.
+        '''
+        has_updates = False
+        full_name = json_with_updates.get('fullName')
+        if full_name is not None and full_name != self.full_name:
+            self.full_name = full_name
+            has_updates = True
+        password = json_with_updates.get('password')
+        if password is not None:
+            password = generate_password_hash(password)
+            if password != self.password:
+                self.password = password
+                has_updates = True
+        course_name = json_with_updates.get('course_name')
+        if course_name is not None and course_name != self.course_name:
+            self.course_name = course_name
+            has_updates = True
+        course_location = json_with_updates.get('course_location')
+        if course_location is not None and course_location != self.course_location:
+            self.course_location = course_location
+            has_updates = True
+        language = json_with_updates.get('language')
+        if language is not None and language != self.language:
+            self.language = language
+            has_updates = True
+        first_query_done = json_with_updates.get('first_query_done')
+        # first_query_done field can be changed only from False to True
+        if first_query_done is not None and first_query_done and not self.first_query_done:
+            self.first_query_done = True
+            has_updates = True
+        return has_updates
 
 
 class Course(db.Model):
