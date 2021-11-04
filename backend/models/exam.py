@@ -11,18 +11,18 @@ class Exam(db.Model):
     mark_entered_by = db.Column(db.String(200))
     opened_at = db.Column(db.DateTime())
     closed_at = db.Column(db.DateTime())
-    duration = db.Column(db.Interval)
+    duration_in_minutes = db.Column(db.Integer)
     taken_at = db.Column(db.DateTime())
     mark_entered_at = db.Column(db.DateTime())
 
-    def __init__(self, exam_set_id, student_id, student_mark, mark_entered_by, opened_at, closed_at, duration, taken_at, mark_entered_at):
+    def __init__(self, exam_set_id, student_id, student_mark, mark_entered_by, opened_at, closed_at, duration_in_minutes, taken_at, mark_entered_at):
         self.exam_set_id = exam_set_id
         self.student_id = student_id
         self.student_mark = student_mark
         self.mark_entered_by = mark_entered_by
         self.opened_at = opened_at
         self.closed_at = closed_at
-        self.duration = duration
+        self.duration_in_minutes = duration_in_minutes
         self.taken_at = taken_at
         self.mark_entered_at = mark_entered_at
 
@@ -38,7 +38,7 @@ class Exam(db.Model):
             'mark_entered_by': self.mark_entered_by,
             'opened_at': self.opened_at,
             'closed_at': self.closed_at,
-            'duration': self.duration,
+            'duration_in_minutes': self.duration_in_minutes,
             'taken_at': self.taken_at,
             'mark_entered_at': self.mark_entered_at
         }
@@ -53,7 +53,6 @@ class Exam(db.Model):
         if exam_set_id is not None and exam_set_id != self.exam_set_id:
             self.exam_set_id = exam_set_id
             has_updates = True
-            
         student_id = json_with_updates.get('student_id')
         if student_id is not None and student_id != self.student_id:
             self.student_id = student_id
@@ -74,9 +73,9 @@ class Exam(db.Model):
         if closed_at is not None and closed_at != self.closed_at:
             self.closed_at = closed_at
             has_updates = True
-        duration = json_with_updates.get('duration')
-        if duration is not None and duration != self.duration:
-            self.duration = duration
+        duration_in_minutes = json_with_updates.get('duration_in_minutes')
+        if duration_in_minutes is not None and duration_in_minutes != self.duration_in_minutes:
+            self.duration_in_minutes = duration_in_minutes
             has_updates = True
         taken_at = json_with_updates.get('taken_at')
         if taken_at is not None and taken_at != self.taken_at:
