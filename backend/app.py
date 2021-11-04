@@ -47,7 +47,7 @@ def get_all_role_types():
 
 @app.route('/role-type/<query_name>')
 def get_role_type_by_name(query_name):
-    return role_type_handler.handle_get_object_by_attribute(role_type=query_name)
+    return role_type_handler.handle_get_first_object_by_attribute(role_type=query_name)
 
 
 @app.route('/course-locations')
@@ -57,7 +57,7 @@ def get_all_course_locations():
 
 @app.route('/course-location/<query_name>')
 def get_course_location_by_name(query_name):
-    return course_location_handler.handle_get_object_by_attribute(location=query_name)
+    return course_location_handler.handle_get_first_object_by_attribute(location=query_name)
 
 
 @app.route('/supported-languages')
@@ -67,7 +67,7 @@ def get_all_supported_languages():
 
 @app.route('/supported-language/<query_name>')
 def get_supported_language_by_name(query_name):
-    return supported_language_handler.handle_get_object_by_attribute(location=query_name)
+    return supported_language_handler.handle_get_first_object_by_attribute(location=query_name)
 
 
 @app.route('/courses')
@@ -77,7 +77,7 @@ def get_all_courses():
 
 @app.route('/course/<query_name>')
 def get_course_by_name(query_name):
-    return course_handler.handle_get_object_by_attribute(name=query_name)
+    return course_handler.handle_get_first_object_by_attribute(name=query_name)
 
 
 @app.route('/course', methods=['POST'])
@@ -102,7 +102,7 @@ def get_all_students():
 
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
-    result = student_handler.handle_get_object_by_attribute(email=query_email)
+    result = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if result.status_code == 200:
         first_query_done_request = jsonify({'first_query_done' : True})
         student_handler.handle_update_object_by_attribute(first_query_done_request, email=query_email)
