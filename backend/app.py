@@ -12,6 +12,8 @@ from models.course import *
 from models.course_location import *
 from models.role_type import *
 from models.supported_language import *
+from models.exam import *
+from models.exam_set import *
 
 app = Flask(__name__)
 
@@ -28,6 +30,8 @@ role_type_handler = QueryHandler(db, RoleType, 'role type')
 course_location_handler = QueryHandler(db, CourseLocation, 'course location')
 supported_language_handler = QueryHandler(
     db, SupportedLanguages, 'supported language')
+exam_handler = QueryHandler(db, Exam, 'exam')
+exam_set_handler = QueryHandler(db, ExamSet, 'exam_set')
 
 
 @app.route('/')
@@ -69,6 +73,14 @@ def get_all_supported_languages():
 def get_supported_language_by_name(query_name):
     return supported_language_handler.handle_get_first_object_by_attribute(location=query_name)
 
+
+@app.route('/exams')
+def get_all_exams():
+    return exam_handler.handle_get_all_request()
+    
+@app.route('/exam_sets')
+def get_all_exam_sets():
+    return exam_set_handler.handle_get_all_request()
 
 @app.route('/courses')
 def get_all_courses():
