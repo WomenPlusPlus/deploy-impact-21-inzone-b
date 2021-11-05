@@ -40,25 +40,31 @@ const Dashboard = () => {
         <div className="section section--top">
           <div className="column--left column-top">
             <h3 className="title">
-            <Trans key="sub-1" i18nKey="description.subtitle-1">
+            <Trans key="sub-1" i18nKey="static.subtitle-1">
             Your latest updates
             </Trans>
             </h3>
             <div className="inner__wrapper inner__wrapper--top">
               <img src={updatesImage} alt="updates" id="img--updates" />
-              <p className="p__text">You&apos;re all caught up!</p>
+              <p className="p__text">
+              <Trans key="img-1" i18nKey="static.img-text-1">
+              You&apos;re all caught up!
+            </Trans>
+              </p>
             </div>
           </div>
           <div className="column--right column-top">
             <h3 className="title">
-            <Trans key="sub-2" i18nKey="description.subtitle-2">
+            <Trans key="sub-2" i18nKey="static.subtitle-2">
             Your program
             </Trans>
             </h3>
             <div className="inner__wrapper inner__wrapper--top">
               <img src={progressImage} alt="progress" id="img--progress" />
               <p className="p__text">
+              <Trans key="img-2" i18nKey="static.img-text-2">
                 Your program and progress will appear here
+            </Trans>
               </p>
             </div>
           </div>
@@ -67,24 +73,42 @@ const Dashboard = () => {
         <div className="section section--bottom">
           <div className="column--left column-bottom">
             <h3 className="title">
-            <Trans key="sub-3" i18nKey="description.subtitle-3">
+            <Trans key="sub-3" i18nKey="static.subtitle-3">
             Your exam status
             </Trans>
             </h3>
             <div className="inner__wrapper inner__wrapper--bottom">
-              <h5 className="h5__line line">Upcoming exams</h5>
+              <h5 className="h5__line line">
+              <Trans key="inntert-title-1" i18nKey="static.inner-title-1">
+              Upcoming exams
+            </Trans>
+              </h5>
               <p className="p__text">
+              <Trans key="third-card-text" i18nKey="static.third-card-text">
                 Your upcoming exam sessions will be added here
+            </Trans>
               </p>
             </div>
           </div>
         <div className="column--right column-bottom" id="column--notitle">
           <div className="inner__wrapper inner__wrapper--bottom">
             <div className="inner__nav line">
-              <h5 className="h5__line">Post exams</h5>
+              <h5 className="h5__line">
+              <Trans key="inntert-title-2" i18nKey="static.inner-title-2">
+              Post exams
+            </Trans>
+              </h5>
               <div className="nav__pastexams">
-                <a href="/">Completion date</a>
-                <a href="/">Status</a>
+                <a href="/">
+                  <Trans key="section-1" i18nKey="static.fourth-card-section-1">
+                   Completion date
+                  </Trans>
+                </a>
+                <a href="/">
+                <Trans key="section-2" i18nKey="static.fourth-card-section-2">
+                  Status
+                  </Trans>
+                </a>
               </div>
             </div>
           </div>

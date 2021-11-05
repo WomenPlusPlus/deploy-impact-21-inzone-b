@@ -36,3 +36,16 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
+
+# Deploy to Azure:
+Follow this instruction to deploy with VSCode.
+
+https://docs.microsoft.com/en-us/azure/app-service/quickstart-nodejs?tabs=linux&pivots=development-environment-vscode#deploy-to-azure
+
+If there is an error about "There appears to be trouble with your network connection. Retrying..." during deployment, set the flag CUSTOM_BUILD_COMMAND from command line:
+
+```az webapp config appsettings set -g Edunity -n edunity-frontend --settings CUSTOM_BUILD_COMMAND="yarn install --prefer-offline --network-timeout 100000"```
+
+Verify that the flag is set correctly:
+
+```az webapp config appsettings list -g Edunity -n edunity-frontend```
