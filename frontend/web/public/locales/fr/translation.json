@@ -1,8 +1,18 @@
 {
-    "title": "English",
-    "description": {
+    "title": "French",
+    "static": {
     "subtitle-1": "Vos dernières mises à jour",
     "subtitle-2": "Votre programme",
-    "subtitle-3": "Votre statut d'examen"
+    "subtitle-3": "Votre statut d'examen",
+    "link-1": "aperçu",
+    "link-2": "messages",
+    "link-3": "Examens",
+    "img-text-1": "Vous avez tout rattrapé!",
+    "img-text-2": "Votre programme et vos progrès apparaîtront ici",
+    "inner-title-1": "Examens à venir",
+    "inner-title-2": "Examens de poste",
+    "third-card-text": "Vos prochaines sessions d'examen seront ajoutées ici",
+    "fourth-card-section-1": "Date d'achèvement",
+    "fourth-card-section-2": "Statut"
     }
 }
