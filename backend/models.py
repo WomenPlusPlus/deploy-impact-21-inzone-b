@@ -53,7 +53,7 @@ class Student(db.Model):
         Returns True if some fields were updated and False otherwise.
         '''
         has_updates = False
-        full_name = json_with_updates.get('fullName')
+        full_name = json_with_updates.get('full_name')
         if full_name is not None and full_name != self.full_name:
             self.full_name = full_name
             has_updates = True
