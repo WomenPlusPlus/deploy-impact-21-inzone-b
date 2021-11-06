@@ -14,6 +14,8 @@ from models.role_type import *
 from models.supported_language import *
 from models.exam import *
 from models.exam_set import *
+from models.question_type import *
+from models.exam_question import *
 
 app = Flask(__name__)
 
@@ -32,7 +34,8 @@ supported_language_handler = QueryHandler(
     db, SupportedLanguages, 'supported language')
 exam_handler = QueryHandler(db, Exam, 'exam')
 exam_set_handler = QueryHandler(db, ExamSet, 'exam_set')
-
+question_type_handler =  QueryHandler(db, QuestionType, 'question_type')
+exam_question_handler = QueryHandler(db, ExamQuestion, 'exam_question')
 
 @app.route('/')
 def home():
@@ -81,6 +84,15 @@ def get_all_exams():
 @app.route('/exam_sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
+
+@app.route('/question_types')
+def get_all_question_types():
+    return question_type_handler.handle_get_all_request()
+
+@app.route('/exam_questions')
+def get_all_exam_questions():
+    return exam_question_handler.handle_get_all_request()
+
 
 @app.route('/courses')
 def get_all_courses():
