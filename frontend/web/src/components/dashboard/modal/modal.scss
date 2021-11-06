@@ -2,14 +2,14 @@
 @import "../../../scss/config/colors";
 
 .modal {
-    top: calc(100% / 3);
+    top: calc(100% / 4);
 }
 
 .modal__container {
     padding: 1rem;
     display: flex;
-    width: 30vw !important;
-    height: 22vh;
+    width: 50vw !important;
+    min-height: 22vh;
 }
 
 .modal-header {
@@ -47,7 +47,7 @@ div.fade.in.modal {
 }
 
 .modal-content {
-    width: 30vw !important;
+    width: 50vw !important;
     border-radius: 8px;
 }
 
