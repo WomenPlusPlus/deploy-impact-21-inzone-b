@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from "react";
+import { Link} from "react-router-dom";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
+import {Button} from 'react-bootstrap';  
 
 import CongratulationsModal from "./modal";
 
@@ -13,6 +15,7 @@ const Dashboard = () => {
   // const user = useSelector((state) => state.user.value);
   // eslint-disable-next-line
   const [firstLogin, setFirstLogin] =  useState(true);
+  const [currentExams, setCurrentExams] =  useState([]);
 
   const {i18n} = useTranslation()
   
@@ -31,6 +34,11 @@ const Dashboard = () => {
         const lng = localStorage.getItem('i18nextLng');
         i18n.changeLanguage(lng)
         })
+      axios.get(`student/${currentEmail}/current-exams`)
+      .then((response) => {
+        console.log(response, 'response student')
+        setCurrentExams(response.data)
+      })
     }
   }, []);
 
@@ -83,11 +91,39 @@ const Dashboard = () => {
               Upcoming exams
             </Trans>
               </h5>
-              <p className="p__text">
+              {
+                currentExams.length ? 
+                (
+                  <>
+                  {
+                    currentExams.map((exam, i) => {
+                      return (
+                        <div key={i} className="exams__container">
+                        <div className="exams__wrapper--left">
+                        <h6>Global Health - MCQ</h6>
+                        <p>Limit: {exam.closed_at}</p>
+                      </div>
+                      <div className="exams__wrapper--right">
+                      <Link to="/instructions">
+                        <Button variant="primary">
+                          Start exam
+                        </Button>
+                      </Link>
+                      </div>
+                      </div>
+                      )
+                    })
+                  }
+                
+                </>
+                )
+                : 
+              (<p className="p__text">
               <Trans key="third-card-text" i18nKey="static.third-card-text">
                 Your upcoming exam sessions will be added here
             </Trans>
-              </p>
+              </p>)
+              }
             </div>
           </div>
         <div className="column--right column-bottom" id="column--notitle">
