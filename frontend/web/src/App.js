@@ -9,6 +9,7 @@ import Signup from "./components/signup/";
 import SetupAccountScreen from "./components/signup/second-step/";
 import ForgotPasswordScreen from "./components/forgot-password/";
 import Dashboard from "./components/dashboard/";
+import Instructions from "./components/dashboard/instructions";
 
 import './scss/custom.scss';
 import Nav from "./components/navigation-bar";
@@ -39,6 +40,9 @@ function App() {
                     </Route>
                     <Route path="/home">
                         <Dashboard/>
+                    </Route>
+                    <Route path="/instructions">
+                        <Instructions/>
                     </Route>
                 </Switch>
             </main>
