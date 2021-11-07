@@ -1,0 +1,12 @@
+@import "../../scss/config/colors";
+
+.mcq-screen {
+  flex-grow: 1;
+  background-color: $dashboard-bg;
+
+  .question-wrapper {
+    background-color: white;
+    margin-top: 4rem;
+    padding: 4rem 8rem;
+  }
+}

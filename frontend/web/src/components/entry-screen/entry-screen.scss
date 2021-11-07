@@ -1,6 +1,10 @@
 @import './../../scss/custom.scss';
+@import './../../scss/config/_colors.scss';
 
 .entry-screen {
+  flex-grow: 1;
+  background-color: $entry-screen-bg;
+
   h1 {
     margin: 50px 0;
   }

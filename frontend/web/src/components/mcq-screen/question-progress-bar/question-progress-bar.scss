@@ -1,0 +1,29 @@
+.mcq-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+
+  span.number {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid #655E5D;
+    color: #655E5D;
+
+    &.active {
+      background-color: #0056D1;
+      border-color: #0056D1;
+      color: white;
+    }
+  }
+
+  span.bar-line:not(:last-child) {
+    display: inline-flex;
+    border-bottom: 1px solid #655E5D;
+    width: 24px;
+  }
+}

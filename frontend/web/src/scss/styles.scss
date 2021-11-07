@@ -1,1 +1,13 @@
 @import './custom';
+
+#app {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}

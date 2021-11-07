@@ -15,12 +15,12 @@ const Dashboard = () => {
   const [firstLogin, setFirstLogin] =  useState(true);
 
   const {i18n} = useTranslation()
-  
+
   useEffect(() => {
     const isLogged = localStorage.getItem('isLogged');
     const currentEmail = localStorage.getItem('currentEmail');
-    
-    
+
+
     if (isLogged) {
       axios
       .get(`student/${currentEmail}`)
@@ -35,78 +35,77 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="container-fluid" style={{ padding: 0 }}>
-      <div className="dash__container">
-        <div className="section section--top">
-          <div className="column--left column-top">
-            <h3 className="title">
-            <Trans key="sub-1" i18nKey="static.subtitle-1">
-            Your latest updates
-            </Trans>
-            </h3>
-            <div className="inner__wrapper inner__wrapper--top">
-              <img src={updatesImage} alt="updates" id="img--updates" />
-              <p className="p__text">
-              <Trans key="img-1" i18nKey="static.img-text-1">
-              You&apos;re all caught up!
-            </Trans>
-              </p>
-            </div>
-          </div>
-          <div className="column--right column-top">
-            <h3 className="title">
-            <Trans key="sub-2" i18nKey="static.subtitle-2">
-            Your program
-            </Trans>
-            </h3>
-            <div className="inner__wrapper inner__wrapper--top">
-              <img src={progressImage} alt="progress" id="img--progress" />
-              <p className="p__text">
-              <Trans key="img-2" i18nKey="static.img-text-2">
-                Your program and progress will appear here
-            </Trans>
-              </p>
-            </div>
+    <div className="container-fluid dash__container">
+      <div className="section section--top">
+        <div className="column--left column-top">
+          <h3 className="title">
+          <Trans key="sub-1" i18nKey="static.subtitle-1">
+          Your latest updates
+          </Trans>
+          </h3>
+          <div className="inner__wrapper inner__wrapper--top">
+            <img src={updatesImage} alt="updates" id="img--updates" />
+            <p className="p__text">
+            <Trans key="img-1" i18nKey="static.img-text-1">
+            You&apos;re all caught up!
+          </Trans>
+            </p>
           </div>
         </div>
-        {firstLogin ? <CongratulationsModal className="congratulations__modal"></CongratulationsModal> : <></>}
-        <div className="section section--bottom">
-          <div className="column--left column-bottom">
-            <h3 className="title">
+        <div className="column--right column-top">
+          <h3 className="title">
+          <Trans key="sub-2" i18nKey="static.subtitle-2">
+          Your program
+          </Trans>
+          </h3>
+          <div className="inner__wrapper inner__wrapper--top">
+            <img src={progressImage} alt="progress" id="img--progress" />
+            <p className="p__text">
+            <Trans key="img-2" i18nKey="static.img-text-2">
+              Your program and progress will appear here
+          </Trans>
+            </p>
+          </div>
+        </div>
+      </div>
+      {firstLogin ? <CongratulationsModal className="congratulations__modal"></CongratulationsModal> : <></>}
+      <div className="section section--bottom">
+        <div className="column--left column-bottom">
+          <h3 className="title">
             <Trans key="sub-3" i18nKey="static.subtitle-3">
-            Your exam status
+              Your exam status
             </Trans>
-            </h3>
-            <div className="inner__wrapper inner__wrapper--bottom">
-              <h5 className="h5__line line">
+          </h3>
+          <div className="inner__wrapper inner__wrapper--bottom">
+            <h5 className="h5__line line">
               <Trans key="inntert-title-1" i18nKey="static.inner-title-1">
-              Upcoming exams
-            </Trans>
-              </h5>
-              <p className="p__text">
+                Upcoming exams
+              </Trans>
+            </h5>
+            <p className="p__text">
               <Trans key="third-card-text" i18nKey="static.third-card-text">
                 Your upcoming exam sessions will be added here
-            </Trans>
-              </p>
-            </div>
+              </Trans>
+            </p>
           </div>
+        </div>
         <div className="column--right column-bottom" id="column--notitle">
           <div className="inner__wrapper inner__wrapper--bottom">
             <div className="inner__nav line">
               <h5 className="h5__line">
-              <Trans key="inntert-title-2" i18nKey="static.inner-title-2">
-              Post exams
-            </Trans>
+                <Trans key="inntert-title-2" i18nKey="static.inner-title-2">
+                  Post exams
+                </Trans>
               </h5>
               <div className="nav__pastexams">
                 <a href="/">
                   <Trans key="section-1" i18nKey="static.fourth-card-section-1">
-                   Completion date
+                    Completion date
                   </Trans>
                 </a>
                 <a href="/">
-                <Trans key="section-2" i18nKey="static.fourth-card-section-2">
-                  Status
+                  <Trans key="section-2" i18nKey="static.fourth-card-section-2">
+                    Status
                   </Trans>
                 </a>
               </div>
@@ -114,7 +113,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-   </div>
    </div>
   );
 };
