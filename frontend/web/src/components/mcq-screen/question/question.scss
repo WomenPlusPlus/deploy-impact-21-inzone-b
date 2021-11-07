@@ -1,0 +1,46 @@
+.mcq-screen-question {
+
+  h4 {
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+
+  .answer {
+    padding: 12px;
+    margin: 16px 32px;
+    border: 2px solid #CCDDF5;
+    display: flex;
+    align-items: center;
+
+    .answer-label {
+      display: inline-flex;
+      color: #0056D1;
+      border: 1px solid #0056D1;
+      border-radius: 5px;
+      width: 24px;
+      height: 24px;
+      justify-content: center;
+      align-items: center;
+      margin-right: 12px;
+    }
+
+    .answer-text {
+      display: inline-block;
+    }
+
+    &:hover, &.active {
+      cursor: pointer;
+      background-color: #0056D1;
+      border-color: #0056D1;
+
+      .answer-label {
+        color: white;
+        border-color: white;
+      }
+
+      .answer-text {
+        color: white;
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
 
 .dash__container {
   background-color: $dashboard-bg;
-  min-height: 100vh;
+  flex-grow: 1;
 }
 
 .section {

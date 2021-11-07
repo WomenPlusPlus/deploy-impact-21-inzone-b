@@ -131,7 +131,7 @@ function SecondStep(props) {
             <option value={0} disabled>
               Select your location
             </option>
-            {courseLocations.map(({ id, location }, index) => <option key={id} value={location} >{location}</option>)}
+            {courseLocations.map(({ id, location }) => <option key={id} value={location} >{location}</option>)}
           </select>
         </div>
         }
