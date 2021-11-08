@@ -6,7 +6,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'antonina'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://avnadmin:YRCpQ9L8NxQqOCa9@inzone-b-pg-inzone-b-project.aivencloud.com:15460/inzone?sslmode=require'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://Inzoneb:TpdsD16ZRmxy4mqs@inzone-b-pg-inzone-b-project.aivencloud.com:15460/inzone?sslmode=require'
 
 
 class ProductionConfig(Config):

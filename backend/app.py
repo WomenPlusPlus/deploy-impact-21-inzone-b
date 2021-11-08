@@ -6,7 +6,16 @@ from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from handler import *
-from models import *
+
+from models.student import *
+from models.course import *
+from models.course_location import *
+from models.role_type import *
+from models.supported_language import *
+from models.exam import *
+from models.exam_set import *
+from models.question_type import *
+from models.exam_question import *
 
 app = Flask(__name__)
 
@@ -23,7 +32,10 @@ role_type_handler = QueryHandler(db, RoleType, 'role type')
 course_location_handler = QueryHandler(db, CourseLocation, 'course location')
 supported_language_handler = QueryHandler(
     db, SupportedLanguages, 'supported language')
-
+exam_handler = QueryHandler(db, Exam, 'exam')
+exam_set_handler = QueryHandler(db, ExamSet, 'exam_set')
+question_type_handler =  QueryHandler(db, QuestionType, 'question_type')
+exam_question_handler = QueryHandler(db, ExamQuestion, 'exam_question')
 
 @app.route('/')
 def home():
@@ -42,7 +54,7 @@ def get_all_role_types():
 
 @app.route('/role-type/<query_name>')
 def get_role_type_by_name(query_name):
-    return role_type_handler.handle_get_object_by_attribute(role_type=query_name)
+    return role_type_handler.handle_get_first_object_by_attribute(role_type=query_name)
 
 
 @app.route('/course-locations')
@@ -52,7 +64,7 @@ def get_all_course_locations():
 
 @app.route('/course-location/<query_name>')
 def get_course_location_by_name(query_name):
-    return course_location_handler.handle_get_object_by_attribute(location=query_name)
+    return course_location_handler.handle_get_first_object_by_attribute(location=query_name)
 
 
 @app.route('/supported-languages')
@@ -62,7 +74,24 @@ def get_all_supported_languages():
 
 @app.route('/supported-language/<query_name>')
 def get_supported_language_by_name(query_name):
-    return supported_language_handler.handle_get_object_by_attribute(location=query_name)
+    return supported_language_handler.handle_get_first_object_by_attribute(location=query_name)
+
+
+@app.route('/exams')
+def get_all_exams():
+    return exam_handler.handle_get_all_request()
+    
+@app.route('/exam_sets')
+def get_all_exam_sets():
+    return exam_set_handler.handle_get_all_request()
+
+@app.route('/question_types')
+def get_all_question_types():
+    return question_type_handler.handle_get_all_request()
+
+@app.route('/exam_questions')
+def get_all_exam_questions():
+    return exam_question_handler.handle_get_all_request()
 
 
 @app.route('/courses')
@@ -72,7 +101,7 @@ def get_all_courses():
 
 @app.route('/course/<query_name>')
 def get_course_by_name(query_name):
-    return course_handler.handle_get_object_by_attribute(name=query_name)
+    return course_handler.handle_get_first_object_by_attribute(name=query_name)
 
 
 @app.route('/course', methods=['POST'])
@@ -97,7 +126,7 @@ def get_all_students():
 
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
-    result = student_handler.handle_get_object_by_attribute(email=query_email)
+    result = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if result.status_code == 200:
         first_query_done_request = jsonify({'first_query_done' : True})
         student_handler.handle_update_object_by_attribute(first_query_done_request, email=query_email)

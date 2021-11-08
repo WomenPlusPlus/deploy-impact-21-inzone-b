@@ -1,7 +1,12 @@
 from os import stat
 from flask import jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import *
+from models.base_model import db
+from models.student import *
+from models.course import *
+from models.course_location import *
+from models.role_type import *
+from models.supported_language import *
 
 
 class QueryHandler:
@@ -31,7 +36,8 @@ class QueryHandler:
     @staticmethod
     def get_missing_field_name(json_object, fields):
         '''
-        Given a json_object and a list of required fields, finds the first one in the list that is missing in the json object. If all fields are present, returns None.
+        Given a json_object and a list of required fields, 
+        finds the first one in the list that is missing in the json object. If all fields are present, returns None.
         '''
         for field in fields:
             if json_object.get(field) is None:
@@ -48,11 +54,12 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
-    def handle_get_object_by_attribute(self, **kwargs):
+    def handle_get_first_object_by_attribute(self, **kwargs):
         '''
         Given keyword arguments, get the first object with matching query condition.
         For example, 
-        if the input is name='some_name', then we will return the first object of the db which field 'name' equals to 'some_name'
+        if the input is name='some_name', 
+        then we will return the first object of the db model which field 'name' equals to 'some_name'
         '''
         try:
             object = self.model.query.filter_by(**kwargs).first()
@@ -91,7 +98,8 @@ class QueryHandler:
         '''
         Given keyword arguments, delete the first object with matching query condition.
         For example,
-        if the input is name='some_name', then we will delete the first object of the db which field 'name' equals to 'some_name'
+        if the input is name='some_name', 
+        then we will delete the first object of the db model which field 'name' equals to 'some_name'
         '''
         try:
             object = self.model.query.filter_by(**kwargs).first()
