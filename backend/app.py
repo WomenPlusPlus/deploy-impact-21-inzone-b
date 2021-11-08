@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify, session
-
+import json
 from config import DevelopmentConfig
 from flask_migrate import Migrate
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import text
 
 from handler import *
 
@@ -147,6 +148,23 @@ def delete_student(query_email):
 def update_student(query_email):
     return student_handler.handle_update_object_by_attribute(request, email=query_email)
 
+@app.route('/student/<query_email>/current-exams')
+def get_current_exams_of_a_student(query_email):
+    student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
+    if student_response.status_code != 200:
+        # there is some error while getting student info, so we return the error itself
+        return student_response
+
+    # there is no error when getting student info,
+    # but we need to convert from reponse data to dict
+    student_data_dict = json.loads(student_response.get_data())
+    student_id = student_data_dict.get('id')
+    # we create SQLAlchemy text command which the current time is within opened time and closed time
+    current_time = datetime.now()
+    text_command = text('student_id={} and opened_at < timestamp \'{}\' and timestamp \'{}\' < closed_at'.format(
+        student_id, current_time, current_time))
+    all_exams_of_a_student_response = exam_handler.handle_get_all_objects_with_text_command(text_command)
+    return all_exams_of_a_student_response
 
 @app.route('/student/login', methods=['POST'])
 def student_login():
