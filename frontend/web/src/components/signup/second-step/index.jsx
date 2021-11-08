@@ -16,7 +16,7 @@ function SecondStep(props) {
 
   const fetchRoleTypes = useCallback(async () => {
     try {
-      const response = await fetch("https://edunity.azurewebsites.net/role-types")
+      const response = await fetch("https://edunity-backend.azurewebsites.net/role-types")
       if (!response.ok) {
         throw new Error('Could not get role types')
       }
@@ -29,7 +29,7 @@ function SecondStep(props) {
 
   const fetchCourseLocations = useCallback(async () => {
     try {
-      const response = await fetch("https://edunity.azurewebsites.net/course-locations")
+      const response = await fetch("https://edunity-backend.azurewebsites.net/course-locations")
       if (!response.ok) {
         throw new Error('Could not get course locations')
       }
@@ -42,7 +42,7 @@ function SecondStep(props) {
 
   const fetchCourses = useCallback(async () => {
     try {
-      const response = await fetch("https://edunity.azurewebsites.net/courses")
+      const response = await fetch("https://edunity-backend.azurewebsites.net/courses")
       if (!response.ok) {
         throw new Error('Could not get courses')
       }
@@ -55,7 +55,7 @@ function SecondStep(props) {
 
   const fetchLanguages = useCallback(async () => {
     try {
-      const response = await fetch("https://edunity.azurewebsites.net/supported-languages")
+      const response = await fetch("https://edunity-backend.azurewebsites.net/supported-languages")
       if (!response.ok) {
         throw new Error('Could not get courses')
       }
