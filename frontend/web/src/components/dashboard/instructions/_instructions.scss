@@ -1,0 +1,47 @@
+.instructions__container {
+    min-width: 100vw;
+    min-height: 100vh;
+    height: 100vh;
+    background-color: #FAFCFF;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 5rem 10rem 5rem 10rem;
+}
+
+.instructions__wrapper {
+    max-width: 25vw;
+    max-height: 650px;
+    &--right {
+        max-width: 35vw;
+        padding: 1.5rem 2.5rem 1.5rem 2.5rem;
+        background-color: #fff;
+        box-shadow: 0 2px 8px 0 rgba(197, 197, 197, 0.5);
+        border-radius: 5px;
+        overflow: auto;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.instruction__inner {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.instruction__img {
+    margin-right: 1rem;
+}
+
+.instructions__title {
+    margin-bottom: 2rem;
+}
+
+.instructions__text {
+    margin-bottom: 4rem;
+}
+
+.instructions__cancel {
+    margin-right: 15px;
+}
