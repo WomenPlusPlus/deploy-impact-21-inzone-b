@@ -81,14 +81,26 @@ def get_supported_language_by_name(query_name):
 @app.route('/exams')
 def get_all_exams():
     return exam_handler.handle_get_all_request()
-    
+
+
 @app.route('/exam_sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
 
+
+@app.route('/exam_set/<id>/exam_questions')
+def get_all_questions_by_exam_set_id(id):
+    exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
+    if exam_set_response.status_code != 200:
+        # there is some error while getting exam_set, so we return the error itself
+        return exam_set_response
+    return exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
+
+
 @app.route('/question_types')
 def get_all_question_types():
     return question_type_handler.handle_get_all_request()
+
 
 @app.route('/exam_questions')
 def get_all_exam_questions():
