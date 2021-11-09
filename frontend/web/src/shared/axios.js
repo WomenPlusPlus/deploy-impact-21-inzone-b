@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseURL = 'https://edunity.azurewebsites.net/';
+const baseURL = "https://azure-backend.azurewebsites.net/";
 
 export default axios.create({
   baseURL,
