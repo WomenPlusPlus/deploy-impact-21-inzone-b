@@ -70,6 +70,22 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
+    def handle_get_all_objects_by_attribute(self, **kwargs):
+        '''
+        Given keyword arguments, get all objects with matching query condition.
+        For example,
+        if the input is name='some_name', then we will return all objects of the db model which field 'name' equals to 'some_name'
+        '''
+        try:
+            objects = self.model.query.filter_by(**kwargs).all()
+            if len(objects) == 0:
+                return QueryHandler.create_generic_json_response(
+                    {'message': 'Unable to find any {} with filter {}'.format(self.model_name, kwargs)}, 400)
+            return QueryHandler.create_generic_json_response([e.serialize() for e in objects])
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
+
     def handle_get_all_objects_with_text_command(self, text_command):
         '''
         Given text command, get all objects with matching query condition.
