@@ -6,7 +6,7 @@
     display: flex;
     justify-content: space-evenly;
     padding: 5rem 8rem 5rem 8rem;
-    @media (min-width:300px) and (max-width: 1025px)  { 
+    @media (min-width:400px) and (max-width: 1025px)  { 
     padding: 0;
     flex-direction: column;
     justify-content: center;
