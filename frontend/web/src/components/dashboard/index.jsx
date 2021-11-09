@@ -16,7 +16,7 @@ const Dashboard = () => {
   // eslint-disable-next-line
   const [firstLogin, setFirstLogin] = useState(true);
   const [currentExams, setCurrentExams] = useState([]);
-  const [fullName, setFullName] = useState([]);
+  const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
 
@@ -26,7 +26,9 @@ const Dashboard = () => {
 
     if (isLogged) {
       axios.get(`student/${currentEmail}`).then((response) => {
+        console.log(response.data);
         setFullName(response.data.full_name);
+        setFirstLogin(response.data.first_query_done);
         if (response.data.language === "Français")
           localStorage.setItem("i18nextLng", "fr");
         else if (response.data.language === "Arabic")
@@ -78,12 +80,12 @@ const Dashboard = () => {
           </div>
         </div>
         {firstLogin ? (
+          <></>
+        ) : (
           <CongratulationsModal
             fullName={fullName}
             className="congratulations__modal"
           ></CongratulationsModal>
-        ) : (
-          <></>
         )}
         <div className="section section--bottom">
           <div className="column--left column-bottom">
