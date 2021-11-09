@@ -24,9 +24,9 @@ To deploy to azure:
 ```az login```
 2. Make sure requirements.txt is updated
 3. Check the status of SCM_DO_BUILD_DURING_DEPLOYMENT:  
-```az webapp config appsettings list -g Edunity -n edunity```  
+```az webapp config appsettings list -g Edunity -n edunity-backend```  
 If the value of this flag is 0, set it to 1 with:  
-```az webapp config appsettings set -g Edunity -n edunity --settings SCM_DO_BUILD_DURING_DEPLOYMENT=1```  
+```az webapp config appsettings set -g Edunity -n edunity-backend --settings SCM_DO_BUILD_DURING_DEPLOYMENT=1```  
 4. Deploy with:  
-```az webapp up --sku B1 --name edunity```
+```az webapp up --sku B1 --name edunity-backend```
 

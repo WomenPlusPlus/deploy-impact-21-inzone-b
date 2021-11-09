@@ -83,12 +83,12 @@ def get_all_exams():
     return exam_handler.handle_get_all_request()
 
 
-@app.route('/exam_sets')
+@app.route('/exam-sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
 
 
-@app.route('/exam_set/<id>/exam_questions')
+@app.route('/exam-set/<id>/exam-questions')
 def get_all_questions_by_exam_set_id(id):
     exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
     if exam_set_response.status_code != 200:
@@ -97,12 +97,12 @@ def get_all_questions_by_exam_set_id(id):
     return exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
 
 
-@app.route('/question_types')
+@app.route('/question-types')
 def get_all_question_types():
     return question_type_handler.handle_get_all_request()
 
 
-@app.route('/exam_questions')
+@app.route('/exam-questions')
 def get_all_exam_questions():
     return exam_question_handler.handle_get_all_request()
 
