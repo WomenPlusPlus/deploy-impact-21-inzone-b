@@ -5,7 +5,13 @@
     background-color: #FAFCFF;
     display: flex;
     justify-content: space-evenly;
-    padding: 5rem 10rem 5rem 10rem;
+    padding: 5rem 8rem 5rem 8rem;
+    @media (min-width:400px) and (max-width: 1025px)  { 
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
 }
 
 .instructions__wrapper {
@@ -22,6 +28,10 @@
             display: none;
         }
     }
+    @media (min-width:300px) and (max-width: 1025px)  { 
+        max-width: 90%;
+        padding: 3rem
+        }
 }
 
 .instruction__inner {
