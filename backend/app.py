@@ -35,10 +35,10 @@ course_location_handler = QueryHandler(db, CourseLocation, 'course location')
 supported_language_handler = QueryHandler(
     db, SupportedLanguages, 'supported language')
 exam_handler = QueryHandler(db, Exam, 'exam')
-exam_set_handler = QueryHandler(db, ExamSet, 'exam_set')
-question_type_handler =  QueryHandler(db, QuestionType, 'question_type')
-exam_question_handler = QueryHandler(db, ExamQuestion, 'exam_question')
-student_answer_handler = QueryHandler(db, StudentAnswer, 'student answers')
+exam_set_handler = QueryHandler(db, ExamSet, 'exam set')
+question_type_handler =  QueryHandler(db, QuestionType, 'question type')
+exam_question_handler = QueryHandler(db, ExamQuestion, 'exam question')
+student_answer_handler = QueryHandler(db, StudentAnswer, 'student answer')
 
 @app.route('/')
 def home():
@@ -85,6 +85,15 @@ def get_all_exams():
     return exam_handler.handle_get_all_request()
 
 
+@app.route('/exam/<id>/student-answers')
+def get_student_answers_by_exam_id(id):
+    exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)
+    if exam_response.status_code != 200:
+        # there is some error while getting exam, so we return the error itself
+        return exam_response
+    return student_answer_handler.handle_get_all_objects_by_attribute(exam_id=id)
+
+
 @app.route('/exam-sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
@@ -109,7 +118,7 @@ def get_all_exam_questions():
     return exam_question_handler.handle_get_all_request()
 
 
-@app.route('/student_answers')
+@app.route('/student-answers')
 def get_all_student_answers():
     return student_answer_handler.handle_get_all_request()
 
