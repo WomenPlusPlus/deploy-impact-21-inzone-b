@@ -17,6 +17,7 @@ from models.exam import *
 from models.exam_set import *
 from models.question_type import *
 from models.exam_question import *
+from models.student_answer import *
 
 app = Flask(__name__)
 
@@ -37,6 +38,7 @@ exam_handler = QueryHandler(db, Exam, 'exam')
 exam_set_handler = QueryHandler(db, ExamSet, 'exam_set')
 question_type_handler =  QueryHandler(db, QuestionType, 'question_type')
 exam_question_handler = QueryHandler(db, ExamQuestion, 'exam_question')
+student_answer_handler = QueryHandler(db, StudentAnswer, 'student answers')
 
 @app.route('/')
 def home():
@@ -105,6 +107,11 @@ def get_all_question_types():
 @app.route('/exam-questions')
 def get_all_exam_questions():
     return exam_question_handler.handle_get_all_request()
+
+
+@app.route('/student_answers')
+def get_all_student_answers():
+    return student_answer_handler.handle_get_all_request()
 
 
 @app.route('/courses')
