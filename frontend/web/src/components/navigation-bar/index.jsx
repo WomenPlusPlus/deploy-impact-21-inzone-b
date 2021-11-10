@@ -17,32 +17,32 @@ const Nav = () => {
       <div className="wrapper--left">
         <img id="nav__logo" src={icon} alt="logo" />
       </div>
-      {user &&
+      {user && (
         <div className="wrapper--middle">
-          <a href="#" tabIndex="1">
-          <Trans key="link-1" i18nKey="static.link-1">
-            Overview
+          <a href="/home">
+            <Trans key="link-1" i18nKey="static.link-1">
+              Overview
             </Trans>
           </a>
-          <a href="#" tabIndex="2">
-          <Trans key="link-1" i18nKey="static.link-2">
-            Messages
+          <a href="/home">
+            <Trans key="link-1" i18nKey="static.link-2">
+              Messages
             </Trans>
           </a>
-          <a href="#" tabIndex="3">
-          <Trans key="link-1" i18nKey="static.link-3">
-            Exams
+          <a href="/home">
+            <Trans key="link-1" i18nKey="static.link-3">
+              Exams
             </Trans>
           </a>
         </div>
-      }
-      {user &&
+      )}
+      {user && (
         <div className="wrapper--right">
           <img id="nav__img--circle" src={demo} alt="profile" />
         </div>
-      }
+      )}
     </div>
   );
-}
+};
 
 export default Nav;
