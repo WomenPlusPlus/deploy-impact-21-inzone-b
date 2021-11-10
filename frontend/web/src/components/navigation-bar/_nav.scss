@@ -55,7 +55,7 @@
       font-weight: 600;
     }
   }
-  a[tabindex]:focus {
+  a:focus {
     color: $dashboard-pressed;
     text-decoration: underline;
   }
