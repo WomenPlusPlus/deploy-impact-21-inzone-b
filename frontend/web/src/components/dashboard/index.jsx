@@ -110,7 +110,14 @@ const Dashboard = () => {
                           <p>Limit: {exam.closed_at}</p>
                         </div>
                         <div className="exams__wrapper--right">
-                          <Link to="/instructions">
+                          <Link
+                            to={{
+                              pathname: "/instructions",
+                              examId: {
+                                id: exam.id,
+                              },
+                            }}
+                          >
                             <Button variant="primary">Start exam</Button>
                           </Link>
                         </div>

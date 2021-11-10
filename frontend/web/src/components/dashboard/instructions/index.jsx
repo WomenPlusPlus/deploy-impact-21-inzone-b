@@ -7,17 +7,22 @@ import check from "../../../assets/instructions/check.svg";
 import question from "../../../assets/instructions/question.svg";
 import warning from "../../../assets/instructions/warning.svg";
 import windowsvg from "../../../assets/instructions/window.svg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
+  const location = useLocation();
+  const { id } = location.examId;
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
 
     if (currentEmail) {
       axios.get(`student/${currentEmail}/current-exams`).then((response) => {
-        setTimeLimit(response.data[0].duration_in_minutes);
+        const currentExam = response.data.filter((el) => {
+          return el.id === id;
+        });
+        setTimeLimit(currentExam[0].duration_in_minutes);
       });
     }
   }, []);
@@ -47,8 +52,8 @@ const Instructions = () => {
             <div>
               <h6>Completion time</h6>
               <p>
-                You have {timeLimit} to complete the exam. The counter starts as
-                soon as you click on Start Exam.
+                You have {timeLimit} minutes to complete the exam. The counter
+                starts as soon as you click on Start Exam.
               </p>
             </div>
           </div>
