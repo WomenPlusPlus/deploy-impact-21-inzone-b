@@ -21,7 +21,8 @@
 .inner__wrapper {
   background-color: $white;
   width: 100%;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
+  border: 1px solid #E5E5E5;
   &--top {
     min-height: 30vh;
     display: flex;
@@ -48,14 +49,14 @@
 }
 
 #img--updates {
-  margin-top: 3rem;
-  max-width: 162px;
-  max-height: 146px;
+  margin-top: 6rem;
+  max-width: 222px;
+  max-height: 186px;
 }
 #img--progress {
   margin-top: 4rem;
-  max-width: 310px;
-  max-height: 116px;
+  max-width: 340px;
+  max-height: 136px;
 }
 
 .line {
