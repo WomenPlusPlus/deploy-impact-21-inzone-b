@@ -2,8 +2,10 @@
 @import "../../scss/config/colors";
 
 .dash__container {
+  min-height: 100vh;
   background-color: $dashboard-bg;
   flex-grow: 1;
+  padding-top: 1rem;
 }
 
 .section {
@@ -41,7 +43,7 @@
 }
 .column--right {
   width: 40%;
-  padding: 2rem 2rem 2rem 0;
+  padding: 2rem 3rem 2rem 0;
 }
 
 #column--notitle {
