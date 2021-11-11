@@ -24,8 +24,9 @@ const Signup = () => {
               email: student.email,
             })
           );
-          localStorage.setItem("isLogged", true);
-          history.push("/home");
+          // we direct to login page after signup successfully
+          // so that previously-logged-in user will be reset
+          history.push("/login");
         } else {
           alert("signup was not successful :(");
           console.log("testing");
