@@ -36,9 +36,9 @@ supported_language_handler = QueryHandler(
     db, SupportedLanguages, 'supported language')
 exam_handler = QueryHandler(db, Exam, 'exam')
 exam_set_handler = QueryHandler(db, ExamSet, 'exam set')
-question_type_handler =  QueryHandler(db, QuestionType, 'question type')
+question_type_handler = QueryHandler(db, QuestionType, 'question type')
 exam_question_handler = QueryHandler(db, ExamQuestion, 'exam question')
-student_answer_handler = QueryHandler(db, StudentAnswer, 'student answer')
+student_answer_handler = StudentAnswerQueryHandler(db, StudentAnswer, 'student answer')
 
 @app.route('/')
 def home():
@@ -121,6 +121,16 @@ def get_all_exam_questions():
 @app.route('/student-answers')
 def get_all_student_answers():
     return student_answer_handler.handle_get_all_request()
+
+
+@app.route('/student-answer', methods=['POST'])
+def add_new_student_answer():
+    return student_answer_handler.handle_add_new_object_request(request)
+
+
+@app.route('/student-answer/<id>', methods=['PUT'])
+def update_student_answer(id):
+    return student_answer_handler.handle_update_object_by_attribute(request, id=id)
 
 
 @app.route('/courses')

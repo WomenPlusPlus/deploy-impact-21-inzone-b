@@ -222,3 +222,31 @@ class CourseQueryHandler(QueryHandler):
             description=content.get('description'),
             number_of_credits=content.get('number_of_credits'))
         return self.add_new_object_to_db(course, name=course_name)
+
+
+class StudentAnswerQueryHandler(QueryHandler):
+    '''
+    A class inherits from QueryHandler and perform specific functionality related to student answer
+    '''
+
+    def handle_add_new_object_request(self, request):
+        '''
+        Given a JSON request, create new object in db
+        '''
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        content = request.get_json()
+        missing_field = QueryHandler.get_missing_field_name(
+            content, ['question_id', 'exam_id', 'answer_indexes', 'answer_texts'])
+        if missing_field is not None:
+            # there is at least 1 missing key in the input json, so we throw an error back
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
+        question_id = content.get('question_id')
+        exam_id = content.get('exam_id')
+        # create a new student answer
+        student_answer = self.model(
+            question_id=question_id,
+            exam_id=exam_id,
+            answer_indexes=content.get('answer_indexes'),
+            answer_texts=content.get('answer_texts'))
+        return self.add_new_object_to_db(student_answer, question_id=question_id, exam_id=exam_id)
