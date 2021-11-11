@@ -1,12 +1,13 @@
 from os import stat
 from flask import jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from models.base_model import db
+from models.base_model import db, get_missing_field_name
 from models.student import *
 from models.course import *
 from models.course_location import *
 from models.role_type import *
 from models.supported_language import *
+import json
 
 
 class QueryHandler:
@@ -32,17 +33,6 @@ class QueryHandler:
         response.status_code = code
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
-
-    @staticmethod
-    def get_missing_field_name(json_object, fields):
-        '''
-        Given a json_object and a list of required fields, 
-        finds the first one in the list that is missing in the json object. If all fields are present, returns None.
-        '''
-        for field in fields:
-            if json_object.get(field) is None:
-                return field
-        return None
 
     def handle_get_all_request(self):
         '''
@@ -179,7 +169,7 @@ class StudentQueryHandler(QueryHandler):
         if not request.is_json:
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        missing_field = QueryHandler.get_missing_field_name(
+        missing_field = get_missing_field_name(
             content, ['full_name', 'email', 'password', 'course_name', 'course_location', 'language'])
         if missing_field is not None:
             # there is at least 1 missing key in the input json, so we throw an error back
@@ -208,7 +198,7 @@ class CourseQueryHandler(QueryHandler):
         if not request.is_json:
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        missing_field = QueryHandler.get_missing_field_name(
+        missing_field = get_missing_field_name(
             content, ['name', 'start_at', 'finish_at', 'description', 'number_of_credits'])
         if missing_field is not None:
             # there is at least 1 missing key in the input json, so we throw an error back
@@ -236,7 +226,7 @@ class StudentAnswerQueryHandler(QueryHandler):
         if not request.is_json:
             return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
         content = request.get_json()
-        missing_field = QueryHandler.get_missing_field_name(
+        missing_field = get_missing_field_name(
             content, ['question_id', 'exam_id', 'answer_indexes', 'answer_texts'])
         if missing_field is not None:
             # there is at least 1 missing key in the input json, so we throw an error back
@@ -250,3 +240,33 @@ class StudentAnswerQueryHandler(QueryHandler):
             answer_indexes=content.get('answer_indexes'),
             answer_texts=content.get('answer_texts'))
         return self.add_new_object_to_db(student_answer, question_id=question_id, exam_id=exam_id)
+
+    def handle_add_multiple_objects_with_attribute(self, request, **kwargs):
+        '''
+        Add student answers to db with fields specified in kwargs
+        '''
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        content_list = json.loads(json.dumps(request.get_json()))
+        if type(content_list) != type([]):
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not list'}, 405)
+        try:
+            objects = []
+            for content in content_list:
+                # Make sure that 'obj' contains fields from 'kwargs' with the same values
+                for arg_key in kwargs:
+                    if content.get(arg_key) is None:
+                        content[arg_key] = kwargs.get(arg_key)
+                    elif str(content.get(arg_key)) != kwargs.get(arg_key):
+                        return QueryHandler.create_generic_json_response({'message': 'Invalid input: got {} with not {}'.format(self.model_name, kwargs)}, 405)
+                object, error_message = self.model.create_from_json(content)
+                if object is None:
+                    return QueryHandler.create_generic_json_response({'message': error_message}, 405)
+                objects.append(object)
+            for obj in objects:
+                self.db_obj.session.add(obj)
+            self.db_obj.session.commit()
+            return QueryHandler.create_generic_json_response(
+                {'message': '{} new {} added with {}'.format(len(objects), self.model_name, kwargs)})
+        except Exception as e:
+            return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)

@@ -94,6 +94,15 @@ def get_student_answers_by_exam_id(id):
     return student_answer_handler.handle_get_all_objects_by_attribute(exam_id=id)
 
 
+@app.route('/exam/<id>/student-answers', methods=['POST'])
+def add_student_answers_by_exam_id(id):
+    exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)
+    if exam_response.status_code != 200:
+        # there is some error while getting exam, so we return the error itself
+        return exam_response
+    return student_answer_handler.handle_add_multiple_objects_with_attribute(request, exam_id=id)
+
+
 @app.route('/exam-sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
@@ -131,6 +140,11 @@ def add_new_student_answer():
 @app.route('/student-answer/<id>', methods=['PUT'])
 def update_student_answer(id):
     return student_answer_handler.handle_update_object_by_attribute(request, id=id)
+
+
+@app.route('/student-answer/<id>', methods=['DELETE'])
+def delete_student_answer(id):
+    return student_answer_handler.handle_delete_object_by_attribute(id=id)
 
 
 @app.route('/courses')

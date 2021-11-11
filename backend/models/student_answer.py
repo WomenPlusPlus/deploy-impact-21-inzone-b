@@ -1,4 +1,4 @@
-from .base_model import db
+from .base_model import db, get_missing_field_name
 
 class StudentAnswer(db.Model):
     __tablename__ = 'student_answers'
@@ -42,3 +42,22 @@ class StudentAnswer(db.Model):
             self.answer_texts = answer_texts
             has_updates = True
         return has_updates
+
+    @staticmethod
+    def create_from_json(content):
+        '''
+        Creates StudentAnswer object from input 'content'.
+        If some mandatory fields are missing in 'content', returns an error message.
+        '''
+        missing_field = get_missing_field_name(
+            content, ['question_id', 'exam_id', 'answer_indexes', 'answer_texts'])
+        if missing_field is not None:
+            # there is at least 1 missing key in the input json, so we throw an error back
+            return None, 'Invalid input: missing field \'{}\''.format(missing_field)
+        # create a new student answer
+        student_answer = StudentAnswer(
+            question_id=content.get('question_id'),
+            exam_id=content.get('exam_id'),
+            answer_indexes=content.get('answer_indexes'),
+            answer_texts=content.get('answer_texts'))
+        return student_answer, ''
