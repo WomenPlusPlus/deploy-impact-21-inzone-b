@@ -6,14 +6,14 @@ class StudentAnswer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer)
     exam_id = db.Column(db.Integer)
-    answer_index = db.Column(db.Integer)
-    answer_text = db.Column(db.String(200))
+    answer_indexes = db.Column(db.ARRAY(db.Integer))
+    answer_texts = db.Column(db.ARRAY(db.String))
 
-    def __init__(self, question_id, exam_id, answer_index, answer_text):
+    def __init__(self, question_id, exam_id, answer_indexes, answer_texts):
         self.question_id = question_id
         self.exam_id = exam_id
         self.answer_index = answer_index
-        self.answer_text = answer_text
+        self.answer_texts = answer_texts
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -23,8 +23,8 @@ class StudentAnswer(db.Model):
             'id': self.id,
             'question_id': self.question_id,
             'exam_id': self.exam_id,
-            'answer_index': self.answer_index,
-            'answer_text': self.answer_text
+            'answer_indexes': self.answer_indexes,
+            'answer_texts': self.answer_texts
         }
 
     def update(self, json_with_updates):
@@ -41,12 +41,12 @@ class StudentAnswer(db.Model):
         if exam_id is not None and exam_id != self.exam_id:
             self.exam_id = exam_id
             has_updates = True
-        answer_index = json_with_updates.get('answer_index')
-        if answer_index is not None and answer_index != self.answer_index:
-            self.answer_index = answer_index
+        answer_indexes = json_with_updates.get('answer_indexes')
+        if answer_indexes is not None and answer_indexes != self.answer_indexes:
+            self.answer_indexes = answer_indexes
             has_updates = True
-        answer_text = json_with_updates.get('answer_text')
-        if answer_text is not None and answer_text != self.answer_text:
-            self.answer_text = answer_text
+        answer_texts = json_with_updates.get('answer_texts')
+        if answer_texts is not None and answer_texts != self.answer_texts:
+            self.answer_texts = answer_texts
             has_updates = True
         return has_updates
