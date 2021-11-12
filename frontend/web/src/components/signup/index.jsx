@@ -14,6 +14,8 @@ const Signup = () => {
   const [signupStep, setSignupStep] = useState(1)
   const [student, setStudent] = useState({})
 
+  const [showLoginError, setShowLoginError] = useState(false);
+
   const signUp = async (student) => {
     axios.post("student", student)
       .then((response) => {
@@ -27,8 +29,7 @@ const Signup = () => {
           localStorage.setItem("isLogged", true);
           history.push("/home");
         } else {
-          alert("signup was not successful :(");
-          console.log("testing");
+          setShowLoginError(true);
         }
       });
   }
@@ -70,6 +71,7 @@ const Signup = () => {
           { signupStep === 2 && <SecondStep
             title="Let's set up your account"
             onSubmitData={secondStepHandler}
+            showLoginError={showLoginError}
           /> }
         </div>
       </div>
