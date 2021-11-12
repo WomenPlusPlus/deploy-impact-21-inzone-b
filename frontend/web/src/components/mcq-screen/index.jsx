@@ -10,12 +10,13 @@ import { useLocation } from "react-router";
 const MCQScreen = () => {
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
   const [questions, setQuestions] = useState([]);
+  const [examData, setExamData] = useState([]);
 
   const location = useLocation();
   const { id } = location.examSet;
+  const examId = localStorage.getItem("examId");
 
   useEffect(() => {
-    console.log("inn use efd  ");
     axios.get("exam-questions").then((response) => {
       const currentExamSet = response.data.filter((el) => {
         return el.exam_set_id === id;
@@ -23,19 +24,29 @@ const MCQScreen = () => {
       console.log(response, "response");
       console.log(currentExamSet, "current exam set filtered by id");
       setQuestions(currentExamSet);
+      setExamData(currentExamSet);
     });
   }, []);
 
+  // eslint-disable-next-line
   const [chosenAnswers, setChosenAnswers] = useState([]);
-  const [currentChosenAnswer, setCurrentChosenAnswer] = useState();
+  console.log("choosen answers", chosenAnswers);
+  const [currentChosenAnswer, setCurrentChosenAnswer] = useState({});
 
   const chooseAnswerHandler = (label) => {
-    setCurrentChosenAnswer(label);
+    console.log(label);
+    setCurrentChosenAnswer({
+      exam_id: examId,
+      question_id: currentQuestionNumber,
+      answer_indexes: [label],
+      answer_texts: examData[currentQuestionNumber].possible_answers[label],
+    });
   };
 
   const nextQuestion = () => {
+    console.log(currentChosenAnswer.answer_indexes, "current chosen ");
     setChosenAnswers((prevState) => {
-      return [...prevState, currentChosenAnswer];
+      return [...prevState, { currentChosenAnswer }];
     });
     setCurrentQuestionNumber((prevState) => {
       return prevState + 1;
@@ -46,12 +57,19 @@ const MCQScreen = () => {
   };
 
   const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const handleCloseModal = () => setShowSubmitModal(false);
-  const handleShowModal = () => setShowSubmitModal(true);
+  // submit questions on handleclosemodal
+  const handleCloseModal = (e) => {
+    // axios.post(`exam/${examId}/student-answers`, chosenAnswers);
+    setShowSubmitModal(false);
+  };
+  const handleShowModal = () => {
+    setShowSubmitModal(true);
+  };
 
   const showSubmitScreen = () => {
+    console.log(currentChosenAnswer, "current chosen ");
     setChosenAnswers((prevState) => {
-      return [...prevState, currentChosenAnswer];
+      return [...prevState, { currentChosenAnswer }];
     });
     handleShowModal();
   };
@@ -71,7 +89,7 @@ const MCQScreen = () => {
                   questionData={questions[currentQuestionNumber]}
                   currentQuestionNumber={currentQuestionNumber}
                   chooseAnswerHandler={chooseAnswerHandler}
-                  currentChosenAnswer={currentChosenAnswer}
+                  currentChosenAnswer={currentChosenAnswer.answer_indexes}
                 />
               </div>
             )}
@@ -109,7 +127,7 @@ const MCQScreen = () => {
           All your answers have been saved (even when you were offline). Make
           sure you have internet connection and submit your exam to finish.
         </Modal.Body>
-        {chosenAnswers}
+        {/* {chosenAnswers} */}
         <Modal.Footer>
           {/* TODO: send data to backend */}
           <Button variant="primary" onClick={handleCloseModal}>

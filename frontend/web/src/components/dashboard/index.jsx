@@ -116,6 +116,9 @@ const Dashboard = () => {
                               examSet: {
                                 id: exam.exam_set_id,
                               },
+                              examId: {
+                                examId: exam.id,
+                              },
                             }}
                           >
                             <Button variant="primary">Start exam</Button>
