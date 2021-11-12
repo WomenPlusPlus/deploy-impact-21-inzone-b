@@ -113,8 +113,8 @@ const Dashboard = () => {
                           <Link
                             to={{
                               pathname: "/instructions",
-                              examId: {
-                                id: exam.id,
+                              examSet: {
+                                id: exam.exam_set_id,
                               },
                             }}
                           >
