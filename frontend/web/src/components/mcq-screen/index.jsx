@@ -5,16 +5,24 @@ import Question from "./question";
 import QuestionProgressBar from "./question-progress-bar";
 import { Button, Modal } from "react-bootstrap";
 import axios from "../../shared/axios";
+import { useLocation } from "react-router";
 
 const MCQScreen = () => {
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
   const [questions, setQuestions] = useState([]);
 
+  const location = useLocation();
+  const { id } = location.examSet;
+
   useEffect(() => {
     console.log("inn use efd  ");
     axios.get("exam-questions").then((response) => {
+      const currentExamSet = response.data.filter((el) => {
+        return el.exam_set_id === id;
+      });
       console.log(response, "response");
-      setQuestions([response.data[0]]);
+      console.log(currentExamSet, "current exam set filtered by id");
+      setQuestions(currentExamSet);
     });
   }, []);
 

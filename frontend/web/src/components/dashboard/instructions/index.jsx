@@ -12,7 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
   const location = useLocation();
-  const { id } = location.examId;
+  const { id } = location.examSet;
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
@@ -20,7 +20,7 @@ const Instructions = () => {
     if (currentEmail) {
       axios.get(`student/${currentEmail}/current-exams`).then((response) => {
         const currentExam = response.data.filter((el) => {
-          return el.id === id;
+          return el.exam_set_id === id;
         });
         setTimeLimit(currentExam[0].duration_in_minutes);
       });
@@ -42,9 +42,9 @@ const Instructions = () => {
           </Button>
           <Link
             to={{
-              pathname: "/instructions",
-              examId: {
-                // id: exam.id,
+              pathname: "/exam/mcq",
+              examSet: {
+                id: id,
               },
             }}
           >
