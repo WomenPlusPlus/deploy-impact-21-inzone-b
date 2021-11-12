@@ -36,17 +36,17 @@ const MCQScreen = () => {
   const chooseAnswerHandler = (label) => {
     console.log(label);
     setCurrentChosenAnswer({
-      exam_id: examId,
-      question_id: currentQuestionNumber,
-      answer_indexes: [label],
-      answer_texts: examData[currentQuestionNumber].possible_answers[label],
+      question_id: examData[currentQuestionNumber].id,
+      exam_id: Number(examId),
+      answer_indexes: [Number(label)],
+      answer_texts: [examData[currentQuestionNumber].possible_answers[label]],
     });
   };
 
   const nextQuestion = () => {
     console.log(currentChosenAnswer.answer_indexes, "current chosen ");
     setChosenAnswers((prevState) => {
-      return [...prevState, { currentChosenAnswer }];
+      return [...prevState, { ...currentChosenAnswer }];
     });
     setCurrentQuestionNumber((prevState) => {
       return prevState + 1;
@@ -59,7 +59,8 @@ const MCQScreen = () => {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   // submit questions on handleclosemodal
   const handleCloseModal = (e) => {
-    // axios.post(`exam/${examId}/student-answers`, chosenAnswers);
+    console.log(chosenAnswers, "chosenAnsers ----------");
+    axios.post(`exam/${examId}/student-answers`, chosenAnswers);
     setShowSubmitModal(false);
   };
   const handleShowModal = () => {
@@ -69,7 +70,7 @@ const MCQScreen = () => {
   const showSubmitScreen = () => {
     console.log(currentChosenAnswer, "current chosen ");
     setChosenAnswers((prevState) => {
-      return [...prevState, { currentChosenAnswer }];
+      return [...prevState, { ...currentChosenAnswer }];
     });
     handleShowModal();
   };
