@@ -40,7 +40,14 @@ const Instructions = () => {
           <Button className="instructions__cancel" variant="outline-primary">
             Cancel
           </Button>
-          <Link to="/exam/mcq">
+          <Link
+            to={{
+              pathname: "/instructions",
+              examId: {
+                // id: exam.id,
+              },
+            }}
+          >
             <Button variant="primary">Start exam</Button>
           </Link>
         </div>
