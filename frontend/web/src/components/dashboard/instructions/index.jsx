@@ -13,9 +13,11 @@ const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
   const location = useLocation();
   const { id } = location.examSet;
+  const { examId } = location.examId;
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
+    localStorage.setItem("examId", examId);
 
     if (currentEmail) {
       axios.get(`student/${currentEmail}/current-exams`).then((response) => {
