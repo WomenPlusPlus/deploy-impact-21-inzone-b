@@ -32,7 +32,7 @@ const MCQScreen = () => {
   // eslint-disable-next-line
   const [chosenAnswers, setChosenAnswers] = useState([]);
   console.log("choosen answers", chosenAnswers);
-  const [currentChosenAnswer, setCurrentChosenAnswer] = useState({});
+  const [currentChosenAnswer, setCurrentChosenAnswer] = useState("");
 
   const chooseAnswerHandler = (label) => {
     console.log(label);

@@ -44,8 +44,11 @@ https://docs.microsoft.com/en-us/azure/app-service/quickstart-nodejs?tabs=linux&
 
 If there is an error about "There appears to be trouble with your network connection. Retrying..." during deployment, set the flag CUSTOM_BUILD_COMMAND from command line:
 
-```az webapp config appsettings set -g Edunity -n edunity-frontend --settings CUSTOM_BUILD_COMMAND="yarn install --prefer-offline --network-timeout 100000"```
+```az webapp config appsettings set -g Edunity -n edunity --settings CUSTOM_BUILD_COMMAND="yarn install --prefer-offline --network-timeout 100000"```
 
 Verify that the flag is set correctly:
 
-```az webapp config appsettings list -g Edunity -n edunity-frontend```
+```az webapp config appsettings list -g Edunity -n edunity```
+
+The app can also be deployed from command line with
+```az webapp up --sku B1 --name edunity```

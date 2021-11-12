@@ -39,9 +39,11 @@ const Instructions = () => {
           the instructions and we wish you good luck!
         </p>
         <div className="instructions__buttons">
-          <Button className="instructions__cancel" variant="outline-primary">
-            Cancel
-          </Button>
+          <Link to="/home">
+            <Button className="instructions__cancel" variant="outline-primary">
+              Cancel
+            </Button>
+          </Link>
           <Link
             to={{
               pathname: "/exam/mcq",
