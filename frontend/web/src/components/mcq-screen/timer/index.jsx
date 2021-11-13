@@ -41,7 +41,7 @@ const Timer = ({id}) => {
         <div>
         { minutes === 0 && seconds === 0
             ? null
-            : <h1> {minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</h1> 
+            : <h6> {minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</h6> 
         }
         </div>
     )
