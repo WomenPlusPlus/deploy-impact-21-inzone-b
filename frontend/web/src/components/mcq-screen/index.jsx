@@ -125,8 +125,8 @@ const MCQScreen = () => {
         </div>
       </div>
 
-      <Modal show={showSubmitModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+      <Modal show={showSubmitModal}>
+        <Modal.Header>
           <Modal.Title>You have completed your MCQ exam!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
