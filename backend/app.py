@@ -108,6 +108,23 @@ def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
 
 
+@app.route('/exam-set/<id>')
+def get_exam_set_by_id(id):
+    return exam_set_handler.handle_get_first_object_by_attribute(id=id)
+
+
+@app.route('/exam-set/<id>/number-of-questions')
+def get_number_of_questions_by_exam_set_id(id):
+    exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
+    if exam_set_response.status_code != 200:
+        # there is some error while getting exam_set, so we return the error itself
+        return exam_set_response
+    all_questions_response = exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
+    # we need to convert from reponse data to dict
+    all_questions_dict = json.loads(all_questions_response.get_data())
+    return QueryHandler.create_generic_json_response({'number_of_questions': len(all_questions_dict)})
+
+
 @app.route('/exam-set/<id>/exam-questions')
 def get_all_questions_by_exam_set_id(id):
     exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
