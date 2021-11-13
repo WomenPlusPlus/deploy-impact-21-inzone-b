@@ -11,6 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
+  const [numberOfQuestions, setNumberOfQuestions] = useState([]);
   const location = useLocation();
   const { id } = location.examSet;
   const { examId } = location.examId;
@@ -25,6 +26,10 @@ const Instructions = () => {
           return el.exam_set_id === id;
         });
         setTimeLimit(currentExam[0].duration_in_minutes);
+      });
+      axios.get(`exam-set/${id}/number-of-questions`).then((response) => {
+        console.log(response.data, "get number of questions of an exam set by id");
+        setNumberOfQuestions(response.data.number_of_questions);
       });
     }
   }, []);
@@ -63,7 +68,7 @@ const Instructions = () => {
             <div>
               <h6>Completion time</h6>
               <p>
-                You have {timeLimit} minutes to complete the exam. The counter
+                You have <b>{timeLimit}</b> minutes to complete the exam. The counter
                 starts as soon as you click on Start Exam.
               </p>
             </div>
@@ -76,7 +81,7 @@ const Instructions = () => {
               <h6>Multiple Choice Questions</h6>
               <p>
                 This is a multiple choice question assessment. You will be
-                presented 4 answers but only 1 is correct.
+                presented a number of answers but only 1 is correct.
               </p>
             </div>
           </div>
@@ -87,8 +92,7 @@ const Instructions = () => {
             <div>
               <h6>Total number of questions</h6>
               <p>
-                You have a total of 30 questions to answer. You need to answer
-                at least 16 of them correctly to pass.
+                You have a total of <b>{numberOfQuestions}</b> question(s) to answer.
               </p>
             </div>
           </div>

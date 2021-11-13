@@ -19,10 +19,8 @@ const MCQScreen = () => {
   const examId = localStorage.getItem("examId");
 
   useEffect(() => {
-    axios.get("exam-questions").then((response) => {
-      const currentExamSet = response.data.filter((el) => {
-        return el.exam_set_id === id;
-      });
+    axios.get(`exam-set/${id}/exam-questions`).then((response) => {
+      const currentExamSet = response.data;
       console.log(response, "response");
       console.log(currentExamSet, "current exam set filtered by id");
       setQuestions(currentExamSet);
