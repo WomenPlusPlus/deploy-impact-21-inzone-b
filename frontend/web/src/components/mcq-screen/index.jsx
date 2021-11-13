@@ -6,6 +6,7 @@ import QuestionProgressBar from "./question-progress-bar";
 import { Button, Modal } from "react-bootstrap";
 import axios from "../../shared/axios";
 import { useHistory, useLocation } from "react-router";
+import Timer from './timer'
 
 const MCQScreen = () => {
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
@@ -82,8 +83,10 @@ const MCQScreen = () => {
       <div className="container">
         <div className="row">
           <div className="col-12">
+            
             {questions.length > 0 && (
               <div className="question-wrapper">
+                <Timer id={id}></Timer>
                 <QuestionProgressBar
                   currentQuestionNumber={currentQuestionNumber}
                   questionsNumber={questions.length}
