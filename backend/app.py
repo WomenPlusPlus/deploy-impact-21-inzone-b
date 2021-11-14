@@ -85,6 +85,11 @@ def get_all_exams():
     return exam_handler.handle_get_all_request()
 
 
+@app.route('/exam/<id>')
+def get_exam_by_id(id):
+    return exam_handler.handle_get_first_object_by_attribute(id=id)
+
+
 @app.route('/exam/<id>/student-answers')
 def get_student_answers_by_exam_id(id):
     exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)
