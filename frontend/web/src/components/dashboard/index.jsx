@@ -142,7 +142,7 @@ const Dashboard = () => {
               <div className="inner__nav line">
                 <h5 className="h5__line">
                   <Trans key="inntert-title-2" i18nKey="static.inner-title-2">
-                    Post exams
+                    Past exams
                   </Trans>
                 </h5>
                 <div className="nav__pastexams">
