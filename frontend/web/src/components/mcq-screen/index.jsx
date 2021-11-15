@@ -12,6 +12,7 @@ const MCQScreen = () => {
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [examData, setExamData] = useState([]);
+  const [isTime, setIsTime] = useState(false);
   // eslint-disable-next-line
   const [isCheating, setIsCheating] = useState(false);
   const [modalTitle, setModalTitle] = useState(
@@ -46,6 +47,13 @@ const MCQScreen = () => {
   };
 
   useEffect(() => {
+    if (isTime) {
+      setModalTitle("Time's up");
+      setModalMessage(
+        "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
+      );
+      handleShowModal();
+    }
     window.addEventListener("focus", onFocus);
     window.addEventListener("visibilitychange", visibilityChange);
     if (isCheating) handleShowModal();
@@ -59,7 +67,7 @@ const MCQScreen = () => {
     return () => {
       window.removeEventListener("visibilitychange", visibilityChange);
     };
-  }, [isCheating]);
+  }, [isCheating, isTime]);
 
   // eslint-disable-next-line
   const [chosenAnswers, setChosenAnswers] = useState([]);
@@ -124,7 +132,7 @@ const MCQScreen = () => {
           <div className="col-12">
             {questions.length > 0 && (
               <div className="question-wrapper">
-                <Timer id={id}></Timer>
+                <Timer setIsTime={setIsTime} id={id}></Timer>
                 <QuestionProgressBar
                   currentQuestionNumber={currentQuestionNumber}
                   questionsNumber={questions.length}
