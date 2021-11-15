@@ -91,17 +91,18 @@ class QueryHandler:
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
-    def add_new_object_to_db(self, object, **kwargs):
+    def handle_add_new_object_request(self, request):
         '''
-        Given a object from a model, create new object in db if there is no such object existed in the db.
-        The searching criteria is set by **kwargs.
-        For example,
-        if there is already an object of model A with attribute_x="some_value", then
-        self.add_new_object_to_db(new_object, attribute_x="some_value") --> will not add new object to the db
-        self.add_new_object_to_db(new_object, attribute_x="some_other_value") --> will add new object to the db
-        self.add_new_object_to_db(new_object, attribute_y="some_value") --> will also add new object to the db
+        Given a JSON request, create new object in db, if no such object existed in the db.
+        The searching criteria is set by model.unique_kwargs().
         '''
+        if not request.is_json:
+            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
+        object, error_message = self.model.create_from_json(request.get_json())
+        if object is None:
+            return QueryHandler.create_generic_json_response({'message': error_message}, 405)
         try:
+            kwargs = object.unique_kwargs()
             # we first check if there is any existing object with this argument
             existing_object = self.model.query.filter_by(**kwargs).first()
             if existing_object is not None:
@@ -114,6 +115,7 @@ class QueryHandler:
                 {'message': 'A new {} added with {}'.format(self.model_name, kwargs)})
         except Exception as e:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
+
 
     def handle_delete_object_by_attribute(self, **kwargs):
         '''
@@ -157,89 +159,10 @@ class QueryHandler:
             return QueryHandler.create_generic_json_response({'message': 'unexpected error: {}'.format(str(e))}, 400)
 
 
-class StudentQueryHandler(QueryHandler):
-    '''
-    A class inherits from QueryHandler and perform specific functionality related to student
-    '''
-
-    def handle_add_new_object_request(self, request):
-        '''
-        Given a JSON request, create new object in db
-        '''
-        if not request.is_json:
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
-        content = request.get_json()
-        missing_field = get_missing_field_name(
-            content, ['full_name', 'email', 'password', 'course_name', 'course_location', 'language'])
-        if missing_field is not None:
-            # there is at least 1 missing key in the input json, so we throw an error back
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
-        email = content.get('email')
-        # create a new student
-        student = self.model(
-            full_name=content.get('full_name'),
-            email=email,
-            password=generate_password_hash(content.get('password')),
-            course_name=content.get('course_name'),
-            course_location=content.get('course_location'),
-            language=content.get('language'))
-        return self.add_new_object_to_db(student, email=email)
-
-
-class CourseQueryHandler(QueryHandler):
-    '''
-    A class inherits from QueryHandler and perform specific functionality related to course
-    '''
-
-    def handle_add_new_object_request(self, request):
-        '''
-        Given a JSON request, create new object in db
-        '''
-        if not request.is_json:
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
-        content = request.get_json()
-        missing_field = get_missing_field_name(
-            content, ['name', 'start_at', 'finish_at', 'description', 'number_of_credits'])
-        if missing_field is not None:
-            # there is at least 1 missing key in the input json, so we throw an error back
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
-        course_name = content.get('name')
-        # create a new course
-        course = self.model(
-            name=course_name,
-            start_at=content.get('start_at'),
-            finish_at=content.get('finish_at'),
-            description=content.get('description'),
-            number_of_credits=content.get('number_of_credits'))
-        return self.add_new_object_to_db(course, name=course_name)
-
-
 class StudentAnswerQueryHandler(QueryHandler):
     '''
     A class inherits from QueryHandler and perform specific functionality related to student answer
     '''
-
-    def handle_add_new_object_request(self, request):
-        '''
-        Given a JSON request, create new object in db
-        '''
-        if not request.is_json:
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: not json'}, 405)
-        content = request.get_json()
-        missing_field = get_missing_field_name(
-            content, ['question_id', 'exam_id', 'answer_indexes', 'answer_texts'])
-        if missing_field is not None:
-            # there is at least 1 missing key in the input json, so we throw an error back
-            return QueryHandler.create_generic_json_response({'message': 'Invalid input: missing field \'{}\''.format(missing_field)}, 405)
-        question_id = content.get('question_id')
-        exam_id = content.get('exam_id')
-        # create a new student answer
-        student_answer = self.model(
-            question_id=question_id,
-            exam_id=exam_id,
-            answer_indexes=content.get('answer_indexes'),
-            answer_texts=content.get('answer_texts'))
-        return self.add_new_object_to_db(student_answer, question_id=question_id, exam_id=exam_id)
 
     def handle_add_multiple_objects_with_attribute(self, request, **kwargs):
         '''

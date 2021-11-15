@@ -28,8 +28,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
 # we define db object in models.py and now we link it to the flask app
 db.init_app(app)
 migrate = Migrate(app, db)
-student_handler = StudentQueryHandler(db, Student, 'student')
-course_handler = CourseQueryHandler(db, Course, 'course')
+student_handler = QueryHandler(db, Student, 'student')
+course_handler = QueryHandler(db, Course, 'course')
 role_type_handler = QueryHandler(db, RoleType, 'role type')
 course_location_handler = QueryHandler(db, CourseLocation, 'course location')
 supported_language_handler = QueryHandler(

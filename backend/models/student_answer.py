@@ -61,3 +61,6 @@ class StudentAnswer(db.Model):
             answer_indexes=content.get('answer_indexes'),
             answer_texts=content.get('answer_texts'))
         return student_answer, ''
+
+    def unique_kwargs(self):
+        return {'question_id': self.question_id, 'exam_id': self.exam_id}
