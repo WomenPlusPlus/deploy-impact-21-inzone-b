@@ -31,7 +31,7 @@ const MCQScreen = () => {
     setIsCheating(true);
     setModalTitle("we detected that you cheated");
     setModalMessage(
-      "Asegurate de submit tu examen con conexion a internet, en caso de no hacerlo tu nota sera un 0"
+      "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
     );
     handleShowModal();
   };
