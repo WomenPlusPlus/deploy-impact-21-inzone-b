@@ -7,6 +7,8 @@ import axios from "../../shared/axios";
 import { useHistory, useLocation } from "react-router";
 import Timer from "./timer";
 import McqModal from "./mcq-modal";
+import clock from "../../assets/mcq/clock.png";
+import congrats from "../../assets/dashboard/celebration.svg";
 
 const MCQScreen = () => {
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
@@ -22,6 +24,7 @@ const MCQScreen = () => {
     "All your answers have been saved (even when you were offline). Make sure you have internet connection and submit your exam to finish."
   );
   const [modalButton, setModalButton] = useState("Submit exam");
+  const [modalImage, setModalImage] = useState("");
 
   const location = useLocation();
   const history = useHistory();
@@ -31,6 +34,7 @@ const MCQScreen = () => {
   const cheatingModal = () => {
     setIsCheating(true);
     setModalTitle("we detected that you cheated");
+    setModalImage("");
     setModalMessage(
       "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
     );
@@ -52,6 +56,7 @@ const MCQScreen = () => {
       setModalMessage(
         "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
       );
+      if (modalTitle !== "we detected that you cheated") setModalImage(clock);
       handleShowModal();
     }
     window.addEventListener("focus", onFocus);
@@ -122,6 +127,7 @@ const MCQScreen = () => {
     setChosenAnswers((prevState) => {
       return [...prevState, { ...currentChosenAnswer }];
     });
+    setModalImage(congrats);
     handleShowModal();
   };
 
@@ -176,6 +182,7 @@ const MCQScreen = () => {
         modalTitle={modalTitle}
         modalMessage={modalMessage}
         modalButton={modalButton}
+        modalImage={modalImage}
       ></McqModal>
     </div>
   );

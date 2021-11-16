@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import "./_mcqmodal.scss";
 
 const McqModal = ({
   showSubmitModal,
@@ -7,21 +8,35 @@ const McqModal = ({
   modalMessage,
   modalTitle,
   modalButton,
+  modalImage,
 }) => {
   return (
     <>
       <Modal show={showSubmitModal}>
-        <Modal.Header>
-          <Modal.Title>{modalTitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
-        {/* {chosenAnswers} */}
-        <Modal.Footer>
-          {/* TODO: send data to backend */}
-          <Button variant="primary" onClick={handleCloseModal}>
-            {modalButton}
-          </Button>
-        </Modal.Footer>
+        <div>
+          <Modal.Header>
+            <Modal.Title>{modalTitle}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>{modalMessage}</div>
+          </Modal.Body>
+          {/* {chosenAnswers} */}
+          <Modal.Footer>
+            {/* TODO: send data to backend */}
+            <Button variant="primary" onClick={handleCloseModal}>
+              {modalButton}
+            </Button>
+          </Modal.Footer>
+        </div>
+        <div>
+          {modalImage ? (
+            <div>
+              <img id="modal__image" src={modalImage} alt="modal" />
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       </Modal>
     </>
   );
