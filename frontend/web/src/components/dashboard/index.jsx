@@ -16,6 +16,8 @@ const Dashboard = () => {
   // eslint-disable-next-line
   const [firstLogin, setFirstLogin] = useState(true);
   const [currentExams, setCurrentExams] = useState([]);
+  const [courseName, setCourseName] = useState([]);
+  const [examNames, setExamNames] = useState([]);
   const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
@@ -24,11 +26,29 @@ const Dashboard = () => {
     const isLogged = localStorage.getItem("isLogged");
     const currentEmail = localStorage.getItem("currentEmail");
 
+    const fetchCurrentExamData = async () => {
+      var currentExamList = []
+      var currentExamNameList = []
+      await axios.get(`student/${currentEmail}/current-exams`).then((response) => {
+        console.log(response, "response current exams of a student");
+        currentExamList = response.data;
+      });
+      setCurrentExams(currentExamList);
+      for(let i = 0; i < currentExamList.length; i++){
+        const examSetId = currentExamList[i].exam_set_id;
+        const res = await axios.get(`exam-set/${examSetId}`);
+        // TODO: should we check for response status?
+        currentExamNameList.push(res.data.name);
+      }
+      setExamNames(currentExamNameList)
+    };
+
     if (isLogged) {
       axios.get(`student/${currentEmail}`).then((response) => {
-        console.log(response.data);
+        console.log(response.data, "student");
         setFullName(response.data.full_name);
         setFirstLogin(response.data.first_query_done);
+        setCourseName(response.data.course_name);
         if (response.data.language === "Français")
           localStorage.setItem("i18nextLng", "fr");
         else if (response.data.language === "Arabic")
@@ -37,10 +57,8 @@ const Dashboard = () => {
         const lng = localStorage.getItem("i18nextLng");
         i18n.changeLanguage(lng);
       });
-      axios.get(`student/${currentEmail}/current-exams`).then((response) => {
-        console.log(response, "response student");
-        setCurrentExams(response.data);
-      });
+
+      fetchCurrentExamData(); 
     }
   }, []);
 
@@ -106,7 +124,7 @@ const Dashboard = () => {
                     return (
                       <div key={i} className="exams__container">
                         <div className="exams__wrapper--left">
-                          <h6>Global Health - MCQ</h6>
+                          <h6>{courseName} - {examNames[i]}</h6>
                           <p>Limit: {exam.closed_at}</p>
                         </div>
                         <div className="exams__wrapper--right">
