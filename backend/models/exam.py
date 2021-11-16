@@ -15,7 +15,8 @@ class Exam(db.Model):
     taken_at = db.Column(db.DateTime())
     mark_entered_at = db.Column(db.DateTime())
 
-    def __init__(self, exam_set_id, student_id, student_mark, mark_entered_by, opened_at, closed_at, duration_in_minutes, taken_at, mark_entered_at):
+    def __init__(self, exam_set_id, student_id, opened_at, closed_at, duration_in_minutes, 
+    student_mark=None, mark_entered_by=None, taken_at=None, mark_entered_at=None):
         self.exam_set_id = exam_set_id
         self.student_id = student_id
         self.student_mark = student_mark
@@ -102,13 +103,9 @@ class Exam(db.Model):
         exam = Exam(
             exam_set_id=content.get('exam_set_id'),
             student_id=content.get('student_id'),
-            student_mark=content.get('student_mark'),
-            mark_entered_by=content.get('mark_entered_by'),
             opened_at=content.get('opened_at'),
             closed_at=content.get('closed_at'),
-            duration_in_minutes=content.get('duration_in_minutes'),
-            taken_at=content.get('taken_at'),
-            mark_entered_at=content.get('mark_entered_at'))
+            duration_in_minutes=content.get('duration_in_minutes'))
         return exam, ''
 
     def unique_kwargs(self):
