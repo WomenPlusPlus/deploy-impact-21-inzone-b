@@ -3,15 +3,16 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "../../shared/axios";
 import FirstStep from "./first-step";
-import SecondStep from "./second-step";
+import SetupAccount from "./setup-account";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/user";
+import Student from "./student";
 
 const Signup = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [signupStep, setSignupStep] = useState(1)
+  const [signupStep, setSignupStep] = useState('first-step')
   const [student, setStudent] = useState({})
 
   const [showLoginError, setShowLoginError] = useState(false);
@@ -39,20 +40,30 @@ const Signup = () => {
       email: data.email,
       password: data.password
     });
-    setSignupStep(2);
+    setSignupStep('setup-account');
   }
 
-  const secondStepHandler = async (data) => {
-    // setStudent({
-    //   ...student,
-    //   full_name: data.name,
-    //   course_location: data.location,
-    //   course_name: data.course,
-    //   language: data.language
+  const setupAccountHandler = async (data) => {
+    setStudent((prevState) => {
+      return {
+        ...prevState,
+        full_name: data.name,
+      }
+    });
+    setSignupStep('student');
+  }
+
+  const studentHandler = async (data) => {
+    // setStudent((prevState) => {
+    //   return {
+    //     ...prevState,
+    //     course_location: data.location,
+    //     course_name: data.course,
+    //     language: data.language
+    //   }
     // });
     const s = {
       ...student,
-      full_name: data.name,
       course_location: data.location,
       course_name: data.course,
       language: data.language
@@ -62,16 +73,23 @@ const Signup = () => {
 
   return (
     <EntryScreen>
+      <div>
+        {JSON.stringify(student)}
+      </div>
       <div className="container">
         <div className="row justify-content-center">
-          { signupStep === 1 && <FirstStep
+          { signupStep === 'first-step' && <FirstStep
             title="Welcome to ExamPortal"
             onSubmitData={firstStepHandler}
           /> }
-          { signupStep === 2 && <SecondStep
+          { signupStep === 'setup-account' && <SetupAccount
             title="Let's set up your account"
-            onSubmitData={secondStepHandler}
+            onSubmitData={setupAccountHandler}
             showLoginError={showLoginError}
+          /> }
+          { signupStep === 'student' && <Student
+            title="Let's set up your account"
+            onSubmitData={studentHandler}
           /> }
         </div>
       </div>

@@ -36,4 +36,8 @@
     color: #E55565;
     font-size: 12px;
   }
+
+  button:disabled {
+    background-color: #5B5453;
+  }
 }
