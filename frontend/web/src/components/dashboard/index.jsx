@@ -16,6 +16,8 @@ const Dashboard = () => {
   // eslint-disable-next-line
   const [firstLogin, setFirstLogin] = useState(true);
   const [currentExams, setCurrentExams] = useState([]);
+  const [courseName, setCourseName] = useState([]);
+  const [examNames, setExamNames] = useState([]);
   const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
@@ -24,11 +26,30 @@ const Dashboard = () => {
     const isLogged = localStorage.getItem("isLogged");
     const currentEmail = localStorage.getItem("currentEmail");
 
+    const fetchCurrentExamData = async () => {
+      var current_exam_list = []
+      var current_exam_name_list = []
+      await axios.get(`student/${currentEmail}/current-exams`).then((response) => {
+        console.log(response, "response current exams of a student");
+        current_exam_list = response.data;
+      });
+      setCurrentExams(current_exam_list);
+      for(let i = 0; i < current_exam_list.length; i++){
+        const exam_set_id = current_exam_list[i].exam_set_id;
+        const res = await await axios.get(`exam-set/${exam_set_id}`);
+        // TODO: should we check for response status?
+        const exam_name = res.data.name;
+        current_exam_name_list.push(exam_name);
+      }
+      setExamNames(current_exam_name_list)
+    };
+
     if (isLogged) {
       axios.get(`student/${currentEmail}`).then((response) => {
-        console.log(response.data);
+        console.log(response.data, "student");
         setFullName(response.data.full_name);
         setFirstLogin(response.data.first_query_done);
+        setCourseName(response.data.course_name);
         if (response.data.language === "Français")
           localStorage.setItem("i18nextLng", "fr");
         else if (response.data.language === "Arabic")
@@ -37,10 +58,8 @@ const Dashboard = () => {
         const lng = localStorage.getItem("i18nextLng");
         i18n.changeLanguage(lng);
       });
-      axios.get(`student/${currentEmail}/current-exams`).then((response) => {
-        console.log(response, "response student");
-        setCurrentExams(response.data);
-      });
+
+      fetchCurrentExamData(); 
     }
   }, []);
 
@@ -106,7 +125,7 @@ const Dashboard = () => {
                     return (
                       <div key={i} className="exams__container">
                         <div className="exams__wrapper--left">
-                          <h6>Global Health - MCQ</h6>
+                          <h6>{courseName} - {examNames[i]}</h6>
                           <p>Limit: {exam.closed_at}</p>
                         </div>
                         <div className="exams__wrapper--right">

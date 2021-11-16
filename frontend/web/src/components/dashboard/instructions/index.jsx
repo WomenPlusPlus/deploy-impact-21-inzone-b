@@ -12,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
   const [numberOfQuestions, setNumberOfQuestions] = useState([]);
+  const [examName, setExamName] = useState([]);
   const location = useLocation();
   const { id } = location.examSet;
   const { examId } = location.examId;
@@ -21,15 +22,16 @@ const Instructions = () => {
     localStorage.setItem("examId", examId);
 
     if (currentEmail) {
-      axios.get(`student/${currentEmail}/current-exams`).then((response) => {
-        const currentExam = response.data.filter((el) => {
-          return el.exam_set_id === id;
-        });
-        setTimeLimit(currentExam[0].duration_in_minutes);
+      axios.get(`exam/${examId}`).then((response) => {
+        setTimeLimit(response.data.duration_in_minutes);
       });
       axios.get(`exam-set/${id}/number-of-questions`).then((response) => {
         console.log(response.data, "get number of questions of an exam set by id");
         setNumberOfQuestions(response.data.number_of_questions);
+      });
+      axios.get(`exam-set/${id}`).then((response) => {
+        console.log(response.data, "response an exam set by id");
+        setExamName(response.data.name)
       });
     }
   }, []);
@@ -37,10 +39,10 @@ const Instructions = () => {
     <div className="instructions__container">
       <div className="instructions__wrapper instructions__wrapper--left">
         <h4 className="instructions__title">
-          Welcome to your Global Health MCQ assessment
+          Welcome to your {examName}
         </h4>
         <p className="instructions__text">
-          You’re about to start your Global Health MCQ. Please read carefully
+          You’re about to start your {examName}. Please read carefully
           the instructions and we wish you good luck!
         </p>
         <div className="instructions__buttons">
