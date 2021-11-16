@@ -11,12 +11,14 @@ class ExamSet(db.Model):
     total_mark = db.Column(db.Integer)
     description = db.Column(db.String(200))
     additional_instruction = db.Column(db.String(200))
+    exam_set_type = db.Column(db.String(200))
 
-    def __init__(self, course_id, created_by, created_at, name, total_mark, description="", additional_instruction=""):
+    def __init__(self, course_id, created_by, created_at, name, total_mark, exam_set_type, description="", additional_instruction=""):
         self.course_id = course_id
         self.created_at = created_at
         self.name = name
         self.total_mark = total_mark
+        self.exam_set_type = exam_set_type
         self.description = description
         self.additional_instruction = additional_instruction
 
@@ -31,6 +33,7 @@ class ExamSet(db.Model):
             'created_at': self.created_at,
             'name': self.name,
             'total_mark': self.total_mark,
+            'exam_set_type': self.exam_set_type,
             'description': self.description,
             'additional_instruction': self.additional_instruction
         }
@@ -60,6 +63,10 @@ class ExamSet(db.Model):
         total_mark = json_with_updates.get('total_mark')
         if total_mark is not None and total_mark != self.total_mark:
             self.total_mark = total_mark
+            has_updates = True
+        exam_set_type = json_with_updates.get('exam_set_type')
+        if exam_set_type is not None and exam_set_type != self.exam_set_type:
+            self.exam_set_type = exam_set_type
             has_updates = True
         description = json_with_updates.get('description')
         if description is not None and description != self.description:

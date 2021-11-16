@@ -28,8 +28,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
 # we define db object in models.py and now we link it to the flask app
 db.init_app(app)
 migrate = Migrate(app, db)
-student_handler = StudentQueryHandler(db, Student, 'student')
-course_handler = CourseQueryHandler(db, Course, 'course')
+student_handler = QueryHandler(db, Student, 'student')
+course_handler = QueryHandler(db, Course, 'course')
 role_type_handler = QueryHandler(db, RoleType, 'role type')
 course_location_handler = QueryHandler(db, CourseLocation, 'course location')
 supported_language_handler = QueryHandler(
@@ -88,6 +88,40 @@ def get_all_exams():
 @app.route('/exam/<id>')
 def get_exam_by_id(id):
     return exam_handler.handle_get_first_object_by_attribute(id=id)
+
+
+@app.route('/exam', methods=['POST'])
+def add_new_exam():
+    return exam_handler.handle_add_new_object_request(request)
+
+
+@app.route('/exam/<id>', methods=['DELETE'])
+def delete_exam(id):
+    return exam_handler.handle_delete_object_by_attribute(id=id)
+
+
+@app.route('/exam/<id>/startExam', methods=['PUT'])
+def start_exam_by_id(id):
+    exam = exam_handler.handle_get_first_object_by_attribute(id=id)
+    if exam.status_code != 200:
+        # there is some error while getting exam, so we return the error itself
+        return exam
+    content = exam.get_json()
+    if content.get('taken_at') is not None and content.get('taken_at') != 'null':
+        # the exam is already started
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} is already started at {}'.format(id, content.get('taken_at'))}, 400)
+    start_time = datetime.now()
+    opened_at = datetime.strptime(content.get('opened_at'), '%a, %d %b %Y %X %Z')
+    if start_time < opened_at:
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} will open at {}'.format(id, content.get('opened_at'))}, 400)
+    closed_at = datetime.strptime(content.get('closed_at'), '%a, %d %b %Y %X %Z')
+    if start_time >= closed_at:
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} closed at {}'.format(id, content.get('closed_at'))}, 400)
+    start_exam_request = jsonify({'taken_at' : start_time})
+    return exam_handler.handle_update_object_by_attribute(start_exam_request, id=id)
 
 
 @app.route('/exam/<id>/student-answers')

@@ -1,6 +1,6 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash
-from .base_model import db
+from .base_model import db, get_missing_field_name
 
 class Student(db.Model):
     __tablename__ = 'students'
@@ -79,3 +79,27 @@ class Student(db.Model):
             self.first_query_done = True
             has_updates = True
         return has_updates
+
+    @staticmethod
+    def create_from_json(content):
+        '''
+        Creates Student object from input 'content'.
+        If some mandatory fields are missing in 'content', returns an error message.
+        '''
+        missing_field = get_missing_field_name(
+            content, ['full_name', 'email', 'password', 'course_name', 'course_location', 'language'])
+        if missing_field is not None:
+            # there is at least 1 missing key in the input json, so we throw an error back
+            return None, 'Invalid input: missing field \'{}\''.format(missing_field)
+        # create a new student
+        student = Student(
+            full_name=content.get('full_name'),
+            email=content.get('email'),
+            password=generate_password_hash(content.get('password')),
+            course_name=content.get('course_name'),
+            course_location=content.get('course_location'),
+            language=content.get('language'))
+        return student, ''
+
+    def unique_kwargs(self):
+        return {'email': self.email}
