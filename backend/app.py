@@ -90,6 +90,40 @@ def get_exam_by_id(id):
     return exam_handler.handle_get_first_object_by_attribute(id=id)
 
 
+@app.route('/exam', methods=['POST'])
+def add_new_exam():
+    return exam_handler.handle_add_new_object_request(request)
+
+
+@app.route('/exam/<id>', methods=['DELETE'])
+def delete_exam(id):
+    return exam_handler.handle_delete_object_by_attribute(id=id)
+
+
+@app.route('/exam/<id>/startExam', methods=['PUT'])
+def start_exam_by_id(id):
+    exam = exam_handler.handle_get_first_object_by_attribute(id=id)
+    if exam.status_code != 200:
+        # there is some error while getting exam, so we return the error itself
+        return exam
+    content = exam.get_json()
+    if content.get('taken_at') is not None and content.get('taken_at') != 'null':
+        # the exam is already started
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} is already started at {}'.format(id, content.get('taken_at'))}, 400)
+    start_time = datetime.now()
+    opened_at = datetime.strptime(content.get('opened_at'), '%a, %d %b %Y %X %Z')
+    if start_time < opened_at:
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} will open at {}'.format(id, content.get('opened_at'))}, 400)
+    closed_at = datetime.strptime(content.get('closed_at'), '%a, %d %b %Y %X %Z')
+    if start_time >= closed_at:
+        return QueryHandler.create_generic_json_response(
+                    {'message': 'Exam with id = {} closed at {}'.format(id, content.get('closed_at'))}, 400)
+    start_exam_request = jsonify({'taken_at' : start_time})
+    return exam_handler.handle_update_object_by_attribute(start_exam_request, id=id)
+
+
 @app.route('/exam/<id>/student-answers')
 def get_student_answers_by_exam_id(id):
     exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)

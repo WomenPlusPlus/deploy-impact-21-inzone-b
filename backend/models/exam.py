@@ -1,4 +1,4 @@
-from .base_model import db
+from .base_model import db, get_missing_field_name
 
 
 class Exam(db.Model):
@@ -86,5 +86,32 @@ class Exam(db.Model):
             self.mark_entered_at = mark_entered_at
             has_updates = True
         return has_updates
+
+    @staticmethod
+    def create_from_json(content):
+        '''
+        Creates Exam object from input 'content'.
+        If some mandatory fields are missing in 'content', returns an error message.
+        '''
+        missing_field = get_missing_field_name(
+            content, ['exam_set_id', 'student_id', 'opened_at', 'closed_at', 'duration_in_minutes'])
+        if missing_field is not None:
+            # there is at least 1 missing key in the input json, so we throw an error back
+            return None, 'Invalid input: missing field \'{}\''.format(missing_field)
+        # create a new exam
+        exam = Exam(
+            exam_set_id=content.get('exam_set_id'),
+            student_id=content.get('student_id'),
+            student_mark=content.get('student_mark'),
+            mark_entered_by=content.get('mark_entered_by'),
+            opened_at=content.get('opened_at'),
+            closed_at=content.get('closed_at'),
+            duration_in_minutes=content.get('duration_in_minutes'),
+            taken_at=content.get('taken_at'),
+            mark_entered_at=content.get('mark_entered_at'))
+        return exam, ''
+
+    def unique_kwargs(self):
+        return {'exam_set_id': self.exam_set_id, 'student_id': self.student_id}
 
 
