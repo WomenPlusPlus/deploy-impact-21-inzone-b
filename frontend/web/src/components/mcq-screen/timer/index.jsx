@@ -2,11 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "../../../shared/axios";
 
-const Timer = ({ id, setIsTime }) => {
+const Timer = ({ examId, setIsTime }) => {
   const [minutes, setMinutes] = useState(60);
   const [seconds, setSeconds] = useState(0);
-
-  const currentEmail = localStorage.getItem("currentEmail");
 
   useEffect(() => {
     let myInterval = setInterval(() => {
@@ -28,13 +26,11 @@ const Timer = ({ id, setIsTime }) => {
     };
   });
   useEffect(() => {
-    axios.get(`student/${currentEmail}/current-exams`).then((response) => {
-      const currentExamSet = response.data.filter((el) => {
-        return el.exam_set_id === id;
-      });
+    axios.get(`exam/${examId}`).then((response) => {
+      const currentExamSet = response.data;
       console.log(response, "response student");
-      console.log(currentExamSet, "minutess");
-      setMinutes(currentExamSet[0].duration_in_minutes);
+      console.log(currentExamSet, "exam duration in minutes");
+      setMinutes(currentExamSet.duration_in_minutes);
     });
   }, []);
 

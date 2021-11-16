@@ -69,6 +69,10 @@ const MCQScreen = () => {
       setQuestions(currentExamSet);
       setExamData(currentExamSet);
     });
+    // notify backend that this exam has started by the student
+    axios.put(`exam/${examId}/startExam`).then((response) => {
+      console.log(response, "PUT startExam response");
+    });
     return () => {
       window.removeEventListener("visibilitychange", visibilityChange);
     };
@@ -138,7 +142,7 @@ const MCQScreen = () => {
           <div className="col-12">
             {questions.length > 0 && (
               <div className="question-wrapper">
-                <Timer setIsTime={setIsTime} id={id}></Timer>
+                <Timer setIsTime={setIsTime} examId={examId}></Timer>
                 <QuestionProgressBar
                   currentQuestionNumber={currentQuestionNumber}
                   questionsNumber={questions.length}
