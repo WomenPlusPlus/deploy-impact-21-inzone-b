@@ -27,21 +27,20 @@ const Dashboard = () => {
     const currentEmail = localStorage.getItem("currentEmail");
 
     const fetchCurrentExamData = async () => {
-      var current_exam_list = []
-      var current_exam_name_list = []
+      var currentExamList = []
+      var currentExamNameList = []
       await axios.get(`student/${currentEmail}/current-exams`).then((response) => {
         console.log(response, "response current exams of a student");
-        current_exam_list = response.data;
+        currentExamList = response.data;
       });
-      setCurrentExams(current_exam_list);
-      for(let i = 0; i < current_exam_list.length; i++){
-        const exam_set_id = current_exam_list[i].exam_set_id;
-        const res = await await axios.get(`exam-set/${exam_set_id}`);
+      setCurrentExams(currentExamList);
+      for(let i = 0; i < currentExamList.length; i++){
+        const examSetId = currentExamList[i].exam_set_id;
+        const res = await axios.get(`exam-set/${examSetId}`);
         // TODO: should we check for response status?
-        const exam_name = res.data.name;
-        current_exam_name_list.push(exam_name);
+        currentExamNameList.push(res.data.name);
       }
-      setExamNames(current_exam_name_list)
+      setExamNames(currentExamNameList)
     };
 
     if (isLogged) {
