@@ -65,6 +65,11 @@ const Dashboard = () => {
     }
   }, []);
 
+  const handleButton = (examSet, exam) => {
+    localStorage.setItem("examId", exam);
+    localStorage.setItem("id", examSet);
+  };
+
   return (
     <div className="container-fluid" style={{ padding: 0 }}>
       <div className="dash__container">
@@ -124,6 +129,8 @@ const Dashboard = () => {
               {currentExams.length ? (
                 <>
                   {currentExams.map((exam, i) => {
+                    localStorage.setItem("examId", exam.exam_set_id);
+                    localStorage.setItem("id", exam.id);
                     return (
                       <div key={i} className="exams__container">
                         <div className="exams__wrapper--left">
@@ -136,15 +143,16 @@ const Dashboard = () => {
                           <Link
                             to={{
                               pathname: "/instructions",
-                              examSet: {
-                                id: exam.exam_set_id,
-                              },
-                              examId: {
-                                examId: exam.id,
-                              },
                             }}
                           >
-                            <Button variant="primary">Start exam</Button>
+                            <Button
+                              variant="primary"
+                              onClick={() =>
+                                handleButton(exam.exam_set_id, exam.id)
+                              }
+                            >
+                              Start exam
+                            </Button>
                           </Link>
                         </div>
                       </div>

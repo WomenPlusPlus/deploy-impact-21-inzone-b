@@ -7,43 +7,46 @@ import check from "../../../assets/instructions/check.svg";
 import question from "../../../assets/instructions/question.svg";
 import warning from "../../../assets/instructions/warning.svg";
 import windowsvg from "../../../assets/instructions/window.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Instructions = () => {
   const [timeLimit, setTimeLimit] = useState([]);
   const [numberOfQuestions, setNumberOfQuestions] = useState([]);
   const [examName, setExamName] = useState([]);
-  const location = useLocation();
-  const { id } = location.examSet;
-  const { examId } = location.examId;
+  // const location = useLocation();
+  // const { id } = location.examSet;
+  // const { examId } = location.examId;
+  const id = localStorage.getItem("id");
+  const examId = localStorage.getItem("examId");
 
   useEffect(() => {
     const currentEmail = localStorage.getItem("currentEmail");
-    localStorage.setItem("examId", examId);
+    // localStorage.setItem("examId", examId);
 
     if (currentEmail) {
       axios.get(`exam/${examId}`).then((response) => {
         setTimeLimit(response.data.duration_in_minutes);
       });
       axios.get(`exam-set/${id}/number-of-questions`).then((response) => {
-        console.log(response.data, "get number of questions of an exam set by id");
+        console.log(
+          response.data,
+          "get number of questions of an exam set by id"
+        );
         setNumberOfQuestions(response.data.number_of_questions);
       });
       axios.get(`exam-set/${id}`).then((response) => {
         console.log(response.data, "response an exam set by id");
-        setExamName(response.data.name)
+        setExamName(response.data.name);
       });
     }
   }, []);
   return (
     <div className="instructions__container">
       <div className="instructions__wrapper instructions__wrapper--left">
-        <h4 className="instructions__title">
-          Welcome to your {examName}
-        </h4>
+        <h4 className="instructions__title">Welcome to your {examName}</h4>
         <p className="instructions__text">
-          You’re about to start your {examName}. Please read carefully
-          the instructions and we wish you good luck!
+          You’re about to start your {examName}. Please read carefully the
+          instructions and we wish you good luck!
         </p>
         <div className="instructions__buttons">
           <Link to="/home">
@@ -70,8 +73,8 @@ const Instructions = () => {
             <div>
               <h6>Completion time</h6>
               <p>
-                You have <b>{timeLimit}</b> minutes to complete the exam. The counter
-                starts as soon as you click on Start Exam.
+                You have <b>{timeLimit}</b> minutes to complete the exam. The
+                counter starts as soon as you click on Start Exam.
               </p>
             </div>
           </div>
@@ -94,7 +97,8 @@ const Instructions = () => {
             <div>
               <h6>Total number of questions</h6>
               <p>
-                You have a total of <b>{numberOfQuestions}</b> question(s) to answer.
+                You have a total of <b>{numberOfQuestions}</b> question(s) to
+                answer.
               </p>
             </div>
           </div>
