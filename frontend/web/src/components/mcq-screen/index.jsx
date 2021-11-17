@@ -32,13 +32,13 @@ const MCQScreen = () => {
   const examId = localStorage.getItem("examId");
 
   const cheatingModal = () => {
-    setIsCheating(true);
-    setModalTitle("we detected that you cheated");
-    setModalImage("");
-    setModalMessage(
-      "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
-    );
-    handleShowModal();
+    // setIsCheating(true);
+    // setModalTitle("we detected that you cheated");
+    // setModalImage("");
+    // setModalMessage(
+    //   "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
+    // );
+    // handleShowModal();
   };
   const onFocus = () => {
     cheatingModal();
@@ -142,7 +142,11 @@ const MCQScreen = () => {
           <div className="col-12">
             {questions.length > 0 && (
               <div className="question-wrapper">
-                <Timer setIsTime={setIsTime} examId={examId}></Timer>
+                {!isCheating ? (
+                  <Timer setIsTime={setIsTime} examId={examId}></Timer>
+                ) : (
+                  <></>
+                )}
                 <QuestionProgressBar
                   currentQuestionNumber={currentQuestionNumber}
                   questionsNumber={questions.length}
