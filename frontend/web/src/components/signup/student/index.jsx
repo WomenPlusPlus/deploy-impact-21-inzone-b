@@ -138,9 +138,9 @@ function Student(props) {
                 <span className={`signup-progress-bar-label ${location !== '' ? 'active' : ''}`} onClick={() => {setSetupStep('location')}}>
                     Location
                 </span>
-                <span className={`signup-progress-bar-line ${setupStep === 'course' || course ? 'active' : ''}`}></span>
-                <span className={`signup-progress-bar-number ${setupStep === 'course' || course ? 'active' : ''}`}>2</span>
-                <span className={`signup-progress-bar-label ${setupStep === 'course' || course ? 'active' : ''}`} onClick={() => {setSetupStep('course')}}>
+                <span className={`signup-progress-bar-line ${course !== '' ? 'active' : ''}`}></span>
+                <span className={`signup-progress-bar-number ${course !== '' ? 'active' : ''}`}>2</span>
+                <span className={`signup-progress-bar-label ${course !== '' ? 'active' : ''}`} onClick={() => {setSetupStep('course')}}>
                     Course(s)
                 </span>
                 <span className={`signup-progress-bar-line ${language !== '' ? 'active' : ''}`}></span>

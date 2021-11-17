@@ -23,14 +23,11 @@ const FirstStep = (props) => {
   }
 
   const setAndCheckPassword = (password) => {
-    setPassword((prevState => {
+    setPassword((prevState) => {
       return password;
-    }));
+    });
     checkNextStep();
   }
-
-  // const [errorUsername, setErrorUsername] = React.useState(false);
-  // const [errorPassword, setErrorPassword] = React.useState(false);
 
   const [allowNextStep, setAllowNextStep] = React.useState(false);
 
@@ -41,7 +38,7 @@ const FirstStep = (props) => {
       // setErrorUsername(true);
     }
     let errorPassword = false;
-    if (password.length < 8 && !/[A-Z]/.test(password) && !(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password))) {
+    if ((password.length < 8) || (password.toLowerCase() === password) || !((password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)))) {
       errorPassword = true;
       // setErrorPassword(true);
     }
@@ -112,7 +109,7 @@ const FirstStep = (props) => {
           }`}
         >
           <div className='d-flex align-items-center'>
-            <div className="form-text">At least 8 characters long</div>
+            <div className={`form-text ${password.length >= 8 ? 'text-success' : ''}`}>At least 8 characters long</div>
             {password.length >= 8 &&
               <div className='password-checkbox'>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -122,7 +119,7 @@ const FirstStep = (props) => {
             }
           </div>
           <div className='d-flex align-items-center'>
-            <div className="form-text">Contains 1 uppercase character</div>
+            <div className={`form-text ${/[A-Z]/.test(password) ? 'text-success' : ''}`}>Contains 1 uppercase character</div>
             {/[A-Z]/.test(password) &&
             <div className='password-checkbox'>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,7 +129,7 @@ const FirstStep = (props) => {
             }
           </div>
           <div className='d-flex align-items-center'>
-            <div className="form-text">Contains 1 number or symbol</div>
+            <div className={`form-text ${(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)) ? 'text-success' : ''}`}>Contains 1 number or symbol</div>
             {(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)) &&
             <div className='password-checkbox'>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -86,6 +86,7 @@ function SetupAccount(props) {
             type="button"
             className="btn btn-primary w-100"
             onClick={createAccount}
+            disabled={name === '' || role === ''}
           >
             Create my account
           </button>
