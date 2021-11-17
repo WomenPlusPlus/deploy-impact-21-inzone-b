@@ -69,14 +69,18 @@ const MCQScreen = () => {
       setQuestions(currentExamSet);
       setExamData(currentExamSet);
     });
-    // notify backend that this exam has started by the student
-    axios.put(`exam/${examId}/startExam`).then((response) => {
-      console.log(response, "PUT startExam response");
-    });
+
     return () => {
       window.removeEventListener("visibilitychange", visibilityChange);
     };
   }, [isCheating, isTime]);
+
+  useEffect(() => {
+    // notify backend that this exam has started by the student
+    axios.put(`exam/${examId}/startExam`).then((response) => {
+      console.log(response, "PUT startExam response");
+    });
+  }, []);
 
   // eslint-disable-next-line
   const [chosenAnswers, setChosenAnswers] = useState([]);
