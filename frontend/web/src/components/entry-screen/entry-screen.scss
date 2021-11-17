@@ -31,4 +31,14 @@
   .password-checkbox {
     margin-left: 10px;
   }
+
+  .form-text.error {
+    color: #E55565;
+    font-size: 12px;
+  }
+
+  button:disabled {
+    background-color: #5B5453;
+    border-color: #5B5453;
+  }
 }

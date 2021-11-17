@@ -22,22 +22,35 @@ const FirstStep = (props) => {
     }
   }
 
-  const [errorUsername, setErrorUsername] = React.useState(false);
-  const [errorPassword, setErrorPassword] = React.useState(false);
+  const setAndCheckPassword = (password) => {
+    setPassword((prevState) => {
+      return password;
+    });
+    checkNextStep();
+  }
 
-  const nextStep = () => {
+  const [allowNextStep, setAllowNextStep] = React.useState(false);
+
+  const checkNextStep = () => {
     let errorEmail = false;
     if (email.length === 0) {
       errorEmail = true;
-      setErrorUsername(true);
+      // setErrorUsername(true);
     }
     let errorPassword = false;
-    if (password.length < 8 && !/[A-Z]/.test(password) && !(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password))) {
+    if ((password.length < 8) || (password.toLowerCase() === password) || !((password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)))) {
       errorPassword = true;
-      setErrorPassword(true);
+      // setErrorPassword(true);
     }
     if (!errorEmail && !errorPassword) {
-      // history.push("/signup/setup-account");
+      setAllowNextStep(true);
+    } else {
+      setAllowNextStep(false);
+    }
+  }
+
+  const nextStep = () => {
+    if (allowNextStep) {
       props.onSubmitData({
         email,
         password
@@ -57,13 +70,12 @@ const FirstStep = (props) => {
             type="email"
             className="form-control"
             id="email-user"
-            onFocus={(e) => {
-              setErrorUsername(false);
-            }}
+            // onFocus={(e) => {
+            //   setErrorUsername(false);
+            // }}
             value={email}
             onChange={(event => setEmail(event.target.value))}
           />
-          {errorUsername && <div className="form-text text-danger">Please provide a valid email address.</div>}
         </div>
         <div className="mb-4">
           <label htmlFor="password" className="form-label">
@@ -75,14 +87,14 @@ const FirstStep = (props) => {
               className="form-control"
               id="password"
               onFocus={(e) => {
-                setErrorPassword(false);
+                // setErrorPassword(false);
                 setPasswordInstructions(true);
               }}
               // onBlur={(e) => {
               //   setPasswordInstructions(false);
               // }}
               value={password}
-              onChange={(event => setPassword(event.target.value))}
+              onChange={(event => setAndCheckPassword(event.target.value))}
             />
             <div className='eye-icon position-absolute' onClick={showHidePassword}>
               <svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +102,6 @@ const FirstStep = (props) => {
               </svg>
             </div>
           </div>
-          {errorPassword && <div className="form-text text-danger">Please provide a valid password.</div>}
         </div>
         <div
           className={`mb-5 ${
@@ -98,7 +109,7 @@ const FirstStep = (props) => {
           }`}
         >
           <div className='d-flex align-items-center'>
-            <div className="form-text">At least 8 characters long</div>
+            <div className={`form-text ${password.length >= 8 ? 'text-success' : ''}`}>At least 8 characters long</div>
             {password.length >= 8 &&
               <div className='password-checkbox'>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +119,7 @@ const FirstStep = (props) => {
             }
           </div>
           <div className='d-flex align-items-center'>
-            <div className="form-text">Contains 1 uppercase character</div>
+            <div className={`form-text ${/[A-Z]/.test(password) ? 'text-success' : ''}`}>Contains 1 uppercase character</div>
             {/[A-Z]/.test(password) &&
             <div className='password-checkbox'>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +129,7 @@ const FirstStep = (props) => {
             }
           </div>
           <div className='d-flex align-items-center'>
-            <div className="form-text">Contains 1 number or symbol</div>
+            <div className={`form-text ${(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)) ? 'text-success' : ''}`}>Contains 1 number or symbol</div>
             {(password.match(/[0-9]/g) || /[!@#$%^&*(),.?":{}|<>]/g.test(password)) &&
             <div className='password-checkbox'>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,6 +156,7 @@ const FirstStep = (props) => {
             type="button"
             className="btn btn-primary w-100"
             onClick={nextStep}
+            disabled={!allowNextStep}
           >
             Sign Up
           </button>
