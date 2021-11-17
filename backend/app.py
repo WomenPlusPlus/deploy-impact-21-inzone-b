@@ -262,14 +262,13 @@ def get_current_exams_of_a_student(query_email):
     if student_response.status_code != 200:
         # there is some error while getting student info, so we return the error itself
         return student_response
-
     # there is no error when getting student info,
     # but we need to convert from reponse data to dict
     student_data_dict = json.loads(student_response.get_data())
     student_id = student_data_dict.get('id')
     # we create SQLAlchemy text command which the current time is within opened time and closed time
     current_time = datetime.now()
-    text_command = text('student_id={} and opened_at < timestamp \'{}\' and timestamp \'{}\' < closed_at'.format(
+    text_command = text('student_id={} and opened_at < timestamp \'{}\' and timestamp \'{}\' < closed_at and taken_at IS NULL'.format(
         student_id, current_time, current_time))
     all_exams_of_a_student_response = exam_handler.handle_get_all_objects_with_text_command(text_command)
     return all_exams_of_a_student_response
