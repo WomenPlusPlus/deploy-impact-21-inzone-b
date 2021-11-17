@@ -126,46 +126,51 @@ const Dashboard = () => {
                   Upcoming exams
                 </Trans>
               </h5>
-              {currentExams.length ? (
-                <>
-                  {currentExams.map((exam, i) => {
-                    localStorage.setItem("examId", exam.exam_set_id);
-                    localStorage.setItem("id", exam.id);
-                    return (
-                      <div key={i} className="exams__container">
-                        <div className="exams__wrapper--left">
-                          <h6>
-                            {courseName} - {examNames[i]}
-                          </h6>
-                          <p>Limit: {exam.closed_at}</p>
-                        </div>
-                        <div className="exams__wrapper--right">
-                          <Link
-                            to={{
-                              pathname: "/instructions",
-                            }}
-                          >
-                            <Button
-                              variant="primary"
-                              onClick={() =>
-                                handleButton(exam.exam_set_id, exam.id)
-                              }
+              <div className="container__overflow">
+                {currentExams.length ? (
+                  <>
+                    {currentExams.map((exam, i) => {
+                      localStorage.setItem("examId", exam.exam_set_id);
+                      localStorage.setItem("id", exam.id);
+                      return (
+                        <div key={i} className="exams__container">
+                          <div className="exams__wrapper--left">
+                            <h6>
+                              {courseName} - {examNames[i]}
+                            </h6>
+                            <p>Limit: {exam.closed_at}</p>
+                          </div>
+                          <div className="exams__wrapper--right">
+                            <Link
+                              to={{
+                                pathname: "/instructions",
+                              }}
                             >
-                              Start exam
-                            </Button>
-                          </Link>
+                              <Button
+                                variant="primary"
+                                onClick={() =>
+                                  handleButton(exam.exam_set_id, exam.id)
+                                }
+                              >
+                                Start exam
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </>
-              ) : (
-                <p className="p__text">
-                  <Trans key="third-card-text" i18nKey="static.third-card-text">
-                    Your upcoming exam sessions will be added here
-                  </Trans>
-                </p>
-              )}
+                      );
+                    })}
+                  </>
+                ) : (
+                  <p className="p__text">
+                    <Trans
+                      key="third-card-text"
+                      i18nKey="static.third-card-text"
+                    >
+                      Your upcoming exam sessions will be added here
+                    </Trans>
+                  </p>
+                )}
+              </div>
             </div>
           </div>
           <div className="column--right column-bottom" id="column--notitle">
