@@ -73,9 +73,6 @@ const Signup = () => {
 
   return (
     <EntryScreen>
-      <div>
-        {JSON.stringify(student)}
-      </div>
       <div className="container">
         <div className="row justify-content-center">
           { signupStep === 'first-step' && <FirstStep

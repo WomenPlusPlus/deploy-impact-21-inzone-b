@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "../../../shared/axios";
 import { Link } from "react-router-dom";
+import './student.scss'
 
 
 function Student(props) {
@@ -13,7 +14,6 @@ function Student(props) {
     const [languages, setLanguages] = React.useState([]);
 
     const [setupStep, setSetupStep] = React.useState('location');
-    const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
     useEffect(() => {
         axios.get('course-locations').then((response) => {
@@ -28,7 +28,6 @@ function Student(props) {
     }, []);
 
     const createAccount = () => {
-        setButtonDisabled(true);
         if (setupStep === 'location') {
             setSetupStep('course');
         } else if (setupStep === 'course') {
@@ -56,9 +55,8 @@ function Student(props) {
                         className="form-select"
                         onChange={(event) => {
                             setLocation(event.target.value);
-                            setButtonDisabled(false);
                         }}
-                        defaultValue={0}
+                        defaultValue={location || 0}
                     >
                         <option value={0} disabled>
                             Select your location
@@ -81,9 +79,8 @@ function Student(props) {
                             className="form-select"
                             onChange={(event) => {
                                 setCourse(event.target.value);
-                                setButtonDisabled(false);
                             }}
-                            defaultValue={0}
+                            defaultValue={course || 0}
                         >
                             <option value={0} disabled>
                                 Select your course
@@ -106,9 +103,8 @@ function Student(props) {
                             className="form-select"
                             onChange={(event) => {
                                 setLanguage(event.target.value);
-                                setButtonDisabled(false);
                             }}
-                            defaultValue={0}
+                            defaultValue={language || 0}
                         >
                             <option value={0} disabled>
                                 Select language
@@ -126,17 +122,33 @@ function Student(props) {
                         type="button"
                         className="btn btn-primary w-100"
                         onClick={createAccount}
-                        disabled={buttonDisabled}
+                        disabled={!(setupStep === 'location' && location !== '' || setupStep === 'course' && course || setupStep === 'language' && language)}
                     >
                         Create my account
                     </button>
                 </div>
-                <div className="text-center">
+                <div className="text-center pb-5">
                     <Link to="/login" className="form-text">
                         Cancel account creation
                     </Link>
                 </div>
             </form>
+            <div className="singup-progress-bar my-5">
+                <span className={`signup-progress-bar-number ${location !== '' ? 'active' : ''}`}>1</span>
+                <span className={`signup-progress-bar-label ${location !== '' ? 'active' : ''}`} onClick={() => {setSetupStep('location')}}>
+                    Location
+                </span>
+                <span className={`signup-progress-bar-line ${setupStep === 'course' || course ? 'active' : ''}`}></span>
+                <span className={`signup-progress-bar-number ${setupStep === 'course' || course ? 'active' : ''}`}>2</span>
+                <span className={`signup-progress-bar-label ${setupStep === 'course' || course ? 'active' : ''}`} onClick={() => {setSetupStep('course')}}>
+                    Course(s)
+                </span>
+                <span className={`signup-progress-bar-line ${language !== '' ? 'active' : ''}`}></span>
+                <span className={`signup-progress-bar-number ${language !== '' ? 'active' : ''}`}>3</span>
+                <span className={`signup-progress-bar-label ${language !== '' ? 'active' : ''}`} onClick={() => {setSetupStep('language')}}>
+                    Language
+                </span>
+            </div>
         </div>
     );
 }
