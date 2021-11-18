@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, session
 import json
+import random
 from config import DevelopmentConfig
 from flask_migrate import Migrate
 from datetime import timedelta
@@ -159,6 +160,9 @@ def get_number_of_questions_by_exam_set_id(id):
         # there is some error while getting exam_set, so we return the error itself
         return exam_set_response
     all_questions_response = exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
+    if all_questions_response.status_code != 200:
+        # there is some error while getting all_questions, so we return the error itself
+        return all_questions_response
     # we need to convert from reponse data to dict
     all_questions_dict = json.loads(all_questions_response.get_data())
     return QueryHandler.create_generic_json_response({'number_of_questions': len(all_questions_dict)})
@@ -170,7 +174,14 @@ def get_all_questions_by_exam_set_id(id):
     if exam_set_response.status_code != 200:
         # there is some error while getting exam_set, so we return the error itself
         return exam_set_response
-    return exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
+    all_questions_response = exam_question_handler.handle_get_all_objects_by_attribute(exam_set_id=id)
+    if all_questions_response.status_code != 200:
+        # there is some error while getting all_questions, so we return the error itself
+        return all_questions_response
+    # we need to convert from reponse data to list
+    all_questions_list = json.loads(all_questions_response.get_data())
+    random.shuffle(all_questions_list)
+    return QueryHandler.create_generic_json_response(all_questions_list)
 
 
 @app.route('/question-types')
