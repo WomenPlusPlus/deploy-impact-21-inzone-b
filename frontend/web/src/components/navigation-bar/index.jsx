@@ -4,13 +4,20 @@ import { Trans } from "react-i18next";
 
 import "./_nav.scss";
 import icon from "../../assets/dashboard/favicon.png";
-import demo from "../../assets/dashboard/face_demo.png";
+import demo from "../../assets/header/user.svg";
+import { NavDropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   // TO DO: get this information from shared state
   // const userIsLoggedIn = false;
 
   const user = useSelector((state) => state.user.value);
+  const logOutHandler = () => {
+    console.log("heeey");
+    localStorage.setItem("currentEmail", "");
+    localStorage.setItem("isLogged", false);
+  };
 
   return (
     <div className="nav__container">
@@ -38,7 +45,33 @@ const Nav = () => {
       )}
       {user && (
         <div className="wrapper--right">
-          <img id="nav__img--circle" src={demo} alt="profile" />
+          <NavDropdown
+            eventKey={1}
+            title={
+              <div className="pull-left">
+                <img
+                  className="thumbnail-image"
+                  id="nav__img--circle"
+                  src={demo}
+                  alt="user pic"
+                />
+
+                {user.username}
+              </div>
+            }
+            id="basic-nav-dropdown"
+          >
+            <NavDropdown.Item eventKey={1.1} href="/profile">
+              Profile
+            </NavDropdown.Item>
+            <NavDropdown.Item divider />
+            <NavDropdown.Item eventKey={1.3}>
+              <i className="fa fa-sign-out"></i>
+              <Link id="logout" to="/login" onClick={logOutHandler}>
+                Logout
+              </Link>
+            </NavDropdown.Item>
+          </NavDropdown>
         </div>
       )}
     </div>

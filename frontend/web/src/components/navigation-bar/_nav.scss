@@ -60,3 +60,13 @@
     text-decoration: underline;
   }
 }
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+#logout {
+  color: #b23b3b;
+  font-weight: 500;
+  text-decoration: none;
+}
