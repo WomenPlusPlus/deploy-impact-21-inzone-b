@@ -37,10 +37,10 @@ const Timer = ({ examId, setIsTime }) => {
   return (
     <div>
       {minutes === 0 && seconds === 0 ? null : (
-        <h6>
+        <h5 style={minutes ? { color: "#0056D1" } : { color: "#E55565" }}>
           {" "}
           {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </h6>
+        </h5>
       )}
     </div>
   );
