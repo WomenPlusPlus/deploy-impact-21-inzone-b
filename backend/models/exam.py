@@ -79,7 +79,8 @@ class Exam(db.Model):
             self.duration_in_minutes = duration_in_minutes
             has_updates = True
         taken_at = json_with_updates.get('taken_at')
-        if taken_at is not None and taken_at != self.taken_at:
+        # we allow taken_at to be None, so we should not check for None here
+        if taken_at != self.taken_at:
             self.taken_at = taken_at
             has_updates = True
         mark_entered_at = json_with_updates.get('mark_entered_at')
