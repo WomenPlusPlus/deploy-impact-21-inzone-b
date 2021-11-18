@@ -52,9 +52,9 @@ const MCQScreen = () => {
 
   useEffect(() => {
     if (isTime) {
-      setModalTitle("Time's up");
+      setModalTitle("Your time has run out!");
       setModalMessage(
-        "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
+        "All your answers have been saved (even when you were offline). Make sure you have internet connection and submit your exam to finish. Otherwise your score will be a 0."
       );
       if (modalTitle !== "we detected that you cheated") setModalImage(clock);
       handleShowModal();
@@ -64,8 +64,6 @@ const MCQScreen = () => {
     if (isCheating) handleShowModal();
     axios.get(`exam-set/${id}/exam-questions`).then((response) => {
       const currentExamSet = response.data;
-      console.log(response, "response");
-      console.log(currentExamSet, "current exam set filtered by id");
       setQuestions(currentExamSet);
       setExamData(currentExamSet);
     });
@@ -77,18 +75,14 @@ const MCQScreen = () => {
 
   useEffect(() => {
     // notify backend that this exam has started by the student
-    axios.put(`exam/${examId}/startExam`).then((response) => {
-      console.log(response, "PUT startExam response");
-    });
+    axios.put(`exam/${examId}/startExam`).then((response) => {});
   }, []);
 
   // eslint-disable-next-line
   const [chosenAnswers, setChosenAnswers] = useState([]);
-  console.log("choosen answers", chosenAnswers);
   const [currentChosenAnswer, setCurrentChosenAnswer] = useState("");
 
   const chooseAnswerHandler = (label) => {
-    console.log(label);
     setCurrentChosenAnswer({
       question_id: examData[currentQuestionNumber].id,
       exam_id: Number(examId),
@@ -98,7 +92,6 @@ const MCQScreen = () => {
   };
 
   const nextQuestion = () => {
-    console.log(currentChosenAnswer.answer_indexes, "current chosen ");
     setChosenAnswers((prevState) => {
       return [...prevState, { ...currentChosenAnswer }];
     });
@@ -113,7 +106,6 @@ const MCQScreen = () => {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   // submit questions on handleclosemodal
   const handleCloseModal = (e) => {
-    console.log(chosenAnswers, "chosenAnsers ----------");
     axios
       .post(`exam/${examId}/student-answers`, chosenAnswers)
       .then(() => {
@@ -131,7 +123,6 @@ const MCQScreen = () => {
   };
 
   const showSubmitScreen = () => {
-    console.log(currentChosenAnswer, "current chosen ");
     setChosenAnswers((prevState) => {
       return [...prevState, { ...currentChosenAnswer }];
     });
