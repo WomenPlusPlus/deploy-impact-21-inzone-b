@@ -18,6 +18,8 @@ const Dashboard = () => {
   const [currentExams, setCurrentExams] = useState([]);
   const [courseName, setCourseName] = useState([]);
   const [examNames, setExamNames] = useState([]);
+  const [examTypes, setExamTypes] = useState([]);
+  const [zoomLink, setZoomLink] = useState([]);
   const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
@@ -29,6 +31,8 @@ const Dashboard = () => {
     const fetchCurrentExamData = async () => {
       var currentExamList = [];
       var currentExamNameList = [];
+      let currentExamTypeList = [];
+      let currenZoomLink = [];
       await axios
         .get(`student/${currentEmail}/current-exams`)
         .then((response) => {
@@ -42,8 +46,12 @@ const Dashboard = () => {
         // TODO: should we check for response status?
         console.log(res.data, "res data from loop");
         currentExamNameList.push(res.data.name);
+        currentExamTypeList.push(res.data.exam_set_type);
+        currenZoomLink.push(res.data.additional_instruction);
       }
       setExamNames(currentExamNameList);
+      setExamTypes(currentExamTypeList);
+      setZoomLink(currenZoomLink);
     };
 
     if (isLogged) {
@@ -130,34 +138,56 @@ const Dashboard = () => {
                 {currentExams.length ? (
                   <>
                     {currentExams.map((exam, i) => {
-                      localStorage.setItem("examId", exam.exam_set_id);
-                      localStorage.setItem("id", exam.id);
-                      return (
-                        <div key={i} className="exams__container">
-                          <div className="exams__wrapper--left">
-                            <h6>
-                              {courseName} - {examNames[i]}
-                            </h6>
-                            <p>Limit: {exam.closed_at}</p>
-                          </div>
-                          <div className="exams__wrapper--right">
-                            <Link
-                              to={{
-                                pathname: "/instructions",
-                              }}
-                            >
-                              <Button
-                                variant="primary"
-                                onClick={() =>
-                                  handleButton(exam.exam_set_id, exam.id)
-                                }
+                      console.log(examTypes[i], "exam types");
+                      if (examTypes[i] === "MCQ exam") {
+                        return (
+                          <div key={i} className="exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>
+                                {courseName} - {examNames[i]}
+                              </h6>
+                              <p>Limit: {exam.closed_at}</p>
+                            </div>
+                            <div className="exams__wrapper--right">
+                              <Link
+                                to={{
+                                  pathname: "/instructions",
+                                }}
                               >
-                                Start exam
-                              </Button>
-                            </Link>
+                                <Button
+                                  variant="primary"
+                                  onClick={() =>
+                                    handleButton(exam.exam_set_id, exam.id)
+                                  }
+                                >
+                                  Start exam
+                                </Button>
+                              </Link>
+                            </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      } else if (examTypes[i] === "Open-question exam") {
+                        console.log(zoomLink, "zoom link");
+                        return (
+                          <div key={i} className="exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>
+                                {courseName} - {examNames[i]}
+                              </h6>
+                              <p>Limit: {exam.closed_at}</p>
+                            </div>
+                            <div className="exams__wrapper--right">
+                              <a
+                                href={zoomLink[i]}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button variant="primary">Go to zoom</Button>
+                              </a>
+                            </div>
+                          </div>
+                        );
+                      }
                     })}
                   </>
                 ) : (
