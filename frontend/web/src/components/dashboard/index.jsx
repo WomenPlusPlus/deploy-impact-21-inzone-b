@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
+import { truncate } from "../../shared/truncate";
 import { Button } from "react-bootstrap";
 
 import CongratulationsModal from "./modal";
@@ -19,6 +20,9 @@ const Dashboard = () => {
   const [courseName, setCourseName] = useState([]);
   const [examNames, setExamNames] = useState([]);
   const [examTypes, setExamTypes] = useState([]);
+  const [pastExams, setPastExams] = useState([]);
+  const [pastExamNames, setPastExamNames] = useState([]);
+  // const [pastExamTypes, setPastExamTypes] = useState([]);
   const [zoomLink, setZoomLink] = useState([]);
   const [fullName, setFullName] = useState("");
 
@@ -53,6 +57,26 @@ const Dashboard = () => {
       setExamTypes(currentExamTypeList);
       setZoomLink(currenZoomLink);
     };
+    const fetchPastExamData = async () => {
+      var pastExamList = [];
+      var pastExamNameList = [];
+      let pastExamTypeList = [];
+      await axios.get(`student/${currentEmail}/past-exams`).then((response) => {
+        console.log(response, "response current exams of a student");
+        pastExamList = response.data;
+      });
+      setPastExams(pastExamList);
+      for (let i = 0; i < pastExamList.length; i++) {
+        const examSetId = pastExamList[i].exam_set_id;
+        const res = await axios.get(`exam-set/${examSetId}`);
+        // TODO: should we check for response status?
+        console.log(res.data, "res data from loop");
+        pastExamNameList.push(res.data.name);
+        pastExamTypeList.push(res.data.exam_set_type);
+      }
+      setPastExamNames(pastExamNameList);
+      // setPastExamTypes(pastExamTypeList);
+    };
 
     if (isLogged) {
       axios.get(`student/${currentEmail}`).then((response) => {
@@ -70,6 +94,7 @@ const Dashboard = () => {
       });
 
       fetchCurrentExamData();
+      fetchPastExamData();
     }
   }, []);
 
@@ -229,6 +254,39 @@ const Dashboard = () => {
                     </Trans>
                   </a>
                 </div>
+              </div>
+              <div className="container__overflow">
+                {pastExams.length ? (
+                  <>
+                    {pastExams.map((exam, i) => {
+                      return (
+                        <div key={i} className="exams__container">
+                          <div className="exams__wrapper--left">
+                            <h6>{pastExamNames[i]}</h6>
+                          </div>
+                          <p id="taken__at">{truncate(exam.taken_at, 17)}</p>
+                          <div className="exams__wrapper--right ">
+                            {exam.student_mark === null ||
+                            exam.student_mark <= 6 ? (
+                              <Button variant="outline-danger">Failed</Button>
+                            ) : (
+                              <Button variant="outline-success">Passed</Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <p className="p__text">
+                    <Trans
+                      key="third-card-text"
+                      i18nKey="static.third-card-text"
+                    >
+                      Your grades for your past exams will be added here
+                    </Trans>
+                  </p>
+                )}
               </div>
             </div>
           </div>

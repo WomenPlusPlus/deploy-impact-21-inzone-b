@@ -136,3 +136,22 @@
         display: none;
     }
 }
+
+
+.btn-outline-success, .btn-outline-danger {
+  max-height: 35px;
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.btn-outline-success {
+  background-color: #F3FBF4;
+}
+.btn-outline-danger {
+  background-color: #FFF9FB;
+}
+
+#taken__at {
+  margin-left: 5rem;
+}
