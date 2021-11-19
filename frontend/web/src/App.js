@@ -1,5 +1,6 @@
 import './scss/styles.scss';
-import React from 'react'
+import React, {useState} from "react";
+// import { useSelector } from "react-redux";
 import {
     Switch,
     Route,
@@ -14,6 +15,9 @@ import Nav from "./components/navigation-bar";
 import MCQScreen from "./components/mcq-screen";
 
 function App() {
+    // const user = useSelector((state) => state.user.value);
+    const [userIsLoggedIn] = useState(localStorage.getItem('isLogged') === 'true');
+
     return (
         <div id='app'>
             <header>
@@ -23,10 +27,20 @@ function App() {
                 <Switch>
                     <Route path='/' exact>
                         {/*TODO: check if user is logged in or not*/}
-                        <Redirect to='/login' />
+                        {userIsLoggedIn && (
+                            <Redirect to='/home' />
+                        )}
+                        {!userIsLoggedIn && (
+                            <Redirect to='/login' />
+                        )}
                     </Route>
                     <Route path="/login">
-                        <LoginScreen/>
+                        {userIsLoggedIn && (
+                            <Redirect to='/home' />
+                        )}
+                        {!userIsLoggedIn && (
+                            <LoginScreen/>
+                        )}
                     </Route>
                     <Route path="/signup" exact>
                         <Signup />
@@ -35,7 +49,12 @@ function App() {
                         <ForgotPasswordScreen/>
                     </Route>
                     <Route path="/home">
-                        <Dashboard/>
+                        {userIsLoggedIn && (
+                            <Dashboard/>
+                        )}
+                        {!userIsLoggedIn && (
+                            <Redirect to='/login' />
+                        )}
                     </Route>
                     <Route path="/instructions">
                         <Instructions/>

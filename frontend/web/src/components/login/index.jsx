@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "../../shared/axios";
 import { useDispatch } from "react-redux";
@@ -6,7 +6,7 @@ import { login } from "../../features/user";
 import EntryScreen from "../entry-screen";
 
 function LoginScreen(props) {
-  const history = useHistory();
+  // const history = useHistory();
 
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
@@ -38,9 +38,10 @@ function LoginScreen(props) {
               email: username,
             })
           );
-          localStorage.setItem("isLogged", true);
+          localStorage.setItem("isLogged", 'true');
           localStorage.setItem("currentEmail", username);
-          history.push("/home");
+          // history.push("/home");
+          window.location.href = "/home";
         } else {
           alert("login was not successful :(");
           console.log("testing");
