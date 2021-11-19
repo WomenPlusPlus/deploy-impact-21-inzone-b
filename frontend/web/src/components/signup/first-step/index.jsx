@@ -26,12 +26,12 @@ const FirstStep = (props) => {
     setPassword((prevState) => {
       return password;
     });
-    checkNextStep();
+    checkNextStep(password);
   }
 
   const [allowNextStep, setAllowNextStep] = React.useState(false);
 
-  const checkNextStep = () => {
+  const checkNextStep = (password) => {
     let errorEmail = false;
     if (email.length === 0) {
       errorEmail = true;
