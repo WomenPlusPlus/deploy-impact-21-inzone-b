@@ -279,7 +279,9 @@ const Dashboard = () => {
                         );
                       } else {
                         return (
-                          <p className="p__text">We are correcting your exam</p>
+                          <p className="p__text">
+                            We are correcting your exam!
+                          </p>
                         );
                       }
                     })}
