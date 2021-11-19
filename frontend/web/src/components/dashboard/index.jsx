@@ -278,7 +278,9 @@ const Dashboard = () => {
                           </div>
                         );
                       } else {
-                        <></>;
+                        return (
+                          <p className="p__text">We are correcting your exam</p>
+                        );
                       }
                     })}
                   </>
