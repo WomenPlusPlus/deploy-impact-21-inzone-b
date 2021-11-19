@@ -259,22 +259,27 @@ const Dashboard = () => {
                 {pastExams.length ? (
                   <>
                     {pastExams.map((exam, i) => {
-                      return (
-                        <div key={i} className="exams__container">
-                          <div className="exams__wrapper--left">
-                            <h6>{pastExamNames[i]}</h6>
+                      if (exam.student_mark !== null) {
+                        return (
+                          <div key={i} className="exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>{pastExamNames[i]}</h6>
+                            </div>
+                            <p id="taken__at">{truncate(exam.taken_at, 17)}</p>
+                            <div className="exams__wrapper--right ">
+                              {exam.student_mark <= 6 ? (
+                                <Button variant="outline-danger">Failed</Button>
+                              ) : (
+                                <Button variant="outline-success">
+                                  Passed
+                                </Button>
+                              )}
+                            </div>
                           </div>
-                          <p id="taken__at">{truncate(exam.taken_at, 17)}</p>
-                          <div className="exams__wrapper--right ">
-                            {exam.student_mark === null ||
-                            exam.student_mark <= 6 ? (
-                              <Button variant="outline-danger">Failed</Button>
-                            ) : (
-                              <Button variant="outline-success">Passed</Button>
-                            )}
-                          </div>
-                        </div>
-                      );
+                        );
+                      } else {
+                        <></>;
+                      }
                     })}
                   </>
                 ) : (
