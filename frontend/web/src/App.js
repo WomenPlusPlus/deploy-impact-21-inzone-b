@@ -13,6 +13,7 @@ import Dashboard from "./components/dashboard/";
 import Instructions from "./components/dashboard/instructions";
 import Nav from "./components/navigation-bar";
 import MCQScreen from "./components/mcq-screen";
+import UserNotValidated from './components/user-not-validated';
 
 function App() {
     // const user = useSelector((state) => state.user.value);
@@ -61,6 +62,9 @@ function App() {
                     </Route>
                     <Route path="/exam/mcq">
                         <MCQScreen/>
+                    </Route>
+                    <Route path="/awaiting-admin-approval">
+                        <UserNotValidated/>
                     </Route>
                 </Switch>
             </main>

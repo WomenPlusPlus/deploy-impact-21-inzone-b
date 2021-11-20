@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
 import { truncate } from "../../shared/truncate";
@@ -27,6 +28,7 @@ const Dashboard = () => {
   const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
+  const history = useHistory();
 
   useEffect(() => {
     const isLogged = localStorage.getItem("isLogged");
@@ -81,6 +83,10 @@ const Dashboard = () => {
     if (isLogged) {
       axios.get(`student/${currentEmail}`).then((response) => {
         console.log(response.data, "student");
+        // TODO: check 'validated_by_admin' value
+        if (response.data.validated_by_admin === false) {
+          history.push("/awaiting-admin-approval");
+        }
         setFullName(response.data.full_name);
         setFirstLogin(response.data.first_query_done);
         setCourseName(response.data.course_name);

@@ -1,0 +1,19 @@
+@import './../../scss/custom.scss';
+@import './../../scss/config/_colors.scss';
+
+.user-not-validated {
+    flex-grow: 1;
+    background-color: $entry-screen-bg;
+
+    .box {
+        background-color: white;
+
+        img {
+            max-height: 300px;
+        }
+
+        p {
+            color: $user-not-validated-text-color;
+        }
+    }
+}
