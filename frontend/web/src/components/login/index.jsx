@@ -24,7 +24,8 @@ function LoginScreen(props) {
 
   const dispatch = useDispatch();
 
-  const logIn = async () => {
+  const logIn = async (e) => {
+    e.preventDefault();
     axios
       .post("student/login", {
         email: username,
@@ -56,7 +57,7 @@ function LoginScreen(props) {
         <div className="row justify-content-center">
           <div className="col-lg-6">
             <h1>Welcome to ExamPortal</h1>
-            <form>
+            <form onSubmit={logIn}>
               {
                 showLoginError &&
                 <div className="form-text error d-flex align-items-center mb-4">
@@ -111,9 +112,8 @@ function LoginScreen(props) {
               </div>
               <div className="mb-4">
                 <button
-                  type="button"
+                  type="submit"
                   className="btn btn-primary w-100"
-                  onClick={logIn}
                   disabled={!username || !password}
                 >
                   Log In

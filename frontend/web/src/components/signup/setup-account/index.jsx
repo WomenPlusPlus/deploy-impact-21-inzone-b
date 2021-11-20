@@ -14,7 +14,8 @@ function SetupAccount(props) {
     });
   }, []);
 
-  const createAccount = () => {
+  const createAccount = (e) => {
+    e.preventDefault();
     props.onSubmitData({
       name,
       role,
@@ -24,7 +25,7 @@ function SetupAccount(props) {
   return (
     <div className="col-lg-6">
       <h1>{props.title}</h1>
-      <form>
+      <form onSubmit={createAccount}>
         {
           props.showLoginError &&
           <div className="form-text error d-flex align-items-center mb-4">
@@ -83,9 +84,8 @@ function SetupAccount(props) {
 
         <div className="mb-5">
           <button
-            type="button"
+            type="submit"
             className="btn btn-primary w-100"
-            onClick={createAccount}
             disabled={name === '' || role === ''}
           >
             Create my account

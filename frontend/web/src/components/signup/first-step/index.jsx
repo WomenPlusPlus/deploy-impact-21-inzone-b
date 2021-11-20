@@ -49,7 +49,8 @@ const FirstStep = (props) => {
     }
   }
 
-  const nextStep = () => {
+  const nextStep = (e) => {
+    e.preventDefault();
     if (allowNextStep) {
       props.onSubmitData({
         email,
@@ -61,7 +62,7 @@ const FirstStep = (props) => {
   return (
     <div className="col-lg-6">
       <h1>{props.title}</h1>
-      <form>
+      <form onSubmit={nextStep}>
         <div className="mb-4">
           <label htmlFor="email-user" className="form-label">
             Email
@@ -153,9 +154,8 @@ const FirstStep = (props) => {
         </div>
         <div className="mb-4">
           <button
-            type="button"
+            type="submit"
             className="btn btn-primary w-100"
-            onClick={nextStep}
             disabled={!allowNextStep}
           >
             Sign Up

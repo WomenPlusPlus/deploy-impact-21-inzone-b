@@ -27,7 +27,8 @@ function Student(props) {
         });
     }, []);
 
-    const createAccount = () => {
+    const createAccount = (e) => {
+        e.preventDefault();
         if (setupStep === 'location') {
             setSetupStep('course');
         } else if (setupStep === 'course') {
@@ -44,7 +45,7 @@ function Student(props) {
     return (
         <div className="col-lg-6">
             <h1>{props.title}</h1>
-            <form>
+            <form onSubmit={createAccount}>
                 {setupStep === 'location' && (
                 <div className="mb-5">
                     <label htmlFor="location" className="form-label">
@@ -119,9 +120,8 @@ function Student(props) {
                 )}
                 <div className="mb-5">
                     <button
-                        type="button"
+                        type="submit"
                         className="btn btn-primary w-100"
-                        onClick={createAccount}
                         disabled={!(setupStep === 'location' && location !== '' || setupStep === 'course' && course || setupStep === 'language' && language)}
                     >
                         Create my account
