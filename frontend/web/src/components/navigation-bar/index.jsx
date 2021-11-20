@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Trans } from "react-i18next";
 
 import "./_nav.scss";
-import icon from "../../assets/dashboard/favicon.png";
+// import icon from "../../assets/dashboard/favicon.png";
 import demo from "../../assets/header/user.svg";
 import { NavDropdown } from "react-bootstrap";
 // import { useHistory } from "react-router-dom";
+
+import logo from "../../assets/header/logo.svg";
 
 const Nav = () => {
   // const dispatch = useDispatch();
@@ -26,7 +29,9 @@ const Nav = () => {
   return (
     <div className="nav__container">
       <div className="wrapper--left">
-        <img id="nav__logo" src={icon} alt="logo" />
+        <Link to='/'>
+          <img id="nav__logo" src={logo} alt="logo" />
+        </Link>
       </div>
       {userIsLoggedIn === true && (
         <div className="wrapper--middle">
@@ -59,16 +64,15 @@ const Nav = () => {
                   src={demo}
                   alt="user pic"
                 />
-
                 {user.username}
               </div>
             }
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item eventKey={1.1} href="/profile">
+            {/* <NavDropdown.Item eventKey={1.1} href="/profile">
               Profile
             </NavDropdown.Item>
-            <NavDropdown.Item divider="true" />
+            <NavDropdown.Item divider="true" /> */}
             <NavDropdown.Item eventKey={1.3}>
               <i className="fa fa-sign-out"></i>
               <span id="logout" onClick={logOutHandler}>
