@@ -354,7 +354,7 @@ def reset_exam_start_time(query_email):
     # but we need to convert from reponse data to dict
     student_data_dict = json.loads(student_response.get_data())
     student_id = student_data_dict.get('id')
-    taken_time_json_query = jsonify({'taken_at' : None})
+    taken_time_json_query = jsonify({'taken_at' : None, 'student_mark' : None})
     all_exams_of_a_student_response = exam_handler.handle_update_multiple_objects_by_attribute(taken_time_json_query, student_id=student_id)
     return all_exams_of_a_student_response
 

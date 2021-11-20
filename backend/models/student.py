@@ -78,6 +78,10 @@ class Student(db.Model):
         if first_query_done is not None and first_query_done and not self.first_query_done:
             self.first_query_done = True
             has_updates = True
+        validated_by_admin = json_with_updates.get('validated_by_admin')
+        if validated_by_admin is not None and validated_by_admin != self.validated_by_admin:
+            self.validated_by_admin = validated_by_admin
+            has_updates = True
         return has_updates
 
     @staticmethod
