@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
 import { truncate } from "../../shared/truncate";
-import { Button } from "react-bootstrap";
+import { Button, Badge } from "react-bootstrap";
 
 import CongratulationsModal from "./modal";
 
@@ -267,16 +267,16 @@ const Dashboard = () => {
                     {pastExams.map((exam, i) => {
                       if (exam.student_mark !== null) {
                         return (
-                          <div key={i} className="exams__container">
+                          <div key={i} className="past-exams__container">
                             <div className="exams__wrapper--left">
                               <h6>{pastExamNames[i]}</h6>
                             </div>
-                            <p id="taken__at">{truncate(exam.taken_at, 17)}</p>
-                            <div className="exams__wrapper--right ">
+                            <p>{truncate(exam.taken_at, 17)}</p>
+                            <div className="exams__wrapper--right">
                               {exam.student_mark <= 6 ? (
-                                <Button variant="outline-danger">Failed</Button>
+                                <Button variant="outline-danger w-100 mx-0 px-0 py-1">Failed</Button>
                               ) : (
-                                <Button variant="outline-success">
+                                <Button variant="outline-success w-100 mx-0 px-0 py-1">
                                   Passed
                                 </Button>
                               )}
@@ -285,9 +285,15 @@ const Dashboard = () => {
                         );
                       } else {
                         return (
-                          <p className="p__text">
-                            We are correcting your exam!
-                          </p>
+                          <div key={i} className="past-exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>{pastExamNames[i]}</h6>
+                            </div>
+                            <p>{truncate(exam.taken_at, 17)}</p>
+                            <div className="exams__wrapper--right ">
+                              <Badge bg="warning">Grading in progress</Badge>
+                            </div>
+                          </div>
                         );
                       }
                     })}

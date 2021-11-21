@@ -79,8 +79,8 @@
 
 .nav__pastexams {
   min-width: 60%;
-  display: flex;
-  justify-content: space-evenly;
+  // display: flex;
+  // justify-content: space-evenly;
   a {
     text-decoration: none;
     font-family: $font;
@@ -88,6 +88,28 @@
     line-height: 18px;
     vertical-align: Center;
     color: #969696;
+    width: 50%;
+    display: inline-block;
+  }
+}
+
+.past-exams__container {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  .exams__wrapper--left {
+    width: 40%;
+    h6 {
+      margin-bottom: 0;
+    }
+  }
+  p {
+    margin-left: 0;
+    width: 30%;
+    margin-bottom: 0;
+  }
+  .exams__wrapper--right {
+    width: 30%;
   }
 }
 
@@ -98,6 +120,7 @@
   vertical-align: Center;
   color: $dashboard-text;
   margin: 0;
+  width: 40%;
 }
 
 .p__text {
@@ -154,10 +177,6 @@
 }
 .btn-outline-danger {
   background-color: #FFF9FB;
-}
-
-#taken__at {
-  margin-left: 5rem;
 }
 
 .exams__wrapper--left {
