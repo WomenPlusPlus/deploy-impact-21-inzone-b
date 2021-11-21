@@ -54,7 +54,7 @@ const MCQScreen = () => {
     if (isTime) {
       setModalTitle("Your time has run out!");
       setModalMessage(
-        "All your answers have been saved (even when you were offline). Make sure you have internet connection and submit your exam to finish. Otherwise your score will be a 0."
+        "All your answers have been saved (even when you were offline). Your exam (even if it is incomplete) will be submitted automatically."
       );
       if (modalTitle !== "we detected that you cheated") setModalImage(clock);
       handleShowModal();
