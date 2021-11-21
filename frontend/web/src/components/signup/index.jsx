@@ -20,20 +20,18 @@ const Signup = () => {
   const signUp = async (student) => {
     axios.post("student", student)
       .then((response) => {
-        if (response.status === 200) {
-          console.log(response);
-          dispatch(
-            login({
-              email: student.email,
-            })
-          );
-          // we direct to login page after signup successfully
-          // so that previously-logged-in user will be reset
-          history.push("/login");
-        } else {
-          setShowLoginError(true);
-        }
-      });
+        dispatch(
+          login({
+            email: student.email,
+          })
+        );
+        // we direct to login page after signup successfully
+        // so that previously-logged-in user will be reset
+        history.push("/login");
+      })
+      .catch((error) => {
+        setShowLoginError(true);
+      })
   }
 
   const firstStepHandler = (data) => {
@@ -83,11 +81,11 @@ const Signup = () => {
           { signupStep === 'setup-account' && <SetupAccount
             title="Let's set up your account"
             onSubmitData={setupAccountHandler}
-            showLoginError={showLoginError}
           /> }
           { signupStep === 'student' && <Student
             title="Let's set up your account"
             onSubmitData={studentHandler}
+            showLoginError={showLoginError}
           /> }
         </div>
       </div>

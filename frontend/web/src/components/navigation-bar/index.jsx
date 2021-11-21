@@ -55,7 +55,6 @@ const Nav = () => {
       {userIsLoggedIn === true && (
         <div className="wrapper--right">
           <NavDropdown
-            eventKey={1}
             title={
               <div className="pull-left">
                 <img
@@ -77,9 +76,9 @@ const Nav = () => {
             <NavDropdown.Item disabled="true" style={{color: '#655E5D'}}>
               <span>Hi, {user.email}</span>
             </NavDropdown.Item>
-            <NavDropdown.Item eventKey={1.3}>
+            <NavDropdown.Item onClick={logOutHandler}>
               <i className="fa fa-sign-out"></i>
-              <span id="logout" onClick={logOutHandler}>
+              <span id="logout">
                 Logout
               </span>
             </NavDropdown.Item>
