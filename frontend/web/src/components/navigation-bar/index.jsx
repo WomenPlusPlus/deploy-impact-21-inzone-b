@@ -73,6 +73,10 @@ const Nav = () => {
               Profile
             </NavDropdown.Item>
             <NavDropdown.Item divider="true" /> */}
+            {/* TODO: fix this color hack */}
+            <NavDropdown.Item disabled="true" style={{color: '#655E5D'}}>
+              <span>Hi, {user.email}</span>
+            </NavDropdown.Item>
             <NavDropdown.Item eventKey={1.3}>
               <i className="fa fa-sign-out"></i>
               <span id="logout" onClick={logOutHandler}>
