@@ -1,0 +1,36 @@
+.program__container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 1rem;
+}
+
+.program__wrapper--bottom {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.progressbar__star {
+    display: flex;
+    align-items: center;
+    position: relative;
+    display: inline-flex;
+    
+    img {
+        position: absolute;
+        right: 0;
+        z-index: 1;
+    }
+}
+
+.progress-bar {
+    background-color: #382C8B !important;
+}
+
+.progress {
+    width: 97.5%;
+}
+

@@ -26,15 +26,20 @@
   margin-top: 1rem;
   border: 1px solid #E5E5E5;
   border-radius: 10px;
+  height: 300px;
   &--top {
-    min-height: 35vh;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   &--bottom {
-    min-height: 35vh;
+    height: 300px;
+  }
+  &--top--program {
+    height: 300px;
+    padding: 1rem;
   }
 }
 

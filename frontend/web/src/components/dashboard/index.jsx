@@ -7,6 +7,7 @@ import { truncate } from "../../shared/truncate";
 import { Button, Badge } from "react-bootstrap";
 
 import CongratulationsModal from "./modal";
+import Program from "./program";
 
 import "./_dashboard.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const [examNames, setExamNames] = useState([]);
   const [examTypes, setExamTypes] = useState([]);
   const [pastExams, setPastExams] = useState([]);
+  const [progress, setProgress] = useState(0);
   const [pastExamNames, setPastExamNames] = useState([]);
   // const [pastExamTypes, setPastExamTypes] = useState([]);
   const [zoomLink, setZoomLink] = useState([]);
@@ -63,13 +65,16 @@ const Dashboard = () => {
       var pastExamList = [];
       var pastExamNameList = [];
       let pastExamTypeList = [];
+      let progressCounter = 0;
       await axios.get(`student/${currentEmail}/past-exams`).then((response) => {
         console.log(response, "response current exams of a student");
         pastExamList = response.data;
       });
       setPastExams(pastExamList);
+
       for (let i = 0; i < pastExamList.length; i++) {
         const examSetId = pastExamList[i].exam_set_id;
+        if (pastExamList[i].student_mark >= 7) progressCounter += 20;
         const res = await axios.get(`exam-set/${examSetId}`);
         // TODO: should we check for response status?
         console.log(res.data, "res data from loop");
@@ -77,7 +82,7 @@ const Dashboard = () => {
         pastExamTypeList.push(res.data.exam_set_type);
       }
       setPastExamNames(pastExamNameList);
-      // setPastExamTypes(pastExamTypeList);
+      setProgress(progressCounter);
     };
 
     if (isLogged) {
@@ -134,14 +139,20 @@ const Dashboard = () => {
                 Your program
               </Trans>
             </h3>
-            <div className="inner__wrapper inner__wrapper--top">
-              <img src={progressImage} alt="progress" id="img--progress" />
-              <p className="p__text">
-                <Trans key="img-2" i18nKey="static.img-text-2">
-                  Your program and progress will appear here
-                </Trans>
-              </p>
-            </div>
+            {currentExams.length ? (
+              <div className="inner__wrapper inner__wrapper--top--program">
+                <Program progress={progress}></Program>
+              </div>
+            ) : (
+              <div className="inner__wrapper inner__wrapper--top">
+                <img src={progressImage} alt="progress" id="img--progress" />
+                <p className="p__text">
+                  <Trans key="img-2" i18nKey="static.img-text-2">
+                    Your program and progress will appear here
+                  </Trans>
+                </p>
+              </div>
+            )}
           </div>
         </div>
         {firstLogin ? (
@@ -274,7 +285,9 @@ const Dashboard = () => {
                             <p>{truncate(exam.taken_at, 17)}</p>
                             <div className="exams__wrapper--right">
                               {exam.student_mark <= 6 ? (
-                                <Button variant="outline-danger w-100 mx-0 px-0 py-1">Failed</Button>
+                                <Button variant="outline-danger w-100 mx-0 px-0 py-1">
+                                  Failed
+                                </Button>
                               ) : (
                                 <Button variant="outline-success w-100 mx-0 px-0 py-1">
                                   Passed
