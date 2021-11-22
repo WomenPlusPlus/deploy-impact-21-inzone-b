@@ -117,10 +117,9 @@
   font-family: $font;
   font-size: $x-medium;
   line-height: 21px;
-  vertical-align: Center;
   color: $dashboard-text;
   margin: 0;
-  width: 40%;
+  width: 100%;
 }
 
 .p__text {
@@ -153,11 +152,15 @@
 }
 
 .container__overflow {
-  max-height: 250px;
+  height: 230px;
   overflow: auto;
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+.inner__wrapper--bottom {
+  height: 300px;
 }
 
 
