@@ -181,6 +181,9 @@ def get_all_questions_by_exam_set_id(id):
     # we need to convert from reponse data to list
     all_questions_list = json.loads(all_questions_response.get_data())
     random.shuffle(all_questions_list)
+    for question in all_questions_list:
+        if question.get('possible_answers') is not None:
+            random.shuffle(question.get('possible_answers'))
     return QueryHandler.create_generic_json_response(all_questions_list)
 
 
