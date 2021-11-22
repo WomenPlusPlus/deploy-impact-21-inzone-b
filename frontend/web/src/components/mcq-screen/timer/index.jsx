@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "../../../shared/axios";
+import './_timer.scss'
 
 const Timer = ({ examId, setIsTime }) => {
   const [minutes, setMinutes] = useState(60);
@@ -35,7 +36,7 @@ const Timer = ({ examId, setIsTime }) => {
   }, []);
 
   return (
-    <div>
+    <div id="timer__container">
       {minutes === 0 && seconds === 0 ? null : (
         <h5 style={minutes ? { color: "#0056D1" } : { color: "#E55565" }}>
           {" "}
