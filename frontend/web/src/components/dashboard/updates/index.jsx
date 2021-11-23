@@ -6,7 +6,7 @@ const Updates = ({
   currentExams,
   pastExams,
   courseName,
-  examTypes,
+  pastExamNames,
   examNames,
 }) => {
   const [latestRead, setLatestRead] = useState([]);
@@ -63,11 +63,11 @@ const Updates = ({
                     </div>
                     <div>
                       <h6>
-                        {courseName} - {examNames[i]}
+                        {courseName} - {pastExamNames[i]}
                       </h6>
                       <p>
                         You have successfully completed the {courseName} -{" "}
-                        {examNames[i]}
+                        {pastExamNames[i]}
                       </p>
                     </div>
                   </div>

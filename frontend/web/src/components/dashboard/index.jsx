@@ -112,7 +112,7 @@ const Dashboard = () => {
       fetchCurrentExamData();
       fetchPastExamData();
     }
-  }, []);
+  }, [currentExams]);
 
   const handleButton = (examSet, exam) => {
     localStorage.setItem("examId", exam);
@@ -138,6 +138,7 @@ const Dashboard = () => {
                       pastExams={pastExams}
                       examTypes={examTypes}
                       examNames={examNames}
+                      pastExamNames={pastExamNames}
                       courseName={courseName}
                     ></Updates>
                   </div>
