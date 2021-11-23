@@ -1,9 +1,6 @@
 @import "../../../scss/config/font";
 @import "../../../scss/config/colors";
 
-.modal {
-    top: calc(100% / 4);
-}
 
 .modal__container {
     padding: 1rem;
@@ -31,9 +28,10 @@
         color: $dashboard-text;
 }
 
-.modal-footer {
+#dashboard__modal--footer {
     padding-top: 2rem;
     border-top: none;
+    display: flex;
     justify-content: flex-start;
 }
 

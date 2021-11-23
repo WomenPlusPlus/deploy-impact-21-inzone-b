@@ -16,6 +16,7 @@ const CongratulationsModal = ({ fullName }) => {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        centered
       >
         <section className="modal__container">
           <div className="column__left">
@@ -28,7 +29,7 @@ const CongratulationsModal = ({ fullName }) => {
               You can use this portal to do your exams, check your course
               progress and communicate with your tutors!
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer id="dashboard__modal--footer">
               <Button variant="primary" onClick={handleClose}>
                 Okay, thanks
               </Button>
