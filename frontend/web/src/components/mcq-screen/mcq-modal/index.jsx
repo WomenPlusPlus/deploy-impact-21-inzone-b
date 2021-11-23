@@ -12,7 +12,7 @@ const McqModal = ({
 }) => {
   return (
     <>
-      <Modal show={showSubmitModal}>
+      <Modal id="mcq__modal" show={showSubmitModal} centered>
         <div>
           <Modal.Header>
             <Modal.Title>{modalTitle}</Modal.Title>
