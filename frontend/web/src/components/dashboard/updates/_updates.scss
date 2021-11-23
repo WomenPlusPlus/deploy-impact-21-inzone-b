@@ -1,0 +1,29 @@
+.updates__container {
+  display: flex;
+  align-items: flex-start;
+  min-width: 95%;
+  &:hover {
+    cursor: pointer;
+  }
+  img {
+    margin-right: 10px;
+  }
+}
+
+.show__notification {
+  background-color: #eaf3ff;
+  > .dot {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #0145c0;
+  }
+}
+
+.updates__wrapper {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}

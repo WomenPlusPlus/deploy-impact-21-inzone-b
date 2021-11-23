@@ -24,7 +24,7 @@
   background-color: $white;
   width: 100%;
   margin-top: 1rem;
-  border: 1px solid #E5E5E5;
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
   height: 300px;
   &--top {
@@ -154,37 +154,43 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  &--updates {
+    padding: 0;
+  }
 }
 
 .container__overflow {
   height: 230px;
   overflow: auto;
-    &::-webkit-scrollbar {
-        display: none;
-    }
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
+  &--updates {
+    height: 290px;
+  }
 }
 
 .inner__wrapper--bottom {
   height: 300px;
 }
 
-
-.btn-outline-success, .btn-outline-danger {
+.btn-outline-success,
+.btn-outline-danger {
   max-height: 35px;
   display: flex;
   align-items: center;
   margin-right: 2rem;
-  @media (max-width: 1600px)  {
+  @media (max-width: 1600px) {
     margin-right: 1rem;
     margin-left: 1rem;
   }
 }
 
 .btn-outline-success {
-  background-color: #F3FBF4;
+  background-color: #f3fbf4;
 }
 .btn-outline-danger {
-  background-color: #FFF9FB;
+  background-color: #fff9fb;
 }
 
 .exams__wrapper--left {
