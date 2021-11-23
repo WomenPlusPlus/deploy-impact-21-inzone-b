@@ -8,6 +8,7 @@ import { Button, Badge } from "react-bootstrap";
 
 import CongratulationsModal from "./modal";
 import Program from "./program";
+import Updates from "./updates";
 
 import "./_dashboard.scss";
 import updatesImage from "../../assets/dashboard/updates.svg";
@@ -74,7 +75,11 @@ const Dashboard = () => {
 
       for (let i = 0; i < pastExamList.length; i++) {
         const examSetId = pastExamList[i].exam_set_id;
-        if (pastExamList[i].student_mark >= 7) progressCounter += 20;
+        if (
+          pastExamList[i].student_mark >= 7 ||
+          pastExamList[i].student_mark === null
+        )
+          progressCounter += 20;
         const res = await axios.get(`exam-set/${examSetId}`);
         // TODO: should we check for response status?
         console.log(res.data, "res data from loop");
@@ -124,14 +129,30 @@ const Dashboard = () => {
                 Your latest updates
               </Trans>
             </h3>
-            <div className="inner__wrapper inner__wrapper--top">
-              <img src={updatesImage} alt="updates" id="img--updates" />
-              <p className="p__text">
-                <Trans key="img-1" i18nKey="static.img-text-1">
-                  You&apos;re all caught up!
-                </Trans>
-              </p>
-            </div>
+            {currentExams.length || pastExams.length ? (
+              <div className="inner__wrapper">
+                <div className="container__overflow container__overflow--updates">
+                  <div className="exams__container--updates">
+                    <Updates
+                      currentExams={currentExams}
+                      pastExams={pastExams}
+                      examTypes={examTypes}
+                      examNames={examNames}
+                      courseName={courseName}
+                    ></Updates>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="inner__wrapper inner__wrapper--top">
+                <img src={updatesImage} alt="updates" id="img--updates" />
+                <p className="p__text">
+                  <Trans key="img-1" i18nKey="static.img-text-1">
+                    You&apos;re all caught up!
+                  </Trans>
+                </p>
+              </div>
+            )}
           </div>
           <div className="column--right column-top">
             <h3 className="title">
