@@ -59,7 +59,8 @@ class Exam(db.Model):
             self.student_id = student_id
             has_updates = True
         student_mark = json_with_updates.get('student_mark')
-        if student_mark is not None and mark_entered_by != self.student_mark:
+        # we allow student_mark to be None, so we should not check for None here
+        if student_mark != self.student_mark:
             self.student_mark = student_mark
             has_updates = True
         mark_entered_by = json_with_updates.get('mark_entered_by')

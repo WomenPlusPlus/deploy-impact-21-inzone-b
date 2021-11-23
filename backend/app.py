@@ -249,11 +249,19 @@ def get_all_students():
 
 @app.route('/student/<query_email>')
 def get_student_by_email(query_email):
-    result = student_handler.handle_get_first_object_by_attribute(email=query_email)
-    if result.status_code == 200:
+    student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
+    if student_response.status_code != 200:
+        # there is some error while getting student info, so we return the error itself
+        return student_response
+    # there is no error when getting student info,
+    # but we need to convert from reponse data to dict
+    student_data_dict = json.loads(student_response.get_data())
+    validated_by_admin = student_data_dict.get('validated_by_admin')
+    # only after being validated by admin, we then consider this is the first log-in
+    if validated_by_admin == True :
         first_query_done_request = jsonify({'first_query_done' : True})
         student_handler.handle_update_object_by_attribute(first_query_done_request, email=query_email)
-    return result
+    return student_response
 
 
 @app.route('/student', methods=['POST'])
@@ -357,7 +365,7 @@ def reset_exam_start_time(query_email):
     # but we need to convert from reponse data to dict
     student_data_dict = json.loads(student_response.get_data())
     student_id = student_data_dict.get('id')
-    taken_time_json_query = jsonify({'taken_at' : None})
+    taken_time_json_query = jsonify({'taken_at' : None, 'student_mark' : None})
     all_exams_of_a_student_response = exam_handler.handle_update_multiple_objects_by_attribute(taken_time_json_query, student_id=student_id)
     return all_exams_of_a_student_response
 
