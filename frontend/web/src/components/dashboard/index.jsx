@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
 import { truncate } from "../../shared/truncate";
-import { Button, Badge } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
 import CongratulationsModal from "./modal";
 import Program from "./program";
@@ -326,7 +326,9 @@ const Dashboard = () => {
                             </div>
                             <p>{truncate(exam.taken_at, 17)}</p>
                             <div className="exams__wrapper--right ">
-                              <Badge bg="warning">Grading in progress</Badge>
+                                <Button variant="outline-warning w-100 mx-0 px-0 py-1">
+                                  Grading in progress
+                                </Button>
                             </div>
                           </div>
                         );

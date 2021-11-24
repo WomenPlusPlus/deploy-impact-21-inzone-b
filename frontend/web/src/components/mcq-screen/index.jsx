@@ -33,10 +33,10 @@ const MCQScreen = () => {
 
   const cheatingModal = () => {
     setIsCheating(true);
-    setModalTitle("we detected that you cheated");
+    setModalTitle("We noticed you left the current tab or opened a different file/window");
     setModalImage("");
     setModalMessage(
-      "Make sure you submit your exam with an internet connection, otherwise your score will be a 0."
+      "As per the general rules, the exam will now terminate. Plase make sure to submit your answers now."
     );
     handleShowModal();
   };
@@ -54,9 +54,9 @@ const MCQScreen = () => {
     if (isTime) {
       setModalTitle("Your time has run out!");
       setModalMessage(
-        "All your answers have been saved (even when you were offline). Your exam (even if it is incomplete) will be submitted automatically."
+        "Please make sure to submit your answers now."
       );
-      if (modalTitle !== "we detected that you cheated") setModalImage(clock);
+      if (modalTitle !== "We noticed you left the current tab or opened a different file/window") setModalImage(clock);
       handleShowModal();
     }
     window.addEventListener("focus", onFocus);
