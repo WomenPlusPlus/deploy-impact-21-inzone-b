@@ -163,9 +163,9 @@
 .container__overflow {
   height: 230px;
   overflow: auto;
-  // &::-webkit-scrollbar {
-  //   display: none;
-  // }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &--updates {
     height: 290px;
   }
