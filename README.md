@@ -9,7 +9,7 @@ Brings students in refugee camps and University collaborators together in a sing
 - The process to assign exams to students, grade them and share results is very manual and dependent on a centralized admin
 
 ## Who are we designing for
-![](docs/Who_are_we_designing_for.jpg)
+![hi](docs/Who_are_we_designing_for.JPG)
 
 ## Our value proposition:
 1. Focus with **Offline Mode**
@@ -41,10 +41,10 @@ We now can log in with edunity@gmail.com account, and start taking exams from th
 TODO
 
 ### Our team:
-Naia Magunagoikoetxea - UI/UX - naia.magunagoikoetxea.com  
-Simo Vargas Paraschivoiu - UI/UX - simoparaschi.io  
-Patricija Brečko - Frontend  - @patricijab  
-Ezequias Calvo - Frontend - @EzequiasCalvo   
-Antonina Zubach - Backend - @AntoninaZubach     
-David Nguyen - Backend - @davidnhtd  
-Brandi Revels - Scrum & Management - 
+[Naia Magunagoikoetxea](http://naia.magunagoikoetxea.com) - UI/UX  
+[Simo Vargas Paraschivoiu](http://simoparaschi.io) - UI/UX  
+[Patricija Brečko](https://github.com/patricijab) - Frontend  
+[Ezequias Calvo](https://github.com/EzequiasCalvo) - Frontend  
+[Antonina Zubach](https://github.com/AntoninaZubach) - Backend  
+[David Nguyen](https://github.com/davidnhtd) - Backend  
+[Brandi Revels] - Scrum & Management
