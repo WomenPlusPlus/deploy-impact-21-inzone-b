@@ -51,10 +51,10 @@ The instruction of compiling and deploying these app can be found at:
  - [backend](src/backend) 
 
 ## Our team:
-[Naia Magunagoikoetxea](http://naia.magunagoikoetxea.com) - UI/UX  
+[Naia Magunagoikoetxea](https://www.naiamagunagoikoetxea.com/) - UI/UX  
 [Simo Vargas Paraschivoiu](http://simoparaschi.io) - UI/UX  
 [Patricija Brečko](https://github.com/patricijab) - Frontend  
 [Ezequias Calvo](https://github.com/EzequiasCalvo) - Frontend  
 [Antonina Zubach](https://github.com/AntoninaZubach) - Backend  
-[David Nguyen](https://github.com/davidnhtd) - Backend  
-[Brandi Revels] - Scrum & Management
+[David Nguyen](https://github.com/davidnhtd) - Backend & Scrum  
+[Brandi Revels](https://linkedin.com/in/brandi-revels) - Scrum & Management
