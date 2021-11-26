@@ -37,10 +37,20 @@ curl -X PUT  https://edunity-backend.azurewebsites.net/testing/edunity@gmail.com
 ```
 We now can log in with edunity@gmail.com account, and start taking exams from the dashboard.
 
-### Future improvements:
-TODO
+## Future improvements:
+- Tackle current known limitations, such as:  
+  - Authentication: send verification code to every user after they create an account  
+- Explore the potential to further automate the educational journey with a Moodle integration  
+- Create exam within Edunity instead of uploading a file  
 
-### Our team:
+## App compilation and deployment:
+Currently there are 2 app in this repo, 1 for **frontend** (currently deployed at https://edunity.azurewebsites.net/), 1 for **backend** (currently deployed at https://edunity-backend.azurewebsites.net)
+
+The instruction of compiling and deploying these app can be found at:
+ - [frontend](src/frontend)
+ - [backend](src/backend) 
+
+## Our team:
 [Naia Magunagoikoetxea](http://naia.magunagoikoetxea.com) - UI/UX  
 [Simo Vargas Paraschivoiu](http://simoparaschi.io) - UI/UX  
 [Patricija Brečko](https://github.com/patricijab) - Frontend  
