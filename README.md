@@ -50,6 +50,8 @@ The instruction of compiling and deploying these app can be found at:
  - [frontend](src/frontend)
  - [backend](src/backend) 
 
+The API docs for backend can be found [here](docs/Edunity-backend-1.0.0.yaml)
+
 ## Our team:
 [Naia Magunagoikoetxea](https://www.naiamagunagoikoetxea.com/) - UI/UX  
 [Simo Vargas Paraschivoiu](http://simoparaschi.io) - UI/UX  

@@ -1,0 +1,1153 @@
+swagger: '2.0'
+info:
+  description: |
+    This is Edunity backend server.
+  version: 1.0.0
+  title: Swagger Edunity
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+- name: student
+paths:
+  /student:
+    post:
+      tags:
+      - student
+      summary: Add a new student to Edunity
+      operationId: addStudent
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Student object that needs to be added
+        required: true
+        schema:
+          $ref: '#/definitions/Student'
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Bad request
+        405:
+          description: Invalid input
+      security:
+      - student_auth:
+        - write:students
+        - read:students
+  /students:
+    get:
+      tags:
+      - student
+      summary: Get all students
+      description: Returns a list of students
+      operationId: getAllStudents
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Student'
+      security:
+      - api_key: []
+  /student/{studentEmail}:
+    get:
+      tags:
+      - student
+      summary: Find student by email
+      description: Returns a single student
+      operationId: getStudentByEmail
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: studentEmail
+        in: path
+        description: Email of student to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Student'
+        400:
+          description: Invalid Email supplied
+        404:
+          description: Student not found
+      security:
+      - api_key: []
+    put:
+      tags:
+      - student
+      summary: Update a student
+      operationId: updateStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: studentEmail
+        in: path
+        description: Email of student that needs to be updated
+        required: true
+        type: string
+      - name: full_name
+        in: query
+        description: Updated the full name of the student
+        required: false
+        type: string
+      - name: password
+        in: query
+        description: Updated login password of the student
+        required: false
+        type: string
+      - name: language
+        in: query
+        description: Updated language of the student
+        required: false
+        type: string
+      - name: course_location
+        in: query
+        description: Updated course location of the student
+        required: false
+        type: string
+      - name: course
+        in: query
+        description: Updated course of the student
+        required: false
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Student'
+        405:
+          description: Invalid input
+      security:
+      - student_auth:
+        - write:students
+        - read:students
+    delete:
+      tags:
+      - student
+      summary: Delete a student based on student email
+      operationId: deleteStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: studentEmail
+        in: path
+        description: Student email to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid email supplied
+        404:
+          description: Student not found
+      security:
+      - student_auth:
+        - write:students
+        - read:students
+  /student/login:
+    post:
+      tags:
+      - student
+      summary: Logs student into the system
+      operationId: loginStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: email
+        in: query
+        description: The email of the student for login
+        required: true
+        type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: string
+          headers:
+            X-Rate-Limit:
+              type: integer
+              format: int32
+              description: calls per hour allowed by the user
+            X-Expires-After:
+              type: string
+              format: date-time
+              description: date in UTC when token expires
+        400:
+          description: Invalid username/password supplied
+  /student/logout:
+    post:
+      tags:
+      - student
+      summary: Logs out current logged in student session
+      operationId: logoutStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters: []
+      responses:
+        200:
+          description: successful operation
+  /student/{studentEmail}/current-exams:
+    get:
+      tags:
+      - student
+      summary: Get all current exams for a student
+      description: Returns a list of exam objects
+      operationId: getCurrentExamOfAStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: studentEmail
+        in: path
+        description: Email of student
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exam'
+        400:
+          description: Invalid Email supplied
+        404:
+          description: Student not found
+      security:
+      - api_key: []
+  /student/{studentEmail}/past-exams:
+    get:
+      tags:
+      - student
+      summary: Get all past exams for a student
+      description: Returns a list of exam objects
+      operationId: getPastExamOfAStudent
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: studentEmail
+        in: path
+        description: Email of student
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exam'
+        400:
+          description: Invalid Email supplied
+        404:
+          description: Student not found
+      security:
+      - api_key: []
+  /course:
+    post:
+      tags:
+      - course
+      summary: Add a new course to Edunity
+      operationId: addCourse
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Course object that needs to be added
+        required: true
+        schema:
+          $ref: '#/definitions/Course'
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Bad request
+        405:
+          description: Invalid input
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+  /courses:
+    get:
+      tags:
+      - course
+      summary: Get all courses
+      description: Returns a list of courses
+      operationId: getAllCourses
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Course'
+      security:
+      - api_key: []
+  /course/{courseName}:
+    get:
+      tags:
+      - course
+      summary: Find course by name
+      description: Returns a single course
+      operationId: getCourseByName
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: courseName
+        in: path
+        description: Name of course to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Course'
+        400:
+          description: Invalid Name supplied
+        404:
+          description: Course not found
+      security:
+      - api_key: []
+    put:
+      tags:
+      - course
+      summary: Update a course
+      operationId: updateCourse
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: courseName
+        in: path
+        description: Name of course that needs to be updated
+        required: true
+        type: string
+      - name: description
+        in: query
+        description: Updated the description of the course
+        required: false
+        type: string
+      - name: start_date
+        in: query
+        description: Updated start date of the course
+        required: false
+        type: string
+      - name: finish_date
+        in: query
+        description: Updated end date of the course
+        required: false
+        type: string
+      - name: number_of_credits
+        in: query
+        description: Updated number of credits of the course
+        required: false
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Course'
+        405:
+          description: Invalid input
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+    delete:
+      tags:
+      - course
+      summary: Delete a course based on course name
+      operationId: deleteCourse
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: courseName
+        in: path
+        description: Course name to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid name supplied
+        404:
+          description: Course not found
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+  /course/{courseName}/students:
+    get:
+      tags:
+      - course
+      summary: Get all student of a course
+      description: Returns a list of students
+      operationId: getAllStudentsOfCourse
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: courseName
+        in: path
+        description: Name of course
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Student'
+        400:
+          description: Invalid Name supplied
+        404:
+          description: Course not found
+      security:
+      - api_key: []
+  /exams:
+    post:
+      tags:
+      - exam
+      summary: Add a new exam to Edunity
+      operationId: addExam
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Exam that needs to be added
+        required: true
+        schema:
+          $ref: '#/definitions/Exam'
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Bad request
+        405:
+          description: Invalid input
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+    get:
+      tags:
+      - exam
+      summary: Get all exams
+      description: Returns a list of exams
+      operationId: getAllExams
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Exam'
+      security:
+      - api_key: []
+  /exam/{id}:
+    get:
+      tags:
+      - exam
+      summary: Get exam object by id
+      description: Returns an exam object
+      operationId: getExamById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+              $ref: '#/definitions/Exam'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Exam set not found
+      security:
+      - api_key: []
+  /exam/{id}/startExam:
+    put:
+      tags:
+      - exam
+      summary: Notify that an exam has started
+      operationId: startExam
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam ID
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            properties:
+              message:
+                type: string
+        400:
+          description: Invalid id supplied
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+  /exam/{id}/student-answers:
+    get:
+      tags:
+      - exam
+      summary: Get all answers from student of an exam
+      description: Returns a list of answers
+      operationId: getAllAnswersOfAnExam
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/StudentAnswer'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Exam set not found
+      security:
+      - api_key: []
+    post:
+      tags:
+      - exam
+      summary: Add a new student answers of an exam to Edunity
+      operationId: addStudentAnswersOfAnExam
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam id
+        required: true
+        type: integer
+      - in: body
+        name: body
+        description: Answers that needs to be added
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/StudentAnswer'
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Bad request
+        405:
+          description: Invalid input
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+  /exam-sets:
+    post:
+      tags:
+      - exam-set
+      summary: Add a new exam set to Edunity
+      operationId: addExamSet
+      consumes:
+      - application/json
+      - application/xml
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - in: body
+        name: body
+        description: Exam set that needs to be added
+        required: true
+        schema:
+          $ref: '#/definitions/ExamSet'
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Bad request
+        405:
+          description: Invalid input
+      security:
+      - course_auth:
+        - write:courses
+        - read:courses
+    get:
+      tags:
+      - exam-set
+      summary: Get all exam sets
+      description: Returns a list of exam sets
+      operationId: getAllExamSets
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExamSet'
+      security:
+      - api_key: []
+    
+  /exam-set/{id}:
+    get:
+      tags:
+      - exam-set
+      summary: Get exam set by id
+      description: Returns an exam set
+      operationId: getExamSetById
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam set id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+              $ref: '#/definitions/ExamSet'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Exam set not found
+      security:
+      - api_key: []
+  /exam-set/{id}/exam-questions:
+    get:
+      tags:
+      - exam-set
+      summary: Get all questions of an exam set
+      description: Returns a list of exam questions
+      operationId: getAllQuestionOfAnExamSet
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam set id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExamQuestion'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Exam set not found
+      security:
+      - api_key: []
+  /exam-set/{id}/number-of-questions:
+    get:
+      tags:
+      - exam-set
+      summary: Get number of questions of an exam set
+      description: Returns the number of questions of an exam set
+      operationId: getNumberOfQuestionOfAnExamSet
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: id
+        in: path
+        description: Exam set id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            properties:
+              number_of_questions:
+                type: integer
+                example: 38 
+        400:
+          description: Invalid id supplied
+        404:
+          description: Exam set not found
+      security:
+      - api_key: []
+  /course-locations:
+    get:
+      tags:
+      - course-location
+      summary: Get all course locations
+      description: Returns a list of course locations
+      operationId: getAllCourseLocations
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CourseLocation'
+      security:
+      - api_key: []
+  /course-location/{locationName}:
+    get:
+      tags:
+      - course-location
+      summary: Find course location by name
+      description: Returns a single course location
+      operationId: getCourseLocationByName
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: locationName
+        in: path
+        description: Name of the location to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CourseLocation'
+        400:
+          description: Invalid Name supplied
+        404:
+          description: Course Location not found
+      security:
+      - api_key: []
+  /supported-languages:
+    get:
+      tags:
+      - supported-language
+      summary: Get all supported languages
+      description: Returns a list of supported languages
+      operationId: getAllSupportedLanguages
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SupportedLanguage'
+      security:
+      - api_key: []
+  /supported-language/{languageName}:
+    get:
+      tags:
+      - supported-language
+      summary: Find supported language by language name
+      description: Returns a single supported language
+      operationId: getSuportedLanguageByName
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: languageName
+        in: path
+        description: Name of the supported language to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/SupportedLanguage'
+        400:
+          description: Invalid Name supplied
+        404:
+          description: Supported language not found
+      security:
+      - api_key: []
+  /role-types:
+    get:
+      tags:
+      - role-type
+      summary: Get all role types
+      description: Returns a list of role types
+      operationId: getAllRoleTypes
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RoleType'
+      security:
+      - api_key: []
+  /role-type/{typeName}:
+    get:
+      tags:
+      - role-type
+      summary: Find role type by type name
+      description: Returns a single role type
+      operationId: getRoleTypeByName
+      produces:
+      - application/json
+      - application/xml
+      parameters:
+      - name: typeName
+        in: path
+        description: Name of the role type to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/RoleType'
+        400:
+          description: Invalid Name supplied
+        404:
+          description: role type not found
+      security:
+      - api_key: []
+securityDefinitions:
+  course_auth:
+    type: oauth2
+    authorizationUrl: http://edunitycourse.swagger.io/oauth/dialog
+    flow: implicit
+    scopes:
+      write:courses: modify students in your account
+      read:courses: read your students
+  student_auth:
+    type: oauth2
+    authorizationUrl: http://edunitystudent.swagger.io/oauth/dialog
+    flow: implicit
+    scopes:
+      write:students: modify students in your account
+      read:students: read your students
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  Student:
+    type: object
+    required:
+    - email
+    - course
+    - course_location
+    - language
+    properties:
+      id:
+        type: integer
+        format: int64
+      full_name:
+        type: string
+        example: David Beckham
+      email:
+        type: string
+        example: david_beckham@gmail.com
+      password:
+        type: string
+      course:
+        type: string
+        example: Humanity101
+      course_location:
+        type: string
+        example: Geneva
+      language:
+        type: string
+        example: English
+      first_query_done:
+        type: boolean
+        example: False
+      validated_by_admin:
+        type: boolean
+        example: False
+    xml:
+      name: Student
+  Course:
+    type: object
+    required:
+    - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        example: Humanity 101
+      description: 
+        type: string
+        example: an exciting new resource
+      start_at:
+        type: string
+        example: "2021-10-28 00:00:00"
+      finish_at:
+        type: string
+        example: "2022-03-28 23:59:59"
+      number_of_credits:
+        type: integer
+        example: 4
+    xml:
+      name: Course
+  Exam:
+    type: object
+    required:
+    - opened_at
+    - closed_at
+    - duration_in_minutes
+    - student_id
+    properties:
+      id:
+        type: integer
+        format: int64
+      exam_set_id:
+        type: integer
+        format: int64
+      student_id:
+        type: integer
+        format: int64
+      opened_at:
+        type: string
+        example: "2021-10-28 00:00:00"
+      closed_at:
+        type: string
+        example: "2022-03-28 23:59:59"
+      duration_in_minutes:
+        type: integer
+        format: int64
+      taken_at:
+        type: string
+        example: "2022-03-28 23:59:59"
+      student_mark:
+        type: integer
+        format: int64
+      mark_entered_by:
+        type: string
+      mark_entered_at:
+        type: string
+        example: "2022-03-28 23:59:59"
+    xml:
+      name: Exam
+  ExamSet:
+    type: object
+    required:
+    - course_id
+    - total_mark
+    properties:
+      id:
+        type: integer
+        format: int64
+      course_id:
+        type: integer
+        format: int64
+      created_by:
+        type: integer
+        format: int64
+      created_at:
+        type: string
+        example: "2021-10-28 00:00:00"
+      name:
+        type: string
+      total_mark:
+        type: integer
+        format: int64
+      description:
+        type: string
+      additional_instruction:
+        type: string
+      exam_set_type:
+        type: string
+        enum: ["MCQ exam", "Open-question exam", "Capstone project"]
+    xml:
+      name: ExamSet
+  ExamQuestion:
+    type: object
+    required:
+    - exam_set_id
+    - question_type
+    - question_content
+    properties:
+      id:
+        type: integer
+        format: int64
+      exam_set_id:
+        type: integer
+        format: int64
+      question_type:
+        type: string
+      question_content:
+        type: string
+      possible_answers:
+        type: array
+        items:
+          type: string
+    xml:
+      name: ExamQuestion
+  StudentAnswer:
+    type: object
+    required:
+    - question_id
+    - exam_id
+    - answer_index
+    - answer_text
+    - reason_for_submission
+    properties:
+      id:
+        type: integer
+        format: int64
+      question_id:
+        type: integer
+        format: int64
+      exam_id:
+        type: integer
+        format: int64
+      answer_indexes:
+        type: array
+        items:
+          type: integer
+          format: int64
+      answer_texts:
+        type: array
+        items:
+          type: string
+      reason_for_submission:
+        type: string
+        enum: ["all_questions_completed", "time_limit_exceeded", "anti_cheating_violation"]
+    xml:
+      name: StudentAnswer
+  CourseLocation:
+    type: object
+    required:
+    - location
+    properties:
+      id:
+        type: integer
+        format: int64
+      location:
+        type: string
+        example: Geneva
+      country:
+        type: string
+        example: Switzerland
+    xml:
+      name: CourseLocation
+  SupportedLanguage:
+    type: object
+    required:
+    - language
+    properties:
+      id:
+        type: integer
+        format: int64
+      language:
+        type: string
+        example: English
+    xml:
+      name: SupportedLanguage
+  RoleType:
+    type: object
+    required:
+    - role_type
+    properties:
+      id:
+        type: integer
+        format: int64
+      role_type:
+        type: string
+        example: Admin
+    xml:
+      name: RoleType
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      type:
+        type: string
+      message:
+        type: string
+schemes:
+ - https
+ - http
+
+host: edunity.azurewebsites.net
+basePath: /
