@@ -1,3 +1,7 @@
+# Technology:
+Edunity backend is built with the combination of **flask + flask_sqlalchemy**.  
+The backend app interact with a PostgreSQL, which is hosted on [aiven](https://aiven.io/)
+
 # How to run locally  
 1. Exit the current virtual env if you are in a virtual env
 2. Create new env with:  
