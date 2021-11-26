@@ -19,7 +19,12 @@ Brings students in refugee camps and University collaborators together in a sing
 5. **Foster collaboration** between the different users
 
 ## App demo:
-The app can be accessed via https://edunity.azurewebsites.net/
+The app can be accessed via https://edunity.azurewebsites.net/  
+### Demo video:
+[here](https://drive.google.com/file/d/1IEn0fPERQzF58ilnvS_WpWTDgX8yNcK4/view?usp=sharing)  
+or  
+[here](docs/Edunity%20demo.mp4)
+
 ### Signup:
 New user can perfrom signup with a unique email address.  
 After signing up, the user can log in with provided email and password. However, but a verification from the admin is needed, in order for the new user to access the dashboard.
