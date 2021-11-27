@@ -45,8 +45,8 @@ We now can log in with edunity@gmail.com account, and start taking exams from th
 ## Future improvements:
 - Tackle current known limitations, such as:  
   - Authentication: send verification code to every user after they create an account  
+- Enhance current mvp into a finite product 
 - Explore the potential to further automate the educational journey with a Moodle integration  
-- Create exam within Edunity instead of uploading a file  
 
 ## App compilation and deployment:
 Currently there are 2 app in this repo, 1 for **frontend** (currently deployed at https://edunity.azurewebsites.net/), 1 for **backend** (currently deployed at https://edunity-backend.azurewebsites.net)
