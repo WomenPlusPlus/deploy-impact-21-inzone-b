@@ -29,6 +29,8 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
 # we define db object in models.py and now we link it to the flask app
 db.init_app(app)
 migrate = Migrate(app, db)
+with app.app_context():
+    db.create_all()
 student_handler = QueryHandler(db, Student, 'student')
 course_handler = QueryHandler(db, Course, 'course')
 role_type_handler = QueryHandler(db, RoleType, 'role type')
@@ -370,4 +372,4 @@ def reset_exam_start_time(query_email):
     return all_exams_of_a_student_response
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=9292)

@@ -6,11 +6,12 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'antonina'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://Inzoneb:TpdsD16ZRmxy4mqs@inzone-b-pg-inzone-b-project.aivencloud.com:15460/inzone?sslmode=require'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://encima:Potent4Sunscreen@pg-db.gwill.cloud:5432/inzone'
 
 
 class ProductionConfig(Config):
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:482f6763915bc6cfea003668ea49b0334bac0d49bd82e8db@inzone.internal:5432'
 
 
 class StagingConfig(Config):

@@ -1,0 +1,36 @@
+migrations = "./migrations"
+
+# debug = true
+# enabling debug mode will disable JWT authorization
+
+[http]
+port = 8080
+# Port 6000 is blocked on windows. You must change to 8080 or any unblocked port
+
+[jwt]
+key = "secret"
+algo = "HS256"
+
+[auth]
+enabled = true
+type = "body"
+encrypt = "MD5"
+table = "prest_users"
+username = "username"
+password = "password"
+
+[pg]
+host = "pg-db.gwill.cloud"
+user = "encima"
+pass = "Potent4Sunscreen"
+port = 5432
+database = "inzone"
+single = true
+## or used cloud factor
+# URL = "postgresql://user:pass@localhost/mydatabase/?sslmode=disable"
+
+[ssl]
+mode = "disable"
+sslcert = "./PATH"
+sslkey = "./PATH"
+sslrootcert = "./PATH"

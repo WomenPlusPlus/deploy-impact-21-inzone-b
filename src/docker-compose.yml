@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  backend:
+    build: backend/
+    ports:
+      - "9292:9292"
+  web:
+    build: frontend/web 
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Indigenous2Zebra
+      POSTGRES_DB: inzone
+      POSTGRES_USER: inzone
+    
