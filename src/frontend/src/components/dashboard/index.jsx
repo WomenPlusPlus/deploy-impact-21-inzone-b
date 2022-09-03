@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router";
 // import { useSelector } from "react-redux";
 import axios from "../../shared/axios";
 import { truncate } from "../../shared/truncate";
@@ -31,7 +31,7 @@ const Dashboard = () => {
   const [fullName, setFullName] = useState("");
 
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
+  const history = useHistory();
 
   useEffect(() => {
     const isLogged = localStorage.getItem("isLogged");
@@ -78,9 +78,8 @@ const Dashboard = () => {
         if (
           pastExamList[i].student_mark >= 7 ||
           pastExamList[i].student_mark === null
-        ) {
+        )
           progressCounter += 20;
-        }
         const res = await axios.get(`exam-set/${examSetId}`);
         // TODO: should we check for response status?
         console.log(res.data, "res data from loop");
@@ -96,16 +95,16 @@ const Dashboard = () => {
         console.log(response.data, "student");
         // TODO: check 'validated_by_admin' value
         if (response.data.validated_by_admin === false) {
-          navigate("/awaiting-admin-approval");
+          history.push("/awaiting-admin-approval");
         }
         setFullName(response.data.full_name);
         setFirstLogin(response.data.first_query_done);
         setCourseName(response.data.course_name);
-        if (response.data.language === "Français") {
+        if (response.data.language === "Français")
           localStorage.setItem("i18nextLng", "fr");
-        } else if (response.data.language === "Arabic") {
+        else if (response.data.language === "Arabic")
           localStorage.setItem("i18nextLng", "ar");
-        } else localStorage.setItem("i18nextLng", "en");
+        else localStorage.setItem("i18nextLng", "en");
         const lng = localStorage.getItem("i18nextLng");
         i18n.changeLanguage(lng);
       });
@@ -130,34 +129,31 @@ const Dashboard = () => {
                 Your latest updates
               </Trans>
             </h3>
-            {currentExams.length || pastExams.length
-              ? (
-                <div className="inner__wrapper">
-                  <div className="container__overflow container__overflow--updates">
-                    <div className="exams__container--updates">
-                      <Updates
-                        currentExams={currentExams}
-                        pastExams={pastExams}
-                        examTypes={examTypes}
-                        examNames={examNames}
-                        pastExamNames={pastExamNames}
-                        courseName={courseName}
-                      >
-                      </Updates>
-                    </div>
+            {currentExams.length || pastExams.length ? (
+              <div className="inner__wrapper">
+                <div className="container__overflow container__overflow--updates">
+                  <div className="exams__container--updates">
+                    <Updates
+                      currentExams={currentExams}
+                      pastExams={pastExams}
+                      examTypes={examTypes}
+                      examNames={examNames}
+                      pastExamNames={pastExamNames}
+                      courseName={courseName}
+                    ></Updates>
                   </div>
                 </div>
-              )
-              : (
-                <div className="inner__wrapper inner__wrapper--top">
-                  <img src={updatesImage} alt="updates" id="img--updates" />
-                  <p className="p__text">
-                    <Trans key="img-1" i18nKey="static.img-text-1">
-                      You&apos;re all caught up!
-                    </Trans>
-                  </p>
-                </div>
-              )}
+              </div>
+            ) : (
+              <div className="inner__wrapper inner__wrapper--top">
+                <img src={updatesImage} alt="updates" id="img--updates" />
+                <p className="p__text">
+                  <Trans key="img-1" i18nKey="static.img-text-1">
+                    You&apos;re all caught up!
+                  </Trans>
+                </p>
+              </div>
+            )}
           </div>
           <div className="column--right column-top">
             <h3 className="title">
@@ -165,30 +161,29 @@ const Dashboard = () => {
                 Your program
               </Trans>
             </h3>
-            {currentExams.length
-              ? (
-                <div className="inner__wrapper inner__wrapper--top--program">
-                  <Program progress={progress}></Program>
-                </div>
-              )
-              : (
-                <div className="inner__wrapper inner__wrapper--top">
-                  <img src={progressImage} alt="progress" id="img--progress" />
-                  <p className="p__text">
-                    <Trans key="img-2" i18nKey="static.img-text-2">
-                      Your program and progress will appear here
-                    </Trans>
-                  </p>
-                </div>
-              )}
+            {currentExams.length ? (
+              <div className="inner__wrapper inner__wrapper--top--program">
+                <Program progress={progress}></Program>
+              </div>
+            ) : (
+              <div className="inner__wrapper inner__wrapper--top">
+                <img src={progressImage} alt="progress" id="img--progress" />
+                <p className="p__text">
+                  <Trans key="img-2" i18nKey="static.img-text-2">
+                    Your program and progress will appear here
+                  </Trans>
+                </p>
+              </div>
+            )}
           </div>
         </div>
-        {firstLogin ? <></> : (
+        {firstLogin ? (
+          <></>
+        ) : (
           <CongratulationsModal
             fullName={fullName}
             className="congratulations__modal"
-          >
-          </CongratulationsModal>
+          ></CongratulationsModal>
         )}
         <div className="section section--bottom">
           <div className="column--left column-bottom">
@@ -204,72 +199,71 @@ const Dashboard = () => {
                 </Trans>
               </h5>
               <div className="container__overflow">
-                {currentExams.length
-                  ? (
-                    <>
-                      {currentExams.map((exam, i) => {
-                        console.log(examTypes[i], "exam types");
-                        if (examTypes[i] === "MCQ exam") {
-                          return (
-                            <div key={i} className="exams__container">
-                              <div className="exams__wrapper--left">
-                                <h6>
-                                  {courseName} - {examNames[i]}
-                                </h6>
-                                <p>Limit: {exam.closed_at}</p>
-                              </div>
-                              <div className="exams__wrapper--right">
-                                <Link
-                                  to={{
-                                    pathname: "/instructions",
-                                  }}
-                                >
-                                  <Button
-                                    variant="primary"
-                                    onClick={() =>
-                                      handleButton(exam.exam_set_id, exam.id)}
-                                  >
-                                    Start exam
-                                  </Button>
-                                </Link>
-                              </div>
+                {currentExams.length ? (
+                  <>
+                    {currentExams.map((exam, i) => {
+                      console.log(examTypes[i], "exam types");
+                      if (examTypes[i] === "MCQ exam") {
+                        return (
+                          <div key={i} className="exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>
+                                {courseName} - {examNames[i]}
+                              </h6>
+                              <p>Limit: {exam.closed_at}</p>
                             </div>
-                          );
-                        } else if (examTypes[i] === "Open-question exam") {
-                          console.log(zoomLink, "zoom link");
-                          return (
-                            <div key={i} className="exams__container">
-                              <div className="exams__wrapper--left">
-                                <h6>
-                                  {courseName} - {examNames[i]}
-                                </h6>
-                                <p>Limit: {exam.closed_at}</p>
-                              </div>
-                              <div className="exams__wrapper--right">
-                                <a
-                                  href={zoomLink[i]}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
+                            <div className="exams__wrapper--right">
+                              <Link
+                                to={{
+                                  pathname: "/instructions",
+                                }}
+                              >
+                                <Button
+                                  variant="primary"
+                                  onClick={() =>
+                                    handleButton(exam.exam_set_id, exam.id)
+                                  }
                                 >
-                                  <Button variant="primary">Go to zoom</Button>
-                                </a>
-                              </div>
+                                  Start exam
+                                </Button>
+                              </Link>
                             </div>
-                          );
-                        }
-                      })}
-                    </>
-                  )
-                  : (
-                    <p className="p__text">
-                      <Trans
-                        key="third-card-text"
-                        i18nKey="static.third-card-text"
-                      >
-                        Your upcoming exam sessions will be added here
-                      </Trans>
-                    </p>
-                  )}
+                          </div>
+                        );
+                      } else if (examTypes[i] === "Open-question exam") {
+                        console.log(zoomLink, "zoom link");
+                        return (
+                          <div key={i} className="exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>
+                                {courseName} - {examNames[i]}
+                              </h6>
+                              <p>Limit: {exam.closed_at}</p>
+                            </div>
+                            <div className="exams__wrapper--right">
+                              <a
+                                href={zoomLink[i]}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button variant="primary">Go to zoom</Button>
+                              </a>
+                            </div>
+                          </div>
+                        );
+                      }
+                    })}
+                  </>
+                ) : (
+                  <p className="p__text">
+                    <Trans
+                      key="third-card-text"
+                      i18nKey="static.third-card-text"
+                    >
+                      Your upcoming exam sessions will be added here
+                    </Trans>
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -301,60 +295,56 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="container__overflow">
-                {pastExams.length
-                  ? (
-                    <>
-                      {pastExams.map((exam, i) => {
-                        if (exam.student_mark !== null) {
-                          return (
-                            <div key={i} className="past-exams__container">
-                              <div className="exams__wrapper--left">
-                                <h6>{pastExamNames[i]}</h6>
-                              </div>
-                              <p>{truncate(exam.taken_at, 17)}</p>
-                              <div className="exams__wrapper--right">
-                                {exam.student_mark <= 6
-                                  ? (
-                                    <Button variant="outline-danger w-100 mx-0 px-0 py-1">
-                                      Failed
-                                    </Button>
-                                  )
-                                  : (
-                                    <Button variant="outline-success w-100 mx-0 px-0 py-1">
-                                      Passed
-                                    </Button>
-                                  )}
-                              </div>
+                {pastExams.length ? (
+                  <>
+                    {pastExams.map((exam, i) => {
+                      if (exam.student_mark !== null) {
+                        return (
+                          <div key={i} className="past-exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>{pastExamNames[i]}</h6>
                             </div>
-                          );
-                        } else {
-                          return (
-                            <div key={i} className="past-exams__container">
-                              <div className="exams__wrapper--left">
-                                <h6>{pastExamNames[i]}</h6>
-                              </div>
-                              <p>{truncate(exam.taken_at, 17)}</p>
-                              <div className="exams__wrapper--right ">
+                            <p>{truncate(exam.taken_at, 17)}</p>
+                            <div className="exams__wrapper--right">
+                              {exam.student_mark <= 6 ? (
+                                <Button variant="outline-danger w-100 mx-0 px-0 py-1">
+                                  Failed
+                                </Button>
+                              ) : (
+                                <Button variant="outline-success w-100 mx-0 px-0 py-1">
+                                  Passed
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div key={i} className="past-exams__container">
+                            <div className="exams__wrapper--left">
+                              <h6>{pastExamNames[i]}</h6>
+                            </div>
+                            <p>{truncate(exam.taken_at, 17)}</p>
+                            <div className="exams__wrapper--right ">
                                 <Button variant="outline-warning w-100 mx-0 px-0 py-1">
                                   Grading in progress
                                 </Button>
-                              </div>
                             </div>
-                          );
-                        }
-                      })}
-                    </>
-                  )
-                  : (
-                    <p className="p__text">
-                      <Trans
-                        key="third-card-text"
-                        i18nKey="static.third-card-text"
-                      >
-                        Your grades for your past exams will be added here
-                      </Trans>
-                    </p>
-                  )}
+                          </div>
+                        );
+                      }
+                    })}
+                  </>
+                ) : (
+                  <p className="p__text">
+                    <Trans
+                      key="third-card-text"
+                      i18nKey="static.third-card-text"
+                    >
+                      Your grades for your past exams will be added here
+                    </Trans>
+                  </p>
+                )}
               </div>
             </div>
           </div>

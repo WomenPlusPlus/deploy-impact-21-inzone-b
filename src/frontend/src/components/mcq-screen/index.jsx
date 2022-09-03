@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Question from "./question";
 import QuestionProgressBar from "./question-progress-bar";
 import axios from "../../shared/axios";
-import { useLocation, useNavigate } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import Timer from "./timer";
 import McqModal from "./mcq-modal";
 import clock from "../../assets/mcq/clock.png";
@@ -18,27 +18,25 @@ const MCQScreen = () => {
   // eslint-disable-next-line
   const [isCheating, setIsCheating] = useState(false);
   const [modalTitle, setModalTitle] = useState(
-    "You have completed your MCQ exam!",
+    "You have completed your MCQ exam!"
   );
   const [modalMessage, setModalMessage] = useState(
-    "All your answers have been saved (even when you were offline). Make sure you have internet connection and submit your exam to finish.",
+    "All your answers have been saved (even when you were offline). Make sure you have internet connection and submit your exam to finish."
   );
   const [modalButton, setModalButton] = useState("Submit exam");
   const [modalImage, setModalImage] = useState("");
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { id } = location.examSet;
   const examId = localStorage.getItem("examId");
 
   const cheatingModal = () => {
     setIsCheating(true);
-    setModalTitle(
-      "We noticed you left the current tab or opened a different file/window",
-    );
+    setModalTitle("We noticed you left the current tab or opened a different file/window");
     setModalImage("");
     setModalMessage(
-      "As per the general rules, the exam will now terminate. Plase make sure to submit your answers now.",
+      "As per the general rules, the exam will now terminate. Plase make sure to submit your answers now."
     );
     handleShowModal();
   };
@@ -56,14 +54,9 @@ const MCQScreen = () => {
     if (isTime) {
       setModalTitle("Your time has run out!");
       setModalMessage(
-        "Please make sure to submit your answers now.",
+        "Please make sure to submit your answers now."
       );
-      if (
-        modalTitle !==
-          "We noticed you left the current tab or opened a different file/window"
-      ) {
-        setModalImage(clock);
-      }
+      if (modalTitle !== "We noticed you left the current tab or opened a different file/window") setModalImage(clock);
       handleShowModal();
     }
     window.addEventListener("focus", onFocus);
@@ -116,9 +109,10 @@ const MCQScreen = () => {
     axios
       .post(`exam/${examId}/student-answers`, chosenAnswers)
       .then(() => {
-        navigate("/home");
+        history.push("/home");
         setShowSubmitModal(false);
       })
+
       .catch((error) => {
         setModalButton("Retry");
         return Promise.reject(error);
@@ -143,9 +137,11 @@ const MCQScreen = () => {
           <div className="col-12">
             {questions.length > 0 && (
               <div className="question-wrapper">
-                {!isCheating
-                  ? <Timer setIsTime={setIsTime} examId={examId}></Timer>
-                  : <></>}
+                {!isCheating ? (
+                  <Timer setIsTime={setIsTime} examId={examId}></Timer>
+                ) : (
+                  <></>
+                )}
                 <QuestionProgressBar
                   currentQuestionNumber={currentQuestionNumber}
                   questionsNumber={questions.length}
@@ -190,8 +186,7 @@ const MCQScreen = () => {
         modalMessage={modalMessage}
         modalButton={modalButton}
         modalImage={modalImage}
-      >
-      </McqModal>
+      ></McqModal>
     </div>
   );
 };

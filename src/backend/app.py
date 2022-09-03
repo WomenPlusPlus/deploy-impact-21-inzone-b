@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+from flask_cors import CORS
 import json
 import random
 from config import DevelopmentConfig
@@ -21,6 +22,7 @@ from models.exam_question import *
 from models.student_answer import *
 
 app = Flask(__name__)
+CORS(app)
 
 app.config.from_object(DevelopmentConfig)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

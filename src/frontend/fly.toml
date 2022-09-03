@@ -1,4 +1,4 @@
-# fly.toml file generated for inzone-web on 2022-08-31T10:08:45+03:00
+# fly.toml file generated for inzone-web on 2022-09-02T18:25:16+03:00
 
 app = "inzone-web"
 kill_signal = "SIGINT"

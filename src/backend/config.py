@@ -12,7 +12,7 @@ class Config(object):
 class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:482f6763915bc6cfea003668ea49b0334bac0d49bd82e8db@inzone.internal:5432'
-
+# env var: DATABASE_URL=postgres://inzone_backend:UrFLuYoxWpkCRfy@top2.nearest.of.inzone.internal:5432/inzone
 
 class StagingConfig(Config):
     DEVELOPMENT = True
