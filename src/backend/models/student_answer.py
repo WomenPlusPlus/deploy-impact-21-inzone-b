@@ -1,11 +1,11 @@
 from .base_model import db, get_missing_field_name
 
 class StudentAnswer(db.Model):
-    __tablename__ = 'student_answers'
+    __tablename__ = 'exam_answer'
 
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer)
-    exam_id = db.Column(db.Integer)
+    question_id = db.Column(db.Integer, db.ForeignKey('exam_questions.id'))
+    exam_id = db.Column(db.Integer, db.ForeignKey('exam_sets.id'))
     answer_texts = db.Column(db.ARRAY(db.String))
 
     def __init__(self, question_id, exam_id, answer_texts):

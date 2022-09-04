@@ -6,12 +6,18 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'antonina'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://Inzoneb:TpdsD16ZRmxy4mqs@inzone-b-pg-inzone-b-project.aivencloud.com:15460/inzone?sslmode=require'
+    SQLALCHEMY_DATABASE_URI = ''
+    ROLES = ['admin', 'educator', 'student']
+    COURSE_LOCATIONS = [
+        ('Azraq', 'Jordan'),
+        ('Kakuma', 'Kenya'),
+        ('Geneva', 'Switzerland')
+    ]
+    ADMIN_USER = ("EMAIL", "PWD")
 
 
 class ProductionConfig(Config):
     DEBUG = False
-
 
 class StagingConfig(Config):
     DEVELOPMENT = True

@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1
+
+FROM node:16-slim
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=900"
+WORKDIR /app
+
+COPY ["package.json", "package-lock.json*", "yarn.lock", "./"]
+
+RUN yarn install
+
+COPY . .
+
+CMD [ "npm", "run", "start" ]
