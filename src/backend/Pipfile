@@ -11,6 +11,10 @@ Flask-Script = "==2.0.6"
 psycopg2-binary = "*"
 psycopg2 = "*"
 flask-cors = "*"
+flask-login = "*"
+email-validator = "*"
+flask-openapi3 = "*"
+flask-security-too = "*"
 
 [dev-packages]
 

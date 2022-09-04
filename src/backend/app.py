@@ -4,13 +4,20 @@ import json
 import random
 from config import DevelopmentConfig
 from flask_migrate import Migrate
+from flask_security import Security, SQLAlchemyUserDatastore, auth_required, hash_password, roles_required
+from flask_security.models import fsqla_v3 as fsqla
+
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
+from flask_openapi3 import Info, Tag
+from flask_openapi3 import OpenAPI
 
 from handler import *
 
 from models.student import *
+from models.user import *
 from models.course import *
 from models.course_location import *
 from models.role_type import *
@@ -21,7 +28,8 @@ from models.question_type import *
 from models.exam_question import *
 from models.student_answer import *
 
-app = Flask(__name__)
+info = Info(title="Inzone API", version="1.0.0")
+app = OpenAPI(__name__, info=info)
 CORS(app)
 
 app.config.from_object(DevelopmentConfig)
@@ -31,8 +39,15 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)
 # we define db object in models.py and now we link it to the flask app
 db.init_app(app)
 migrate = Migrate(app, db)
-with app.app_context():
-    db.create_all()
+# fsqla.FsModels.set_db_info(db)
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
+exam_tag = Tag(name="Exam")
+user_tag = Tag(name="Student")
+course_tag = Tag(name="Course")
+
+user_handler = QueryHandler(db, Student, 'user')
 student_handler = QueryHandler(db, Student, 'student')
 course_handler = QueryHandler(db, Course, 'course')
 role_type_handler = QueryHandler(db, RoleType, 'role type')
@@ -45,7 +60,30 @@ question_type_handler = QueryHandler(db, QuestionType, 'question type')
 exam_question_handler = QueryHandler(db, ExamQuestion, 'exam question')
 student_answer_handler = StudentAnswerQueryHandler(db, StudentAnswer, 'student answer')
 
-@app.route('/')
+with app.app_context():
+    db.create_all()
+    for role in app.config['ROLES']:
+        user_datastore.find_or_create_role(name=role)
+    
+    
+    try:
+        for loc in app.config['COURSE_LOCATIONS']:
+            l = course_location_handler.handle_get_first_object_by_attribute(location=loc[0])
+            if not l:
+                c = CourseLocation(loc[0], loc[1])
+                db.session.add(c)
+    except IntegrityError as e:
+        print(e)
+
+    u = user_datastore.find_user(email=app.config['ADMIN_USER'][0])
+    if not u:
+        u = user_datastore.create_user(email=app.config['ADMIN_USER'][0], password=app.config['ADMIN_USER'][1])
+    a = user_datastore.find_role('admin')
+    user_datastore.add_role_to_user(u, a)
+    db.session.commit()
+    # user_datastore.add_role_user(u, admin_role)
+
+@app.get('/')
 def home():
     if 'email' in session:
         return QueryHandler.create_generic_json_response(
@@ -55,57 +93,57 @@ def home():
             {'message': 'Welcome to Edunity, proceed to log in now'}, 401)
 
 
-@app.route('/role-types')
+@app.get('/role-types')
 def get_all_role_types():
     return role_type_handler.handle_get_all_request()
 
 
-@app.route('/role-type/<query_name>')
+@app.get('/role-type/<query_name>')
 def get_role_type_by_name(query_name):
     return role_type_handler.handle_get_first_object_by_attribute(role_type=query_name)
 
 
-@app.route('/course-locations')
+@app.get('/course-locations')
 def get_all_course_locations():
     return course_location_handler.handle_get_all_request()
 
 
-@app.route('/course-location/<query_name>')
+@app.get('/course-location/<query_name>')
 def get_course_location_by_name(query_name):
     return course_location_handler.handle_get_first_object_by_attribute(location=query_name)
 
 
-@app.route('/supported-languages')
+@app.get('/supported-languages')
 def get_all_supported_languages():
     return supported_language_handler.handle_get_all_request()
 
 
-@app.route('/supported-language/<query_name>')
+@app.get('/supported-language/<query_name>')
 def get_supported_language_by_name(query_name):
     return supported_language_handler.handle_get_first_object_by_attribute(location=query_name)
 
 
-@app.route('/exams')
+@app.get('/exams', tags=[exam_tag])
 def get_all_exams():
     return exam_handler.handle_get_all_request()
 
 
-@app.route('/exam/<id>')
+@app.get('/exam/<id>', tags=[exam_tag])
 def get_exam_by_id(id):
     return exam_handler.handle_get_first_object_by_attribute(id=id)
 
 
-@app.route('/exam', methods=['POST'])
+@app.post('/exam', tags=[exam_tag])
 def add_new_exam():
     return exam_handler.handle_add_new_object_request(request)
 
 
-@app.route('/exam/<id>', methods=['DELETE'])
+@app.delete('/exam/<id>')
 def delete_exam(id):
     return exam_handler.handle_delete_object_by_attribute(id=id)
 
 
-@app.route('/exam/<id>/startExam', methods=['PUT'])
+@app.post('/exam/<id>/startExam')
 def start_exam_by_id(id):
     exam = exam_handler.handle_get_first_object_by_attribute(id=id)
     if exam.status_code != 200:
@@ -129,7 +167,7 @@ def start_exam_by_id(id):
     return exam_handler.handle_update_object_by_attribute(start_exam_request, id=id)
 
 
-@app.route('/exam/<id>/student-answers')
+@app.get('/exam/<id>/student-answers')
 def get_student_answers_by_exam_id(id):
     exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)
     if exam_response.status_code != 200:
@@ -138,7 +176,7 @@ def get_student_answers_by_exam_id(id):
     return student_answer_handler.handle_get_all_objects_by_attribute(exam_id=id)
 
 
-@app.route('/exam/<id>/student-answers', methods=['POST'])
+@app.post('/exam/<id>/student-answers')
 def add_student_answers_by_exam_id(id):
     exam_response = exam_handler.handle_get_first_object_by_attribute(id=id)
     if exam_response.status_code != 200:
@@ -147,17 +185,17 @@ def add_student_answers_by_exam_id(id):
     return student_answer_handler.handle_add_multiple_objects_with_attribute(request, exam_id=id)
 
 
-@app.route('/exam-sets')
+@app.get('/exam-sets')
 def get_all_exam_sets():
     return exam_set_handler.handle_get_all_request()
 
 
-@app.route('/exam-set/<id>')
+@app.get('/exam-set/<id>')
 def get_exam_set_by_id(id):
     return exam_set_handler.handle_get_first_object_by_attribute(id=id)
 
 
-@app.route('/exam-set/<id>/number-of-questions')
+@app.get('/exam-set/<id>/number-of-questions')
 def get_number_of_questions_by_exam_set_id(id):
     exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
     if exam_set_response.status_code != 200:
@@ -172,7 +210,7 @@ def get_number_of_questions_by_exam_set_id(id):
     return QueryHandler.create_generic_json_response({'number_of_questions': len(all_questions_dict)})
 
 
-@app.route('/exam-set/<id>/exam-questions')
+@app.get('/exam-set/<id>/exam-questions')
 def get_all_questions_by_exam_set_id(id):
     exam_set_response = exam_set_handler.handle_get_first_object_by_attribute(id=id)
     if exam_set_response.status_code != 200:
@@ -191,67 +229,71 @@ def get_all_questions_by_exam_set_id(id):
     return QueryHandler.create_generic_json_response(all_questions_list)
 
 
-@app.route('/question-types')
+@app.get('/question-types')
 def get_all_question_types():
     return question_type_handler.handle_get_all_request()
 
 
-@app.route('/exam-questions')
+@app.get('/exam-questions')
+@auth_required()
 def get_all_exam_questions():
     return exam_question_handler.handle_get_all_request()
 
 
-@app.route('/student-answers')
+@app.get('/student-answers')
+@roles_required('admin', 'educator')
 def get_all_student_answers():
     return student_answer_handler.handle_get_all_request()
 
 
-@app.route('/student-answer', methods=['POST'])
+@app.post('/student-answer')
 def add_new_student_answer():
     return student_answer_handler.handle_add_new_object_request(request)
 
 
-@app.route('/student-answer/<id>', methods=['PUT'])
+@app.put('/student-answer/<id>')
 def update_student_answer(id):
     return student_answer_handler.handle_update_object_by_attribute(request, id=id)
 
 
-@app.route('/student-answer/<id>', methods=['DELETE'])
+@app.delete('/student-answer/<id>')
 def delete_student_answer(id):
     return student_answer_handler.handle_delete_object_by_attribute(id=id)
 
 
-@app.route('/courses')
+@app.get('/courses')
 def get_all_courses():
     return course_handler.handle_get_all_request()
 
 
-@app.route('/course/<query_name>')
+@app.get('/course/<query_name>')
 def get_course_by_name(query_name):
     return course_handler.handle_get_first_object_by_attribute(name=query_name)
 
 
-@app.route('/course', methods=['POST'])
+@app.post('/course')
 def add_new_course():
     return course_handler.handle_add_new_object_request(request)
 
 
-@app.route('/course/<query_name>', methods=['DELETE'])
+@app.delete('/course/<query_name>')
 def delete_course(query_name):
     return course_handler.handle_delete_object_by_attribute(name=query_name)
 
 
-@app.route('/course/<query_name>', methods=['PUT'])
+@app.put('/course/<query_name>')
 def update_course(query_name):
     return course_handler.handle_update_object_by_attribute(request, name=query_name)
 
 
-@app.route('/students')
+@app.get('/students')
+@roles_required('admin', 'educator')
 def get_all_students():
     return student_handler.handle_get_all_request()
 
 
-@app.route('/student/<query_email>')
+@app.get('/student/<query_email>')
+@roles_required('admin', 'educator')
 def get_student_by_email(query_email):
     student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if student_response.status_code != 200:
@@ -268,21 +310,22 @@ def get_student_by_email(query_email):
     return student_response
 
 
-@app.route('/student', methods=['POST'])
+@app.post('/student')
 def add_new_student():
     return student_handler.handle_add_new_object_request(request)
 
 
-@app.route('/student/<query_email>', methods=['DELETE'])
+@app.delete('/student/<query_email>')
 def delete_student(query_email):
     return student_handler.handle_delete_object_by_attribute(email=query_email)
 
 
-@app.route('/student/<query_email>', methods=['PUT'])
+@app.put('/student/<query_email>')
 def update_student(query_email):
     return student_handler.handle_update_object_by_attribute(request, email=query_email)
 
-@app.route('/student/<query_email>/current-exams')
+@app.get('/student/<query_email>/current-exams')
+@auth_required()
 def get_current_exams_of_a_student(query_email):
     student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if student_response.status_code != 200:
@@ -299,7 +342,8 @@ def get_current_exams_of_a_student(query_email):
     all_exams_of_a_student_response = exam_handler.handle_get_all_objects_with_text_command(text_command)
     return all_exams_of_a_student_response
 
-@app.route('/student/<query_email>/past-exams')
+@app.get('/student/<query_email>/past-exams')
+@auth_required()
 def get_past_exams_of_a_student(query_email):
     student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if student_response.status_code != 200:
@@ -317,7 +361,7 @@ def get_past_exams_of_a_student(query_email):
     return all_exams_of_a_student_response
 
 
-@app.route('/student/login', methods=['POST'])
+@app.post('/student/login')
 def student_login():
     try:
         json = request.json
@@ -351,14 +395,14 @@ def student_login():
             {'message': 'unexpected error: {}'.format(str(e))}, 400)
 
 
-@app.route('/student/logout', methods=['POST'])
+@app.post('/student/logout')
 def student_logout():
     if 'email' in session:
         session.pop('email', None)
     return QueryHandler.create_generic_json_response({'message': 'You successfully logged out'})
 
 
-@app.route('/testing/<query_email>/reset-exam-taken-time', methods=['PUT'])
+@app.put('/testing/<query_email>/reset-exam-taken-time')
 def reset_exam_start_time(query_email):
     student_response = student_handler.handle_get_first_object_by_attribute(email=query_email)
     if student_response.status_code != 200:

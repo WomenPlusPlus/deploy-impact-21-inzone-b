@@ -3,10 +3,8 @@ from .base_model import db
 
 class CourseLocation(db.Model):
     __tablename__ = 'course_locations'
-
-    id = db.Column(db.Integer, primary_key=True)
-    location = db.Column(db.String(200))
-    country = db.Column(db.String(200))
+    location = db.Column(db.String(200), primary_key=True)
+    country = db.Column(db.String(200), primary_key=True)
 
     def __init__(self, location, country):
         # we dont have to create the id because the db will do that automatically

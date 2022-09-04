@@ -6,20 +6,18 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'antonina'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://encima:Potent4Sunscreen@pg-db.gwill.cloud:5432/inzone'
+    SQLALCHEMY_DATABASE_URI = ''
     ROLES = ['admin', 'educator', 'student']
     COURSE_LOCATIONS = [
         ('Azraq', 'Jordan'),
         ('Kakuma', 'Kenya'),
         ('Geneva', 'Switzerland')
     ]
-    ADMIN_USER = ("lou@inzone.ch", "UKNgcyrEaeoAsiuPTgL5ian5N8nA5vh")
+    ADMIN_USER = ("EMAIL", "PWD")
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:482f6763915bc6cfea003668ea49b0334bac0d49bd82e8db@inzone.internal:5432'
-# env var: DATABASE_URL=postgres://inzone_backend:UrFLuYoxWpkCRfy@top2.nearest.of.inzone.internal:5432/inzone
 
 class StagingConfig(Config):
     DEVELOPMENT = True

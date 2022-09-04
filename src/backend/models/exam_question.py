@@ -4,10 +4,12 @@ class ExamQuestion(db.Model):
     __tablename__ = 'exam_questions'
 
     id = db.Column(db.Integer, primary_key=True)
-    exam_set_id = db.Column(db.Integer)
-    question_type = db.Column(db.String(200))
+    exam_set_id = db.Column(db.Integer, db.ForeignKey('exam_set.id'))
+    question_type = db.Column(db.String(200), db.ForeignKey('question_type.id'))
     question_content = db.Column(db.String(200))
     possible_answers = db.Column(db.String(200))
+
+    
 
     def __init__(self, exam_set_id, question_type, question_content, possible_answers):
         self.exam_set_id = exam_set_id
